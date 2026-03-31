@@ -227,7 +227,7 @@
                             font-weight: 500;
                             line-height: 100%;
                             vertical-align: middle;
-                                      white-space: nowrap;
+                            white-space: nowrap;
 
                             .mainpair {
                                 display: flex;
@@ -1163,13 +1163,70 @@
                     border: none !important;
                 }
 
-                input[type="range"] {
+                .custom-range {
                     width: 100%;
-                    accent-color: #ec8711;
-                    margin-bottom: 15px;
-                    border-radius: 30px;
-                    background: #1f2233;
-                    border: none !important;
+                    height: 6px;
+                    border-radius: 3px;
+                    background-color: #1F2233;
+                    /* $card2 */
+                    outline: none;
+                    cursor: pointer;
+                    margin-bottom: 4px;
+                    -webkit-appearance: none;
+                    appearance: none;
+                }
+
+                /* Webkit (Chrome, Safari) */
+                .custom-range {
+                    &::-webkit-slider-thumb {
+                        -webkit-appearance: none;
+                        width: 18px;
+                        height: 18px;
+                        border-radius: 50%;
+                        background-color: #f97316;
+                        /* $orange */
+                        border: 2px solid #000;
+                        /* $white */
+                        cursor: pointer;
+                        margin-top: -6px;
+                        /* vertically center thumb */
+                    }
+                }
+
+                /* Firefox */
+                .custom-range {
+                    &::-moz-range-thumb {
+                        width: 18px;
+                        height: 18px;
+                        border-radius: 50%;
+                        background-color: #f97316;
+                        /* $orange */
+                        border: 2px solid #ffffff;
+                        /* $white */
+                        cursor: pointer;
+                    }
+                }
+
+                /* Optional: track hover/focus effects */
+                .custom-range {
+                    &:focus {
+                        outline: none;
+                    }
+                }
+
+                .custom-range {
+                    &::-webkit-slider-runnable-track {
+                        height: 6px;
+                        border-radius: 3px;
+                    }
+                }
+
+                .custom-range {
+                    &::-moz-range-track {
+                        height: 6px;
+                        border-radius: 3px;
+                        background-color: #111c30;
+                    }
                 }
 
                 .amount-display {
@@ -1283,90 +1340,97 @@
 }
 
 @media (max-width: 1540px) {
-     .detailmain{
+    .detailmain {
         padding: 35px 20px;
-     }
+    }
 }
+
 @media (max-width: 1440px) {
-.explore-layout .mainpositions{
-    position: absolute;
-    right: 0;
+    .explore-layout .mainpositions {
+        position: absolute;
+        right: 0;
+    }
 }
-}
+
 @media (max-width: 1100px) {
-.detailmain .detailright{
-width: 100%;
-min-width: unset !important;
+    .detailmain .detailright {
+        width: 100%;
+        min-width: unset !important;
+    }
 }
-}
-@media(max-width:991px){
-    .detailmain .detaileft .mainpositiontable .table-responsive{
+
+@media(max-width:991px) {
+    .detailmain .detaileft .mainpositiontable .table-responsive {
         display: none;
     }
-    .detailmain .mobileboxes .innerbox .innerboxmain{
+
+    .detailmain .mobileboxes .innerbox .innerboxmain {
         align-items: flex-start;
-        .box{
-            .maintime{
-                .timehead{
+
+        .box {
+            .maintime {
+                .timehead {
                     font-size: 14px;
                 }
-                .timepara{
+
+                .timepara {
                     font-size: 12px;
                 }
             }
-                  .tablebuttons {
-                                display: flex;
-                                justify-content: flex-end;
-                                align-items: center;
-                                gap: 8px;
 
-                                .timerbtn {
-                                    display: flex;
-                                    max-width: fit-content;
-                                    padding: 10px 18px;
-                                    justify-content: center;
-                                    align-items: center;
-                                    border-radius: 8px;
-                                    background: rgba(255, 255, 255, 0.02);
-                                    color: #FFF;
-                                    text-align: center;
-                                    font-feature-settings: 'dlig' on, 'salt' on;
-                                    font-size: 14px;
-                                    font-style: normal;
-                                    font-weight: 700;
-                                    line-height: 100%;
-                                    border: none;
-                                }
+            .tablebuttons {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 8px;
 
-                                .claimbtn {
-                                    border-radius: 8px;
-                                    background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
-                                    display: flex;
-                                    width: 81.67px;
-                                    padding: 10px 18px;
-                                    justify-content: center;
-                                    align-items: center;
-                                    color: #FFF;
-                                    text-align: center;
-                                    font-feature-settings: 'dlig' on, 'salt' on;
-                                    font-size: 12px;
-                                    font-style: normal;
-                                    font-weight: 400;
-                                    line-height: 100%;
-                                    border: none;
-                                }
+                .timerbtn {
+                    display: flex;
+                    max-width: fit-content;
+                    padding: 10px 18px;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 8px;
+                    background: rgba(255, 255, 255, 0.02);
+                    color: #FFF;
+                    text-align: center;
+                    font-feature-settings: 'dlig' on, 'salt' on;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: 100%;
+                    border: none;
+                }
 
-                                .sharebtn {
-                                    display: flex;
-                                    width: 32px;
-                                    height: 32px;
-                                    justify-content: center;
-                                    align-items: center;
-                                    border-radius: 8px;
-                                    background: rgba(255, 255, 255, 0.06);
-                                    border: none;
-                                }
-                            }
+                .claimbtn {
+                    border-radius: 8px;
+                    background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
+                    display: flex;
+                    width: 81.67px;
+                    padding: 10px 18px;
+                    justify-content: center;
+                    align-items: center;
+                    color: #FFF;
+                    text-align: center;
+                    font-feature-settings: 'dlig' on, 'salt' on;
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 100%;
+                    border: none;
+                }
+
+                .sharebtn {
+                    display: flex;
+                    width: 32px;
+                    height: 32px;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 8px;
+                    background: rgba(255, 255, 255, 0.06);
+                    border: none;
+                }
+            }
         }
     }
 }

@@ -1840,8 +1840,10 @@
   margin: 0px !important;
   width: 100%;
 }
+
 .prediction-modal {
   width: 100%;
+
   .modal-dialog {
     display: flex !important;
     align-items: flex-end; // Bottom alignment
@@ -1849,6 +1851,7 @@
     margin: 0px !important;
     width: 100%;
   }
+
   .modal-content {
     border-radius: 20px 20px 0 0;
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -1859,6 +1862,7 @@
     padding: 20px;
 
     border-bottom: 1px solid #2d2d3f;
+
     .modal-title {
       color: #fff;
       font-feature-settings: "dlig" on;
@@ -1867,13 +1871,16 @@
       font-weight: 500;
       line-height: 110%;
     }
+
     .btn-close {
       filter: invert(1);
     }
   }
+
   .modal-body {
     padding: 20px !important;
   }
+
   .toggle-container {
     display: flex;
     align-items: flex-start;
@@ -1903,6 +1910,7 @@
         color: #000;
         border: none;
       }
+
       &.down {
         color: #000;
         background: #ff4646;
@@ -1916,6 +1924,7 @@
     align-items: center;
     width: 100%;
     margin-bottom: 12px;
+
     span {
       color: #74728b;
       font-size: 14px;
@@ -1926,6 +1935,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+
       b {
         color: #fff;
         font-size: 14px;
@@ -1935,6 +1945,7 @@
         line-height: 100%;
       }
     }
+
     .token-icons {
       display: inline-flex;
       position: relative;
@@ -1946,6 +1957,7 @@
         height: 20px;
         z-index: 2;
       }
+
       .chain-img {
         width: 14px;
         height: 14px;
@@ -1963,17 +1975,76 @@
     background: #16192a;
     padding: 20px 18px;
     text-align: center;
+
     input {
       background: #1f2233;
       border: none !important;
     }
-    input[type="range"] {
+
+    .custom-range {
       width: 100%;
-      accent-color: #ec8711;
-      margin-bottom: 15px;
-      border-radius: 30px;
-      background: #1f2233;
-      border: none !important;
+      height: 6px;
+      border-radius: 3px;
+      background-color: #1F2233;
+      /* $card2 */
+      outline: none;
+      cursor: pointer;
+      margin-bottom: 4px;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    /* Webkit (Chrome, Safari) */
+    .custom-range {
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background-color: #f97316;
+        /* $orange */
+        border: 2px solid #000;
+        /* $white */
+        cursor: pointer;
+        margin-top: -6px;
+        /* vertically center thumb */
+      }
+    }
+
+    /* Firefox */
+    .custom-range {
+      &::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background-color: #f97316;
+        /* $orange */
+        border: 2px solid #ffffff;
+        /* $white */
+        cursor: pointer;
+      }
+    }
+
+    /* Optional: track hover/focus effects */
+    .custom-range {
+      &:focus {
+        outline: none;
+      }
+    }
+
+    .custom-range {
+      &::-webkit-slider-runnable-track {
+        height: 6px;
+        border-radius: 3px;
+      }
+    }
+
+    .custom-range {
+      &::-moz-range-track {
+        height: 6px;
+        border-radius: 3px;
+        background-color: #111c30;
+      }
     }
 
     .amount-display {
@@ -2009,7 +2080,8 @@
       font-size: 14px;
       font-style: normal;
       font-weight: 500;
-      line-height: 100%; /* 14px */
+      line-height: 100%;
+      /* 14px */
       text-transform: uppercase;
       // transition: 0.3s;
       // &:hover {
@@ -2039,21 +2111,25 @@
       font-weight: 500;
       line-height: 100%;
       border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+
       &:last-child {
         border: none;
       }
+
       span {
         &:last-child {
           color: #fff;
         }
       }
-      
+
     }
+
     hr {
       border-color: #2d2d3f;
       margin: 10px 0;
     }
-    .green{
+
+    .green {
       color: #70E852 !important;
     }
   }
@@ -2067,7 +2143,8 @@
     font-size: 16px;
     font-style: normal;
     font-weight: 500;
-    line-height: 100%; /* 16px */
+    line-height: 100%;
+    /* 16px */
     text-transform: uppercase;
     padding: 18px 22px;
     border: none;
@@ -2111,7 +2188,8 @@
       border-radius: 20px 20px 0 0;
     }
   }
-    .withdraw .modal-dialog {
+
+  .withdraw .modal-dialog {
     margin: 0;
     align-items: flex-end;
     height: 100%;
@@ -2122,39 +2200,49 @@
     }
   }
 }
+
 @media(max-width:430px) {
-.deposit .modal-dialog .modal-content .modal-body .depositcontent .firstbox .left p{
-  font-size: 12px;
+  .deposit .modal-dialog .modal-content .modal-body .depositcontent .firstbox .left p {
+    font-size: 12px;
+  }
+
+  .deposit .modal-dialog .modal-content .modal-body .depositcontent .firstbox .right .usdtpara {
+    font-size: 12px;
+  }
+
+  .deposit .modal-dialog .modal-content .modal-body .depositcontent .qrtextbottom .left h6 {
+    font-size: 12px;
+  }
+
+  .deposit .modal-dialog .modal-content .modal-body .depositcontent .qrtextbottom .right p {
+    font-size: 9px;
+  }
+
+  .profilemodal .modal-dialog .modal-content .modal-body .claimedsucess .box .maintextmodal .speedtext .speedright .mainimg {
+    width: 100%;
+    height: 100%;
+  }
 }
-.deposit .modal-dialog .modal-content .modal-body .depositcontent .firstbox .right .usdtpara{
-   font-size: 12px;
-}
-.deposit .modal-dialog .modal-content .modal-body .depositcontent .qrtextbottom .left h6{
-     font-size: 12px;
-}
-.deposit .modal-dialog .modal-content .modal-body .depositcontent .qrtextbottom .right p{
-  font-size: 9px;
-}
-.profilemodal .modal-dialog .modal-content .modal-body .claimedsucess .box .maintextmodal .speedtext .speedright .mainimg{
-  width: 100%;
-  height: 100%;
-}
-}
+
 @media(max-width:380px) {
   .profilemodal .modal-dialog .modal-content .modal-body .claimedsucess .sharebox {
     flex-direction: column;
     gap: 10px;
   }
-  .deposit .modal-dialog .modal-content .modal-body .depositcontent .firstbox .left p{
-  font-size: 11px;
-}
-.deposit .modal-dialog .modal-content .modal-body .depositcontent .firstbox .right .usdtpara{
-   font-size: 11px;
-}
-.deposit .modal-dialog .modal-content .modal-body .depositcontent .qrtextbottom .left h6{
-     font-size: 11px;
-}
-.deposit .modal-dialog .modal-content .modal-body .depositcontent .qrtextbottom .right p{
-  font-size: 8px;
-}
+
+  .deposit .modal-dialog .modal-content .modal-body .depositcontent .firstbox .left p {
+    font-size: 11px;
+  }
+
+  .deposit .modal-dialog .modal-content .modal-body .depositcontent .firstbox .right .usdtpara {
+    font-size: 11px;
+  }
+
+  .deposit .modal-dialog .modal-content .modal-body .depositcontent .qrtextbottom .left h6 {
+    font-size: 11px;
+  }
+
+  .deposit .modal-dialog .modal-content .modal-body .depositcontent .qrtextbottom .right p {
+    font-size: 8px;
+  }
 }

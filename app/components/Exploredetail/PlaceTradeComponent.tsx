@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from 'react-bootstrap'
 
 interface TradeFormProps {
@@ -28,6 +28,7 @@ const TradeForm: React.FC<TradeFormProps> = ({
     potentialWin,
     onPlacePrediction,
 }) => {
+    const pct = ((amount - 5) / 495) * 100;
     return (
         <>
             <div className="for-detail-component">
@@ -62,11 +63,13 @@ const TradeForm: React.FC<TradeFormProps> = ({
 
                 <div className="slider-box">
                     <input
+                    className='custom-range'
                         type="range"
                         min={5}
                         max={500}
                         value={amount}
                         onChange={(e) => setAmount(Number(e.target.value))}
+                        style={{ background: `linear-gradient(to right,#f97316 ${pct}%,#1F2233 ${pct}%)` }}
                     />
                     <div className="amount-display">${amount}</div>
                 </div>
