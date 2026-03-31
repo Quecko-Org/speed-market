@@ -9,7 +9,7 @@ const page = () => {
     <>
       <Header />
       <PositionsProvider>
-        <div className="app-layout">
+        <div className="app-layout explore-layout">
           <main className="app-main">
             <Exploredetail />
           </main>
