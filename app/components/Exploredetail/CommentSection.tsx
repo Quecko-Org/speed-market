@@ -1,8 +1,5 @@
 import React, { useState, ChangeEvent } from "react";
 
-/* ═══════════════════════════════════════════════════════
-   TYPES
-   ═══════════════════════════════════════════════════════ */
 
 interface Reply {
   id: number;
@@ -37,9 +34,7 @@ interface ThumbIconProps {
   active: boolean;
 }
 
-/* ═══════════════════════════════════════════════════════
-   DATA
-   ═══════════════════════════════════════════════════════ */
+
 
 const AVATARS: string[] = [
   "https://i.pravatar.cc/150?img=1",
@@ -126,9 +121,7 @@ const COMMENTS: Comment[] = [
   },
 ];
 
-/* ═══════════════════════════════════════════════════════
-   ICONS
-   ═══════════════════════════════════════════════════════ */
+
 
 const ThumbIcon: React.FC<ThumbIconProps> = ({ active }) => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill={active ? "#f97316" : "#64748b"}>
@@ -142,9 +135,7 @@ const ReplyIcon: React.FC = () => (
 </svg>
 );
 
-/* ═══════════════════════════════════════════════════════
-   COMPONENTS
-   ═══════════════════════════════════════════════════════ */
+
 
 const Avatar: React.FC<AvatarProps> = ({ src, size = 36 }) => (
   <img
@@ -241,9 +232,7 @@ const DesktopCommentInput: React.FC = () => {
   );
 };
 
-/* ═══════════════════════════════════════════════════════
-   MAIN COMPONENT
-   ═══════════════════════════════════════════════════════ */
+
 
 const CommentSection: React.FC = () => {
   const [mobileInput, setMobileInput] = useState<string>("");
