@@ -8,6 +8,7 @@ import "./styles/winninganimation.scss";
 import "./styles/profile.scss";
 import "./styles/modals.scss";
 import "./styles/exploredetail.scss";
+import "./styles/comments.scss";
 import { ToastContainer } from "react-toastify";
 export const metadata: Metadata = {
   title: "Create Next App",

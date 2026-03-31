@@ -427,7 +427,7 @@ export default function TradingChart() {
     <div
       style={{
         width: "100%",
-        height: "auto",
+        height: 429,
         background: "linear-gradient(117deg, #2C2D42 0%, #1B1C31 99.9%)",
         display: "flex",
         flexDirection: "column",

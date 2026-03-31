@@ -6,6 +6,7 @@ import Footer from "../footer/Footer";
 import { Tab, Tabs } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import TradingChart from "./TradingChart";
+import CommentSection from "./CommentSection";
 
 const Exploredetail: FC = () => {
   const { isOpen: isPositionsOpen, toggle } = usePositions();
@@ -143,7 +144,7 @@ const Exploredetail: FC = () => {
               className="detailtabs"
             >
               <Tab eventKey="comments" title="Comments (98)">
-                Tab content for Home
+                <CommentSection />
               </Tab>
               <Tab eventKey="activity" title="Activity">
                 <h6 className="activityhead">Activity</h6>
