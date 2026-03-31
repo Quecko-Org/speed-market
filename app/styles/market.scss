@@ -25,7 +25,9 @@
         }
     }
 }
-
+.explore-layout{
+        height: calc(100vh - 93px);
+}
 .mainpositions {
     border-left: 1px solid rgba(255, 255, 255, 0.12);
     background: linear-gradient(180deg, #1D2031 0%, #0A0B1D 106.85%);
