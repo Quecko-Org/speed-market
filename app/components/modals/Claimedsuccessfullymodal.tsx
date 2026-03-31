@@ -1,0 +1,150 @@
+"use client";
+import React, { useRef, useState } from "react";
+import { Modal, ProgressBar } from "react-bootstrap";
+import Icon from "../Icon";
+
+interface ClaimedsuccessfullymodalProps {
+  show: boolean;
+  onHide: () => void;
+}
+
+const Claimedsuccessfullymodal: React.FC<ClaimedsuccessfullymodalProps> = ({
+  show,
+  onHide,
+}) => {
+  return (
+    <Modal className="profilemodal" show={show} onHide={onHide} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Claimed Successfully</Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
+        <div className="claimedsucess">
+          <div className="box">
+         <img
+              src="/modalassets/modalbg.png"
+              alt="img"
+              className="img-fluid image"
+            />
+            <div className="maintextmodal">
+              <div className="parentupper">
+                <div className="left">
+                  <span>
+             <img
+                      src="/importantassets/dummyrain.png"
+                      alt="img"
+                      className="img-fluid images"
+                    />
+                    SatoshiSeeker
+                  </span>
+                </div>
+                <div className="right">
+                  <div className="maintimer">
+                     <div className="tokenimages">
+                      <div className="innertoken">
+                        <img
+                          src="/tokenimages/btc.png"
+                          alt="tokenimg"
+                          className="tokenimg"
+                        />
+                      </div>
+                      <Icon name="energy" className="energyimg" />
+
+                      <div className="innertoken">
+                        <img
+                          src="/tokenimages/usdt.png"
+                          alt="tokenimg"
+                          className="tokenimg"
+                        />
+                      </div>
+                    </div>
+                    <h4 className="timerpara">5 min</h4>
+                  </div>
+                </div>
+              </div>
+              <div className="speedtext">
+                <div className="speedleft">
+                  <p className="speedpara">Result</p>
+                  <div className="textparent">
+                    <h4 className="wingreen">Win</h4>
+                    <button className="greenbtc">Up for BTC</button>
+                  </div>
+                </div>
+                <div className="speedright">
+                  <div className="mainimg">
+                    <img
+                      src="\assets\market.png"
+                      alt="img"
+                      className="img-fluid market"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="bottomcontent">
+                <div className="innermain">
+                  <p>Baseline Price</p>
+                  <h4>$90,300.23</h4>
+                </div>
+                <div className="innermain">
+                  <p>Settlement Price</p>
+                  <h4>$90,300.23</h4>
+                </div>
+                <div className="brdr"></div>
+                <div className="innermain">
+                  <p>Effective Amount</p>
+                  <h4>$47.50</h4>
+                </div>
+                <div className="innermain">
+                  <p>Amount Earned</p>
+                  <h4 className="greenpara">$95.00</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="sharebox">
+            <p>Share with Friends</p>
+            <div className="icons">
+              <span>
+                <img
+                  src="\assets\twitter.png"
+                  alt="img"
+                  className="img-fluid"
+                />
+              </span>
+              <span>
+                <img
+                  src="\assets\facebook.png"
+                  alt="img"
+                  className="img-fluid"
+                />
+              </span>
+              <span>
+                <img
+                  src="\assets\telegram.png"
+                  alt="img"
+                  className="img-fluid"
+                />
+              </span>
+              <span>
+                <img
+                  src="\assets\whatsapp.png"
+                  alt="img"
+                  className="img-fluid"
+                />
+              </span>
+              <span>
+                <img src="\assets\mail.png" alt="img" className="img-fluid" />
+              </span>
+            </div>
+          </div>
+          <p className="bottompara">
+            Your funds have been added to your wallet
+          </p>
+          <button className="prediction">Place New Prediction</button>
+        </div>
+      </Modal.Body>
+    </Modal>
+  );
+};
+
+export default Claimedsuccessfullymodal;
