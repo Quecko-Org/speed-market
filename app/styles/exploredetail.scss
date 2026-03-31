@@ -192,6 +192,7 @@
                         font-weight: 400;
                         line-height: 100%;
                         vertical-align: middle;
+                        white-space: nowrap;
                     }
 
                     tbody {
@@ -226,6 +227,7 @@
                             font-weight: 500;
                             line-height: 100%;
                             vertical-align: middle;
+                                      white-space: nowrap;
 
                             .mainpair {
                                 display: flex;
@@ -929,6 +931,7 @@
                                         border-radius: 8px;
                                         background: rgba(255, 255, 255, 0.06);
                                         border: none;
+                                        margin-left: auto;
                                     }
                                 }
                             }
@@ -1050,6 +1053,95 @@
                     }
                 }
             }
+        }
+    }
+}
+
+@media (max-width: 1540px) {
+     .detailmain{
+        padding: 35px 20px;
+     }
+}
+@media (max-width: 1440px) {
+.explore-layout .mainpositions{
+    position: absolute;
+    right: 0;
+}
+}
+@media (max-width: 1100px) {
+.detailmain .detailright{
+width: 100%;
+min-width: unset !important;
+}
+}
+@media(max-width:991px){
+    .detailmain .detaileft .mainpositiontable .table-responsive{
+        display: none;
+    }
+    .detailmain .mobileboxes .innerbox .innerboxmain{
+        align-items: flex-start;
+        .box{
+            .maintime{
+                .timehead{
+                    font-size: 14px;
+                }
+                .timepara{
+                    font-size: 12px;
+                }
+            }
+                  .tablebuttons {
+                                display: flex;
+                                justify-content: flex-end;
+                                align-items: center;
+                                gap: 8px;
+
+                                .timerbtn {
+                                    display: flex;
+                                    max-width: fit-content;
+                                    padding: 10px 18px;
+                                    justify-content: center;
+                                    align-items: center;
+                                    border-radius: 8px;
+                                    background: rgba(255, 255, 255, 0.02);
+                                    color: #FFF;
+                                    text-align: center;
+                                    font-feature-settings: 'dlig' on, 'salt' on;
+                                    font-size: 14px;
+                                    font-style: normal;
+                                    font-weight: 700;
+                                    line-height: 100%;
+                                    border: none;
+                                }
+
+                                .claimbtn {
+                                    border-radius: 8px;
+                                    background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
+                                    display: flex;
+                                    width: 81.67px;
+                                    padding: 10px 18px;
+                                    justify-content: center;
+                                    align-items: center;
+                                    color: #FFF;
+                                    text-align: center;
+                                    font-feature-settings: 'dlig' on, 'salt' on;
+                                    font-size: 12px;
+                                    font-style: normal;
+                                    font-weight: 400;
+                                    line-height: 100%;
+                                    border: none;
+                                }
+
+                                .sharebtn {
+                                    display: flex;
+                                    width: 32px;
+                                    height: 32px;
+                                    justify-content: center;
+                                    align-items: center;
+                                    border-radius: 8px;
+                                    background: rgba(255, 255, 255, 0.06);
+                                    border: none;
+                                }
+                            }
         }
     }
 }
