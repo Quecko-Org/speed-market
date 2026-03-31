@@ -3,25 +3,25 @@ import React, { useRef, useState } from "react";
 import { Modal, ProgressBar } from "react-bootstrap";
 import Icon from "../Icon";
 
-interface ClaimedsuccessfullymodalProps {
+interface SharemarketmodalProps {
   show: boolean;
   onHide: () => void;
 }
 
-const Claimedsuccessfullymodal: React.FC<ClaimedsuccessfullymodalProps> = ({
+const Sharemarketmodal: React.FC<SharemarketmodalProps> = ({
   show,
   onHide,
 }) => {
   return (
     <Modal className="profilemodal" show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Claimed Successfully</Modal.Title>
+        <Modal.Title>Share This Market</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <div className="claimedsucess">
           <div className="box">
-            <img
+              <img
               src="/modalassets/modalbg.png"
               alt="img"
               className="img-fluid image"
@@ -30,7 +30,7 @@ const Claimedsuccessfullymodal: React.FC<ClaimedsuccessfullymodalProps> = ({
               <div className="parentupper">
                 <div className="left">
                   <span>
-                    <img
+                        <img
                       src="/importantassets/dummyrain.png"
                       alt="img"
                       className="img-fluid images"
@@ -38,9 +38,12 @@ const Claimedsuccessfullymodal: React.FC<ClaimedsuccessfullymodalProps> = ({
                     SatoshiSeeker
                   </span>
                 </div>
-                <div className="right">
-                  <div className="maintimer">
-                    <div className="tokenimages">
+              </div>
+
+              <div className="speedtext">
+                <div className="speedleft">
+                  <div className="usdparent">
+ <div className="tokenimages">
                       <div className="innertoken">
                         <img
                           src="/tokenimages/btc.png"
@@ -58,21 +61,21 @@ const Claimedsuccessfullymodal: React.FC<ClaimedsuccessfullymodalProps> = ({
                         />
                       </div>
                     </div>
-                    <h4 className="timerpara">5 min</h4>
+
+                    <div className="btctextmain">
+                      <h3>BTC/USDT</h3>
+
+                      <button>
+                       <Icon name="timer"/>
+                        5 min
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="speedtext">
-                <div className="speedleft">
-                  <p className="speedpara">Result</p>
-                  <div className="textparent">
-                    <h4 className="wingreen">Win</h4>
-                    <button className="greenbtc">Up for BTC</button>
-                  </div>
-                </div>
+
                 <div className="speedright">
                   <div className="mainimg">
-                    <img
+                 <img
                       src="/logo.svg"
                       alt="img"
                       className="img-fluid market"
@@ -80,30 +83,19 @@ const Claimedsuccessfullymodal: React.FC<ClaimedsuccessfullymodalProps> = ({
                   </div>
                 </div>
               </div>
-              <div className="bottomcontent">
-                <div className="innermain">
-                  <p>Baseline Price</p>
-                  <h4>$90,300.23</h4>
-                </div>
-                <div className="innermain">
-                  <p>Settlement Price</p>
-                  <h4>$90,300.23</h4>
-                </div>
-                <div className="brdr"></div>
-                <div className="innermain">
-                  <p>Effective Amount</p>
-                  <h4>$47.50</h4>
-                </div>
-                <div className="innermain">
-                  <p>Amount Earned</p>
-                  <h4 className="greenpara">$95.00</h4>
-                </div>
+
+              <div className="textbox">
+                <p>
+                  Want to try your luck? Bet on BTC/USD for a chance to win big in 5 minutes!
+                </p>
               </div>
             </div>
           </div>
+
           <div className="sharebox">
             <p>Share with Friends</p>
-            <div className="icons">
+
+             <div className="icons">
               <span>
                 <Icon name="x" />
               </span>
@@ -129,14 +121,11 @@ const Claimedsuccessfullymodal: React.FC<ClaimedsuccessfullymodalProps> = ({
               </span>
             </div>
           </div>
-          <p className="bottompara">
-            Your funds have been added to your wallet
-          </p>
-          <button className="prediction">Place New Prediction</button>
+          <button className="close">Close</button>
         </div>
       </Modal.Body>
     </Modal>
   );
 };
 
-export default Claimedsuccessfullymodal;
+export default Sharemarketmodal;

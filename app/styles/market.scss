@@ -26,6 +26,9 @@
     .app-main {
         overflow: auto;
         height: 100%;
+        &::-webkit-scrollbar{
+            display: none;
+        }
     }
 }
 
@@ -159,6 +162,9 @@
     .historytable {
         overflow: auto;
         height: 100%;
+             &::-webkit-scrollbar{
+            display: none;
+        }
 
         table {
             width: 100%;

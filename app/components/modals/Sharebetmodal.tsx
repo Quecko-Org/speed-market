@@ -3,25 +3,27 @@ import React, { useRef, useState } from "react";
 import { Modal, ProgressBar } from "react-bootstrap";
 import Icon from "../Icon";
 
-interface ClaimedsuccessfullymodalProps {
+interface SharebetmodalProps {
   show: boolean;
   onHide: () => void;
 }
 
-const Claimedsuccessfullymodal: React.FC<ClaimedsuccessfullymodalProps> = ({
-  show,
-  onHide,
-}) => {
+const Sharebetmodal: React.FC<SharebetmodalProps> = ({ show, onHide }) => {
   return (
-    <Modal className="profilemodal" show={show} onHide={onHide} centered>
+    <Modal
+      className="profilemodal"
+      show={show}
+      onHide={onHide}
+      centered
+    >
       <Modal.Header closeButton>
-        <Modal.Title>Claimed Successfully</Modal.Title>
+        <Modal.Title>Share Your Bet</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <div className="claimedsucess">
           <div className="box">
-            <img
+        <img
               src="/modalassets/modalbg.png"
               alt="img"
               className="img-fluid image"
@@ -30,7 +32,7 @@ const Claimedsuccessfullymodal: React.FC<ClaimedsuccessfullymodalProps> = ({
               <div className="parentupper">
                 <div className="left">
                   <span>
-                    <img
+                  <img
                       src="/importantassets/dummyrain.png"
                       alt="img"
                       className="img-fluid images"
@@ -40,7 +42,7 @@ const Claimedsuccessfullymodal: React.FC<ClaimedsuccessfullymodalProps> = ({
                 </div>
                 <div className="right">
                   <div className="maintimer">
-                    <div className="tokenimages">
+             <div className="tokenimages">
                       <div className="innertoken">
                         <img
                           src="/tokenimages/btc.png"
@@ -64,15 +66,15 @@ const Claimedsuccessfullymodal: React.FC<ClaimedsuccessfullymodalProps> = ({
               </div>
               <div className="speedtext">
                 <div className="speedleft">
-                  <p className="speedpara">Result</p>
+                  <p className="speedpara">My Bet</p>
                   <div className="textparent">
-                    <h4 className="wingreen">Win</h4>
+                    <h4 className="wingreen">$100,00</h4>
                     <button className="greenbtc">Up for BTC</button>
                   </div>
                 </div>
                 <div className="speedright">
                   <div className="mainimg">
-                    <img
+                     <img
                       src="/logo.svg"
                       alt="img"
                       className="img-fluid market"
@@ -80,63 +82,53 @@ const Claimedsuccessfullymodal: React.FC<ClaimedsuccessfullymodalProps> = ({
                   </div>
                 </div>
               </div>
+              <div className="brdr"></div>
               <div className="bottomcontent">
                 <div className="innermain">
                   <p>Baseline Price</p>
                   <h4>$90,300.23</h4>
                 </div>
                 <div className="innermain">
-                  <p>Settlement Price</p>
-                  <h4>$90,300.23</h4>
-                </div>
-                <div className="brdr"></div>
-                <div className="innermain">
                   <p>Effective Amount</p>
-                  <h4>$47.50</h4>
-                </div>
-                <div className="innermain">
-                  <p>Amount Earned</p>
-                  <h4 className="greenpara">$95.00</h4>
+                  <h4>$90,300.23</h4>
                 </div>
               </div>
             </div>
           </div>
           <div className="sharebox">
             <p>Share with Friends</p>
-            <div className="icons">
+             <div className="icons">
               <span>
-                <Icon name="x" />
+               <Icon name="x" />
               </span>
 
               <span>
-                <Icon name="facebook" />
+              <Icon name="facebook" />
               </span>
 
               <span>
-                <Icon name="telegram" />
+              <Icon name="telegram" />
               </span>
 
               <span>
-                <Icon name="whatsapp" />
+              <Icon name="whatsapp" />
               </span>
 
               <span>
-                <Icon name="mail" />
+           <Icon name="mail" />
               </span>
 
               <span>
-                <Icon name="link" />
+           <Icon name="link" />
               </span>
             </div>
           </div>
-          <p className="bottompara">
-            Your funds have been added to your wallet
-          </p>
-          <button className="prediction">Place New Prediction</button>
+
+          <button onClick={onHide} className="close">Close</button>
         </div>
       </Modal.Body>
     </Modal>
   );
 };
 
-export default Claimedsuccessfullymodal;
+export default Sharebetmodal;

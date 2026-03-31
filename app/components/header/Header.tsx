@@ -7,12 +7,20 @@ import Shareresultsmodal from "../modals/Shareresultsmodal";
 import { showToast } from "@/app/hooks/showToast";
 import Claimprocessedmodal from "../modals/Claimprocessedmodal";
 import Claimedsuccessfullymodal from "../modals/Claimedsuccessfullymodal";
+import Sharemarketmodal from "../modals/Sharemarketmodal";
+import Sharebetmodal from "../modals/Sharebetmodal";
+import Withdrawmodal from "../modals/Withdrawmodal";
+import Depositmodal from "../modals/Depositmodal";
 
 type ModalKeys =
   | "createprofile"
   | "Shareresults"
   | "Claimprocessed"
-  | "Claimsuccessfully";
+  | "Claimsuccessfully"
+  | "Sharemarket"
+  | "Sharebet"
+  | "withdraw"
+  | "deposit";
 
 type ModalState = Record<ModalKeys, boolean>;
 
@@ -22,6 +30,10 @@ const Header: FC = () => {
     Shareresults: false,
     Claimprocessed: false,
     Claimsuccessfully: false,
+    Sharemarket: false,
+     Sharebet: false,
+     withdraw: false,
+     deposit: false,
   });
   const [open, setOpen] = useState(false);
 
@@ -71,7 +83,7 @@ const Header: FC = () => {
                       <p className="walletpara">MetaMask</p>
                     </div>
                     <div
-                      onClick={() => openModal("Claimsuccessfully")}
+                      onClick={() => openModal("deposit")}
                       className="innerwallet"
                     >
                       <img
@@ -182,6 +194,22 @@ const Header: FC = () => {
             <Claimedsuccessfullymodal
         show={modals.Claimsuccessfully}
         onHide={() => closeModal("Claimsuccessfully")}
+      />
+                  <Sharemarketmodal
+        show={modals.Sharemarket}
+        onHide={() => closeModal("Sharemarket")}
+      />
+                       <Sharebetmodal
+        show={modals.Sharebet}
+        onHide={() => closeModal("Sharebet")}
+      />
+                           <Withdrawmodal
+        show={modals.withdraw}
+        onHide={() => closeModal("withdraw")}
+      />
+                            <Depositmodal
+        show={modals.deposit}
+        onHide={() => closeModal("deposit")}
       />
     </>
   );
