@@ -95,6 +95,15 @@
             }
         }
 
+        .chart-parent {
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: linear-gradient(117deg, #2C2D42 0%, #1B1C31 99.9%);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
         .mainpositiontable {
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -564,24 +573,26 @@
                                 overflow: hidden;
 
                                 .innerimg {
-                                width: 100%;
-                                height: 100%;
-                                object-fit: cover;
-                                object-position: center;
+                                    width: 100%;
+                                    height: 100%;
+                                    object-fit: cover;
+                                    object-position: center;
                                 }
                             }
 
                             .userpara {
                                 color: #FFF;
-font-feature-settings: 'dlig' on, 'salt' on;
-font-size: 14px;
-font-style: normal;
-font-weight: 500;
-line-height: 100%; 
+                                font-feature-settings: 'dlig' on, 'salt' on;
+                                font-size: 14px;
+                                font-style: normal;
+                                font-weight: 500;
+                                line-height: 100%;
+
                                 .upstatus {
                                     color: #70E852;
                                 }
-                                .downstatus{
+
+                                .downstatus {
                                     color: #FF4646;
                                 }
                             }
@@ -589,351 +600,17 @@ line-height: 100%;
 
                         .secondpara {
                             color: #FFF;
-text-align: center;
-font-feature-settings: 'dlig' on, 'salt' on;
-font-size: 16px;
-font-style: normal;
-font-weight: 400;
-line-height: 100%; 
-                        }
-                    }
-                }
-
-                    .pagination {
-                background: transparent;
-                border-radius: 0;
-                border: none;
-                outline: none;
-                box-shadow: none;
-                padding: 0;
-                margin: 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-
-                .page-item {
-                    background: transparent;
-                    border-radius: 0;
-                    border: none;
-                    outline: none;
-                    box-shadow: none;
-                    padding: 0;
-                    margin: 0;
-
-                    .page-link {
-                        background: transparent;
-                        border-radius: 0;
-                        border: none;
-                        outline: none;
-                        box-shadow: none;
-                        display: flex;
-                        padding: 6px 11px;
-                        align-items: flex-start;
-                        gap: 10px;
-                        color: #74728B;
-                        font-size: 15px;
-                        font-style: normal;
-                        font-weight: 400;
-                        line-height: 100%;
-                        margin: 0;
-                    }
-                }
-
-                .page-link.active,
-                .active>.page-link {
-                    color: #FFF !important;
-                }
-
-                .page-item:last-child .page-link {
-                    border-radius: 5px;
-                    background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
-                    display: flex;
-                    padding: 6px;
-                    align-items: flex-start;
-                    gap: 10px;
-                    color: #FFF;
-                }
-
-                .page-item:first-child .page-link {
-                    border-radius: 5px;
-                    background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
-                    display: flex;
-                    padding: 6px;
-                    align-items: flex-start;
-                    gap: 10px;
-                    color: #FFF;
-                }
-
-                .page-link.disabled,
-                .disabled>.page-link {
-                    background: rgba(255, 255, 255, 0.06) !important;
-                    color: #74728B !important;
-                }
-            }
-
-                    .predictiontable {
-            display: flex;
-            padding: 12px;
-            flex-direction: column;
-            align-items: center;
-            gap: 25px;
-
-            .table-responsive {
-                width: 100%;
-
-                &::-webkit-scrollbar {
-                    display: none;
-                }
-
-                table {
-                    width: 100%;
-                    border-collapse: separate;
-                    border-spacing: 0 8px;
-
-                    thead th:first-child {
-                        border-top-left-radius: 14px;
-                        border-bottom-left-radius: 14px;
-                        border: 1px solid rgba(255, 255, 255, 0.15);
-                        border-right: none;
-                    }
-
-                    thead th:last-child {
-                        border-top-right-radius: 14px;
-                        border-bottom-right-radius: 14px;
-                        border: 1px solid rgba(255, 255, 255, 0.15);
-                        border-left: none;
-                    }
-
-                    thead th {
-                        background: rgba(255, 255, 255, 0.10);
-                        padding: 17px 18px;
-                        border: 1px solid rgba(255, 255, 255, 0.15);
-                        border-left: none;
-                        border-right: none;
-                        color: #FFF;
-                        font-feature-settings: 'dlig' on, 'salt' on;
-                        font-size: 14px;
-                        font-style: normal;
-                        font-weight: 400;
-                        line-height: 100%;
-                        vertical-align: middle;
-                    }
-
-                    tbody {
-                        tr td:first-child {
-                            border-top-left-radius: 14px;
-                            border-bottom-left-radius: 14px;
-                            border: 1px solid rgba(255, 255, 255, 0.15);
-                            border-right: none;
-                        }
-
-                        tr td:last-child {
-                            border-top-right-radius: 14px;
-                            border-bottom-right-radius: 14px;
-                            border: 1px solid rgba(255, 255, 255, 0.15);
-                            border-left: none;
-                        }
-
-                        .maxwidth {
-                            max-width: 150px;
-                        }
-
-                        tr td {
-                            border: 1px solid rgba(255, 255, 255, 0.15);
-                            padding: 17px 18px;
-                            background: rgba(255, 255, 255, 0.02);
-                            border-left: none;
-                            border-right: none;
-                            color: #FFF;
+                            text-align: center;
                             font-feature-settings: 'dlig' on, 'salt' on;
                             font-size: 16px;
                             font-style: normal;
-                            font-weight: 500;
+                            font-weight: 400;
                             line-height: 100%;
-                            vertical-align: middle;
-
-                            .mainpair {
-                                display: flex;
-                                align-items: center;
-                                gap: 8px;
-
-                                .tokenimages {
-                                    display: flex;
-                                    justify-content: center;
-                                    align-items: center;
-                                    position: relative;
-
-                                    .innertoken {
-                                        width: 24px;
-                                        height: 24px;
-                                        display: flex;
-                                        justify-content: center;
-                                        align-items: center;
-                                        object-fit: cover;
-                                        object-position: center;
-                                        overflow: hidden;
-
-                                        .tokenimg {
-                                            width: 100%;
-                                            height: 100%;
-                                            object-fit: cover;
-                                            object-position: center;
-                                        }
-                                    }
-
-                                    .energy {
-                                        position: absolute;
-                                        top: 50%;
-                                        left: 50%;
-                                        transform: translate(-50%, -50%);
-                                        width: 13.859px;
-                                        height: 24.947px;
-                                    }
-                                }
-
-                                .tokenname {
-                                    color: #FFF;
-                                    text-align: center;
-                                    font-feature-settings: 'dlig' on, 'salt' on;
-                                    font-size: 16px;
-                                    font-style: normal;
-                                    font-weight: 700;
-                                    line-height: 100%;
-                                }
-
-                                .innerspan {
-                                    white-space: nowrap;
-                                    border-radius: 35px;
-                                    background: rgba(255, 255, 255, 0.10);
-                                    display: flex;
-                                    padding: 6px 10px;
-                                    justify-content: center;
-                                    align-items: center;
-                                    gap: 6px;
-                                    color: #FFF;
-                                    text-align: center;
-                                    leading-trim: both;
-                                    text-edge: cap;
-                                    font-feature-settings: 'dlig' on, 'salt' on;
-                                    font-size: 12px;
-                                    font-style: normal;
-                                    font-weight: 500;
-                                    line-height: 100%;
-                                    text-transform: uppercase;
-                                }
-                            }
-
-                            .predictionmain {
-                                display: flex;
-                                align-items: center;
-                                gap: 10px;
-
-                                .predictionimg {
-                                    display: flex;
-                                    width: 18px;
-                                    height: 18px;
-                                    justify-content: center;
-                                    border-radius: 64.286px;
-                                    align-items: center;
-                                }
-
-                                .predictionpara {
-                                    text-align: center;
-                                    font-feature-settings: 'dlig' on, 'salt' on;
-                                    font-size: 16px;
-                                    font-style: normal;
-                                    font-weight: 700;
-                                    line-height: 100%;
-                                }
-                            }
-
-                            .upmain {
-                                .predictionimg {
-                                    background: rgba(112, 232, 82, 0.11);
-                                }
-
-                                .predictionpara {
-                                    color: #70E852;
-                                }
-                            }
-
-                            .downmain {
-                                .predictionimg {
-                                    background: rgba(254, 92, 50, 0.11);
-                                }
-
-                                .predictionpara {
-                                    color: #FE5C32;
-                                }
-                            }
-
-                            .resultpara {
-                                font-feature-settings: 'dlig' on, 'salt' on;
-                                font-size: 16px;
-                                font-style: normal;
-                                font-weight: 500;
-                                line-height: 100%;
-                            }
-
-                            .won {
-                                color: #70E852;
-                            }
-
-                            .lost {
-                                color: #FE5C32;
-                            }
-
-                            .maintime {
-                                display: flex;
-                                flex-direction: column;
-                                align-items: flex-start;
-                                gap: 8px;
-
-                                .timehead {
-                                    color: #FFF;
-                                    text-align: center;
-                                    font-feature-settings: 'dlig' on, 'salt' on;
-                                    font-size: 16px;
-                                    font-style: normal;
-                                    font-weight: 500;
-                                    line-height: 100%;
-                                }
-
-                                .timepara {
-                                    color: #74728B;
-                                    font-feature-settings: 'dlig' on, 'salt' on;
-                                    font-size: 14px;
-                                    font-style: normal;
-                                    font-weight: 500;
-                                    line-height: 120%;
-                                }
-                            }
-
-                            .sharebtn {
-                                display: flex;
-                                width: 32px;
-                                height: 32px;
-                                justify-content: center;
-                                align-items: center;
-                                border-radius: 8px;
-                                background: rgba(255, 255, 255, 0.06);
-                                border: none;
-                            }
                         }
                     }
                 }
-            }
 
-            .pagination {
-                background: transparent;
-                border-radius: 0;
-                border: none;
-                outline: none;
-                box-shadow: none;
-                padding: 0;
-                margin: 0;
-
-                .page-item {
+                .pagination {
                     background: transparent;
                     border-radius: 0;
                     border: none;
@@ -941,58 +618,392 @@ line-height: 100%;
                     box-shadow: none;
                     padding: 0;
                     margin: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
 
-                    .page-link {
+                    .page-item {
                         background: transparent;
                         border-radius: 0;
                         border: none;
                         outline: none;
                         box-shadow: none;
+                        padding: 0;
+                        margin: 0;
+
+                        .page-link {
+                            background: transparent;
+                            border-radius: 0;
+                            border: none;
+                            outline: none;
+                            box-shadow: none;
+                            display: flex;
+                            padding: 6px 11px;
+                            align-items: flex-start;
+                            gap: 10px;
+                            color: #74728B;
+                            font-size: 15px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: 100%;
+                            margin: 0;
+                        }
+                    }
+
+                    .page-link.active,
+                    .active>.page-link {
+                        color: #FFF !important;
+                    }
+
+                    .page-item:last-child .page-link {
+                        border-radius: 5px;
+                        background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
                         display: flex;
-                        padding: 6px 11px;
+                        padding: 6px;
                         align-items: flex-start;
                         gap: 10px;
-                        color: #74728B;
-                        font-size: 15px;
-                        font-style: normal;
-                        font-weight: 400;
-                        line-height: 100%;
-                        margin: 0;
+                        color: #FFF;
+                    }
+
+                    .page-item:first-child .page-link {
+                        border-radius: 5px;
+                        background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
+                        display: flex;
+                        padding: 6px;
+                        align-items: flex-start;
+                        gap: 10px;
+                        color: #FFF;
+                    }
+
+                    .page-link.disabled,
+                    .disabled>.page-link {
+                        background: rgba(255, 255, 255, 0.06) !important;
+                        color: #74728B !important;
                     }
                 }
 
-                .page-link.active,
-                .active>.page-link {
-                    color: #FFF !important;
-                }
-
-                .page-item:last-child .page-link {
-                    border-radius: 5px;
-                    background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
+                .predictiontable {
                     display: flex;
-                    padding: 6px;
-                    align-items: flex-start;
-                    gap: 10px;
-                    color: #FFF;
-                }
+                    padding: 12px;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 25px;
 
-                .page-item:first-child .page-link {
-                    border-radius: 5px;
-                    background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
-                    display: flex;
-                    padding: 6px;
-                    align-items: flex-start;
-                    gap: 10px;
-                    color: #FFF;
-                }
+                    .table-responsive {
+                        width: 100%;
 
-                .page-link.disabled,
-                .disabled>.page-link {
-                    background: rgba(255, 255, 255, 0.06) !important;
-                    color: #74728B !important;
+                        &::-webkit-scrollbar {
+                            display: none;
+                        }
+
+                        table {
+                            width: 100%;
+                            border-collapse: separate;
+                            border-spacing: 0 8px;
+
+                            thead th:first-child {
+                                border-top-left-radius: 14px;
+                                border-bottom-left-radius: 14px;
+                                border: 1px solid rgba(255, 255, 255, 0.15);
+                                border-right: none;
+                            }
+
+                            thead th:last-child {
+                                border-top-right-radius: 14px;
+                                border-bottom-right-radius: 14px;
+                                border: 1px solid rgba(255, 255, 255, 0.15);
+                                border-left: none;
+                            }
+
+                            thead th {
+                                background: rgba(255, 255, 255, 0.10);
+                                padding: 17px 18px;
+                                border: 1px solid rgba(255, 255, 255, 0.15);
+                                border-left: none;
+                                border-right: none;
+                                color: #FFF;
+                                font-feature-settings: 'dlig' on, 'salt' on;
+                                font-size: 14px;
+                                font-style: normal;
+                                font-weight: 400;
+                                line-height: 100%;
+                                vertical-align: middle;
+                            }
+
+                            tbody {
+                                tr td:first-child {
+                                    border-top-left-radius: 14px;
+                                    border-bottom-left-radius: 14px;
+                                    border: 1px solid rgba(255, 255, 255, 0.15);
+                                    border-right: none;
+                                }
+
+                                tr td:last-child {
+                                    border-top-right-radius: 14px;
+                                    border-bottom-right-radius: 14px;
+                                    border: 1px solid rgba(255, 255, 255, 0.15);
+                                    border-left: none;
+                                }
+
+                                .maxwidth {
+                                    max-width: 150px;
+                                }
+
+                                tr td {
+                                    border: 1px solid rgba(255, 255, 255, 0.15);
+                                    padding: 17px 18px;
+                                    background: rgba(255, 255, 255, 0.02);
+                                    border-left: none;
+                                    border-right: none;
+                                    color: #FFF;
+                                    font-feature-settings: 'dlig' on, 'salt' on;
+                                    font-size: 16px;
+                                    font-style: normal;
+                                    font-weight: 500;
+                                    line-height: 100%;
+                                    vertical-align: middle;
+
+                                    .mainpair {
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 8px;
+
+                                        .tokenimages {
+                                            display: flex;
+                                            justify-content: center;
+                                            align-items: center;
+                                            position: relative;
+
+                                            .innertoken {
+                                                width: 24px;
+                                                height: 24px;
+                                                display: flex;
+                                                justify-content: center;
+                                                align-items: center;
+                                                object-fit: cover;
+                                                object-position: center;
+                                                overflow: hidden;
+
+                                                .tokenimg {
+                                                    width: 100%;
+                                                    height: 100%;
+                                                    object-fit: cover;
+                                                    object-position: center;
+                                                }
+                                            }
+
+                                            .energy {
+                                                position: absolute;
+                                                top: 50%;
+                                                left: 50%;
+                                                transform: translate(-50%, -50%);
+                                                width: 13.859px;
+                                                height: 24.947px;
+                                            }
+                                        }
+
+                                        .tokenname {
+                                            color: #FFF;
+                                            text-align: center;
+                                            font-feature-settings: 'dlig' on, 'salt' on;
+                                            font-size: 16px;
+                                            font-style: normal;
+                                            font-weight: 700;
+                                            line-height: 100%;
+                                        }
+
+                                        .innerspan {
+                                            white-space: nowrap;
+                                            border-radius: 35px;
+                                            background: rgba(255, 255, 255, 0.10);
+                                            display: flex;
+                                            padding: 6px 10px;
+                                            justify-content: center;
+                                            align-items: center;
+                                            gap: 6px;
+                                            color: #FFF;
+                                            text-align: center;
+                                            leading-trim: both;
+                                            text-edge: cap;
+                                            font-feature-settings: 'dlig' on, 'salt' on;
+                                            font-size: 12px;
+                                            font-style: normal;
+                                            font-weight: 500;
+                                            line-height: 100%;
+                                            text-transform: uppercase;
+                                        }
+                                    }
+
+                                    .predictionmain {
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 10px;
+
+                                        .predictionimg {
+                                            display: flex;
+                                            width: 18px;
+                                            height: 18px;
+                                            justify-content: center;
+                                            border-radius: 64.286px;
+                                            align-items: center;
+                                        }
+
+                                        .predictionpara {
+                                            text-align: center;
+                                            font-feature-settings: 'dlig' on, 'salt' on;
+                                            font-size: 16px;
+                                            font-style: normal;
+                                            font-weight: 700;
+                                            line-height: 100%;
+                                        }
+                                    }
+
+                                    .upmain {
+                                        .predictionimg {
+                                            background: rgba(112, 232, 82, 0.11);
+                                        }
+
+                                        .predictionpara {
+                                            color: #70E852;
+                                        }
+                                    }
+
+                                    .downmain {
+                                        .predictionimg {
+                                            background: rgba(254, 92, 50, 0.11);
+                                        }
+
+                                        .predictionpara {
+                                            color: #FE5C32;
+                                        }
+                                    }
+
+                                    .resultpara {
+                                        font-feature-settings: 'dlig' on, 'salt' on;
+                                        font-size: 16px;
+                                        font-style: normal;
+                                        font-weight: 500;
+                                        line-height: 100%;
+                                    }
+
+                                    .won {
+                                        color: #70E852;
+                                    }
+
+                                    .lost {
+                                        color: #FE5C32;
+                                    }
+
+                                    .maintime {
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: flex-start;
+                                        gap: 8px;
+
+                                        .timehead {
+                                            color: #FFF;
+                                            text-align: center;
+                                            font-feature-settings: 'dlig' on, 'salt' on;
+                                            font-size: 16px;
+                                            font-style: normal;
+                                            font-weight: 500;
+                                            line-height: 100%;
+                                        }
+
+                                        .timepara {
+                                            color: #74728B;
+                                            font-feature-settings: 'dlig' on, 'salt' on;
+                                            font-size: 14px;
+                                            font-style: normal;
+                                            font-weight: 500;
+                                            line-height: 120%;
+                                        }
+                                    }
+
+                                    .sharebtn {
+                                        display: flex;
+                                        width: 32px;
+                                        height: 32px;
+                                        justify-content: center;
+                                        align-items: center;
+                                        border-radius: 8px;
+                                        background: rgba(255, 255, 255, 0.06);
+                                        border: none;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    .pagination {
+                        background: transparent;
+                        border-radius: 0;
+                        border: none;
+                        outline: none;
+                        box-shadow: none;
+                        padding: 0;
+                        margin: 0;
+
+                        .page-item {
+                            background: transparent;
+                            border-radius: 0;
+                            border: none;
+                            outline: none;
+                            box-shadow: none;
+                            padding: 0;
+                            margin: 0;
+
+                            .page-link {
+                                background: transparent;
+                                border-radius: 0;
+                                border: none;
+                                outline: none;
+                                box-shadow: none;
+                                display: flex;
+                                padding: 6px 11px;
+                                align-items: flex-start;
+                                gap: 10px;
+                                color: #74728B;
+                                font-size: 15px;
+                                font-style: normal;
+                                font-weight: 400;
+                                line-height: 100%;
+                                margin: 0;
+                            }
+                        }
+
+                        .page-link.active,
+                        .active>.page-link {
+                            color: #FFF !important;
+                        }
+
+                        .page-item:last-child .page-link {
+                            border-radius: 5px;
+                            background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
+                            display: flex;
+                            padding: 6px;
+                            align-items: flex-start;
+                            gap: 10px;
+                            color: #FFF;
+                        }
+
+                        .page-item:first-child .page-link {
+                            border-radius: 5px;
+                            background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
+                            display: flex;
+                            padding: 6px;
+                            align-items: flex-start;
+                            gap: 10px;
+                            color: #FFF;
+                        }
+
+                        .page-link.disabled,
+                        .disabled>.page-link {
+                            background: rgba(255, 255, 255, 0.06) !important;
+                            color: #74728B !important;
+                        }
+                    }
                 }
-            }
-        }
             }
         }
     }
