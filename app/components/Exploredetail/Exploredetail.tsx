@@ -7,6 +7,8 @@ import { Tab, Tabs } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import TradingChart from "./TradingChart";
 import CommentSection from "./CommentSection";
+import PlacePredictionModal from "../modals/PlacePredictionModal";
+import TradeForm from "./PlaceTradeComponent";
 
 const Exploredetail: FC = () => {
   const { isOpen: isPositionsOpen, toggle } = usePositions();
@@ -15,6 +17,27 @@ const Exploredetail: FC = () => {
   const handlePageClick = (event: any) => {
     setCurrentPage(event.selected);
   };
+
+   const [showModal, setShowModal] = useState(false)
+
+  const handleOpen = () => setShowModal(true)
+  const handleClose = () => setShowModal(false)
+
+  const [direction, setDirection] = useState<'UP' | 'DOWN'>('UP')
+    const [amount, setAmount] = useState(5)
+  
+    const maxPosition = 5
+    const balance = 500
+    const quickValues = [5, 10, 50, 100, 250]
+  
+    const feeValue = amount * 0.05
+    const effectiveAmount = amount - feeValue
+    const potentialWin = effectiveAmount * 2
+  
+    const handlePlacePrediction = () => {
+      console.log('Prediction placed:', { direction, amount })
+      handleClose()
+    }
   return (
     <>
       <section className="detailmain speedmarket">
@@ -509,9 +532,26 @@ const Exploredetail: FC = () => {
               </span>
             </div>
           </div>
+          <TradeForm
+          direction={direction}
+          setDirection={setDirection}
+          amount={amount}
+          setAmount={setAmount}
+          maxPosition={maxPosition}
+          balance={balance}
+          quickValues={quickValues}
+          feeValue={feeValue}
+          effectiveAmount={effectiveAmount}
+          potentialWin={potentialWin}
+          onPlacePrediction={handlePlacePrediction}
+        />
         </div>
       </section>
       <Footer />
+      <PlacePredictionModal
+        show={showModal}
+        handleClose={handleClose}
+      />
     </>
   );
 };
