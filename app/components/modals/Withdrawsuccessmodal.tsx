@@ -1,7 +1,6 @@
 "use client";
-import React, { useRef, useState } from "react";
-import { Dropdown, Modal } from "react-bootstrap";
-import Icon from "../Icon";
+import React from "react";
+import { Modal } from "react-bootstrap";
 
 interface WithdrawsuccessmodalProps {
   show: boolean;

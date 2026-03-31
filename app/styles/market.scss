@@ -1,6 +1,4 @@
-/* ─────────────────────────────────────────────
-   Keyframe: maintrade slides up + fades in
-───────────────────────────────────────────── */
+
 @keyframes tradeSlideIn {
     from {
         opacity: 0;
@@ -13,12 +11,8 @@
     }
 }
 
-/* ─────────────────────────────────────────────
-   Root app layout
-───────────────────────────────────────────── */
 .app-layout {
     display: grid;
-    /* sidebar column always tracks sidebar's own width (auto) — no grid animation needed */
     grid-template-columns: 1fr auto;
     height: calc(100vh - 153px);
     overflow: hidden;
@@ -32,11 +26,6 @@
     }
 }
 
-/* ─────────────────────────────────────────────
-   MainPositions sidebar — DESKTOP
-   Slides in/out by animating its own width.
-   Grid second column is "auto" so it follows.
-───────────────────────────────────────────── */
 .mainpositions {
     border-left: 1px solid rgba(255, 255, 255, 0.12);
     background: linear-gradient(180deg, #1D2031 0%, #0A0B1D 106.85%);
@@ -47,7 +36,6 @@
     will-change: width;
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-    /* Mobile handle — hidden on desktop */
     .positions-handle {
         display: none;
     }
@@ -63,7 +51,6 @@
         border-left: none;
     }
 
-    /* ── Inner layout ── */
     .positionheader {
         border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         display: flex;
@@ -310,9 +297,6 @@
     }
 }
 
-/* ─────────────────────────────────────────────
-   Desktop toggle button (fixed to right edge)
-───────────────────────────────────────────── */
 .openbtn {
     border-radius: 10px 0 0 10px;
     background: linear-gradient(117deg, #2C2D42 0%, #1B1C31 99.9%);
@@ -362,9 +346,6 @@
     }
 }
 
-/* ─────────────────────────────────────────────
-   Speed market page content
-───────────────────────────────────────────── */
 .speedmarket {
     padding-top: 35px;
     width: 100%;
@@ -806,9 +787,6 @@
     }
 }
 
-/* ─────────────────────────────────────────────
-   Responsive
-───────────────────────────────────────────── */
 @media (max-width: 1540px) {
     .speedmarket .markethead {
         padding: 0 20px;
@@ -841,7 +819,6 @@
 
 @media (max-width: 991px) {
 
-    /* ── Page tweaks ── */
     .speedmarket .markethead {
         font-size: 22px;
     }
@@ -883,29 +860,23 @@
         margin-right: 14px;
     }
 
-    /* ── Hide the desktop side-edge button ── */
     .openbtn {
         display: none;
     }
 
-    /* ── App layout: single column, room at bottom for handle ── */
     .app-layout {
         grid-template-columns: 1fr;
            height: calc(100vh - 100px);
         position: relative;
-        /* Leave space at the bottom so the handle is always visible */
         padding-bottom: 40px;
     }
 
-    /* ── Sidebar: fixed sheet that slides up from the bottom ── */
     .mainpositions {
-        /* Reset desktop sizing */
         width: 100% !important;
         height: auto;
         max-height: 70vh;
         border-left: none;
 
-        /* Fixed to the bottom of the viewport */
         position: fixed;
         bottom: 0;
         left: 0;
@@ -915,28 +886,22 @@
         border-radius: 20px 20px 0 0;
         border-top: 1px solid rgba(255, 255, 255, 0.12);
 
-        /* GPU-accelerated slide — only transform, no width/height animation */
         will-change: transform;
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-        /* Closed: only the handle (40px) peeks above the bottom edge */
         &.hide {
             transform: translateY(calc(100% - 0px));
             pointer-events: auto;
-            /* handle must still be clickable */
             border-left: none;
             opacity: 1;
-            /* override desktop opacity:0 */
             width: 100% !important;
         }
 
-        /* Open: full sheet visible */
         &.show {
             transform: translateY(0);
             width: 100% !important;
         }
 
-        /* ── Mobile handle — shown only on mobile ── */
         .positions-handle {
             display: flex;
             flex-direction: row;
@@ -971,7 +936,6 @@
                 font-weight: 600;
                 line-height: 100%;
                 transform: none;
-                /* override desktop rotation */
                 white-space: nowrap;
             }
 
@@ -980,24 +944,20 @@
                 transition: transform 0.3s ease;
                 transform: rotate(90deg);
 
-                /* points up by default */
                 path {
                     fill: #FFF;
                 }
             }
 
-            /* Arrow flips when open */
             .rotate {
                 transform: rotate(270deg);
             }
         }
 
-        /* Hide the X close button on mobile — handle is the toggle */
         .positionheader .positionbtn {
             display: none;
         }
 
-        /* Table scrolls within the sheet */
         .historytable {
             height: unset;
             max-height: calc(70vh - 40px - 60px - 41px);

@@ -1,6 +1,6 @@
 "use client";
-import React, { useRef, useState } from "react";
-import { Modal, ProgressBar } from "react-bootstrap";
+import React from "react";
+import { Modal } from "react-bootstrap";
 import Icon from "../Icon";
 
 interface SharemarketmodalProps {

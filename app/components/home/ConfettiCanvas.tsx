@@ -1,15 +1,5 @@
 import { useRef, useEffect, useImperativeHandle, forwardRef } from "react";
 
-// ─────────────────────────────────────────────
-//  STEP 1 — ADD YOUR SVG PATHS HERE
-//
-//  Each entry needs:
-//   d      → the path's d="" string (copy from your SVG)
-//   vw, vh → viewBox width & height  (e.g. viewBox="0 0 26 30" → vw:26, vh:30)
-//   color  → stroke or fill color from your SVG
-//   type   → "stroke" for stroke paths, "fill" for filled shapes
-//   sw     → strokeWidth (only required when type is "stroke")
-// ─────────────────────────────────────────────
 type ShapeType = "stroke" | "fill";
 
 interface ShapeDef {
@@ -18,7 +8,7 @@ interface ShapeDef {
   vh: number;
   color: string;
   type: ShapeType;
-  sw?: number; // required when type === "stroke"
+  sw?: number; 
 }
 
 const SHAPE_DEFS: ShapeDef[] = [
@@ -378,9 +368,7 @@ const SHAPE_DEFS: ShapeDef[] = [
     type: "fill",
   },
 ];
-// ─────────────────────────────────────────────
-//  STEP 2 — TUNE ANIMATION SETTINGS (optional)
-// ─────────────────────────────────────────────
+
 interface Config {
   count: number;
   minSize: number;
@@ -403,10 +391,6 @@ const CONFIG: Config = {
   spinSpeed: 14,
 };
 
-// ─────────────────────────────────────────────
-//  TYPES — exported so consuming components
-//  can type the ref correctly
-// ─────────────────────────────────────────────
 export interface ConfettiHandle {
   launch: (originEl: HTMLElement) => void;
 }
@@ -424,14 +408,9 @@ interface Piece {
   scale: number;
 }
 
-// ─────────────────────────────────────────────
-//  COMPONENT — do not edit below this line
-//  unless you want to change core behaviour
-// ─────────────────────────────────────────────
 const ConfettiCanvas = forwardRef<ConfettiHandle>((_, ref) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number | null>(null);
-  // Lazily built on first launch — safe for SSR since it only runs in the browser
   const pathCacheRef = useRef<Path2D[] | null>(null);
 
   useImperativeHandle(ref, () => ({
@@ -442,7 +421,6 @@ const ConfettiCanvas = forwardRef<ConfettiHandle>((_, ref) => {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      // Build Path2D cache once in the browser, reuse on subsequent launches
       if (!pathCacheRef.current) {
         pathCacheRef.current = SHAPE_DEFS.map((s) => new Path2D(s.d));
       }

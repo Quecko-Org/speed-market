@@ -9,19 +9,12 @@ const MainPositions: FC = () => {
   return (
     <aside className={`mainpositions ${isOpen ? "show" : "hide"}`}>
 
-      {/*
-        Mobile-only handle — sits at the very top of the sidebar.
-        When the sidebar is closed it's the only thing peeking above
-        the bottom edge. Tapping it toggles the sidebar.
-        Hidden on desktop via CSS.
-      */}
       <button className="positions-handle" onClick={toggle}>
         <span className="mainnumber">13</span>
         <p className="openpara">My Positions</p>
         <Icon name="openarrow" className={isOpen ? "rotate" : ""} />
       </button>
 
-      {/* ── Sidebar body ── */}
       <div className="positionheader">
         <div className="headerleft">
           <h3 className="mainheading">Open Positions (13)</h3>

@@ -14,6 +14,12 @@
   }
 }
 
+.modal-backdrop {
+  background: rgba(0, 0, 0, 0.60) !important;
+  backdrop-filter: blur(10px) !important;
+  opacity: 1 !important;
+}
+
 .profilemodal {
   .modal-dialog {
     max-width: 468px;
@@ -36,7 +42,6 @@
           font-style: normal;
           font-weight: 500;
           line-height: 110%;
-          /* 17.6px */
           margin: 0px;
           padding: 0px;
         }
@@ -67,7 +72,6 @@
           .box {
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.15);
-            //   background: #fff;
             padding: 20px;
             width: 100%;
             position: relative;
@@ -148,7 +152,6 @@
                         font-style: normal;
                         font-weight: 500;
                         line-height: 120%;
-                        /* 24px */
                         margin-bottom: 5px;
                       }
 
@@ -174,7 +177,6 @@
                         font-style: normal;
                         font-weight: 500;
                         line-height: 100%;
-                        /* 14px */
                         text-transform: uppercase;
                       }
                     }
@@ -188,7 +190,6 @@
                     font-style: normal;
                     font-weight: 400;
                     line-height: 110%;
-                    /* 13.2px */
                   }
 
                   .textparent {
@@ -203,7 +204,6 @@
                       font-style: normal;
                       font-weight: 700;
                       line-height: 100%;
-                      /* 36px */
                       text-transform: capitalize;
                     }
 
@@ -225,7 +225,6 @@
                       font-style: normal;
                       font-weight: 500;
                       line-height: 100%;
-                      /* 12px */
                       text-transform: uppercase;
                     }
                   }
@@ -294,7 +293,6 @@
                     font-style: normal;
                     font-weight: 400;
                     line-height: 110%;
-                    /* 13.2px */
                   }
 
                   h4 {
@@ -303,7 +301,6 @@
                     font-style: normal;
                     font-weight: 700;
                     line-height: 100%;
-                    /* 14px */
                   }
 
                   .greenpara {
@@ -312,7 +309,6 @@
                     font-style: normal;
                     font-weight: 700;
                     line-height: 100%;
-                    /* 16px */
                   }
                 }
 
@@ -367,7 +363,6 @@
                     padding: 8px 10px;
                     max-width: 91px;
                     width: 100%;
-                    // height: 30px;
 
                     .tokenimages {
                       position: relative;
@@ -586,7 +581,6 @@
                   font-style: normal;
                   font-weight: 500;
                   line-height: 100%;
-                  /* 12px */
                   border: none;
                 }
 
@@ -601,7 +595,6 @@
                   font-style: normal;
                   font-weight: 500;
                   line-height: 100%;
-                  /* 12px */
                   border: none;
 
                   &.active {
@@ -622,7 +615,6 @@
               font-style: normal;
               font-weight: 400;
               line-height: 100%;
-              /* 12px */
               margin-bottom: 8px;
             }
 
@@ -648,11 +640,10 @@
                 font-style: normal;
                 font-weight: 400;
                 line-height: 100%;
-                /* 14px */
               }
 
               &:focus {
-                border: 1px solid #ec8711; // ✅ tumhara required color
+                border: 1px solid #ec8711;
               }
             }
           }
@@ -677,7 +668,6 @@
               font-style: normal;
               font-weight: 500;
               line-height: 100%;
-              /* 14px */
               text-transform: uppercase;
               border: none;
             }
@@ -730,13 +720,16 @@
           font-style: normal;
           font-weight: 500;
           line-height: 110%;
-          /* 17.6px */
           margin: 0px;
           padding: 0px;
           display: flex;
           align-items: center;
           justify-content: flex-start;
           gap: 10px;
+
+          .cursorpointer {
+            cursor: pointer;
+          }
         }
 
         .btn-close {
@@ -813,15 +806,15 @@
                   align-items: center;
                   object-fit: cover;
                   object-position: center;
-                            border-radius: 100px;
+                  border-radius: 100px;
                 }
 
-                .chainimg{
+                .chainimg {
                   position: absolute;
                   width: 10.5px;
-height: 10.5px;
-bottom: -3px;
-right: -3px;
+                  height: 10.5px;
+                  bottom: -3px;
+                  right: -3px;
                 }
               }
 
@@ -847,7 +840,6 @@ right: -3px;
                   font-style: normal;
                   font-weight: 500;
                   line-height: 100%;
-                  /* 14px */
                 }
               }
             }
@@ -870,7 +862,6 @@ right: -3px;
                 font-style: normal;
                 font-weight: 500;
                 line-height: 120%;
-                /* 16.8px */
               }
 
               .dropdown {
@@ -883,7 +874,7 @@ right: -3px;
                 &.show {
                   .btn {
                     svg {
-                      transform: rotate(180deg); // arrow up
+                      transform: rotate(180deg);
                     }
                   }
                 }
@@ -922,7 +913,8 @@ right: -3px;
                     border: 1px solid #ec8711;
                     background: #16192a;
                   }
-                  &::after{
+
+                  &::after {
                     display: none;
                   }
                 }
@@ -993,7 +985,6 @@ right: -3px;
                   font-style: normal;
                   font-weight: 400;
                   line-height: 120%;
-                  /* 19.2px */
                 }
               }
 
@@ -1019,7 +1010,6 @@ right: -3px;
                   font-weight: 500;
                   line-height: 100%;
 
-                  /* 16px */
                   span {
                     color: #5f5d72;
                     font-feature-settings: "salt" on;
@@ -1050,7 +1040,6 @@ right: -3px;
               font-style: normal;
               font-weight: 400;
               line-height: 120%;
-              /* 16.8px */
             }
           }
 
@@ -1112,7 +1101,6 @@ right: -3px;
                 font-style: normal;
                 font-weight: 500;
                 line-height: 120%;
-                /* 16.8px */
               }
             }
 
@@ -1169,7 +1157,6 @@ right: -3px;
               font-style: normal;
               font-weight: 400;
               line-height: 120%;
-              /* 14.4px */
             }
           }
 
@@ -1246,9 +1233,9 @@ right: -3px;
             font-style: normal;
             font-weight: 500;
             line-height: 100%;
-            /* 14px */
             text-transform: uppercase;
             margin-top: 20px;
+            border: none;
 
             &.dull {
               border-radius: 14px;
@@ -1265,7 +1252,6 @@ right: -3px;
               font-style: normal;
               font-weight: 500;
               line-height: 100%;
-              /* 14px */
               text-transform: uppercase;
               pointer-events: none;
             }
@@ -1454,7 +1440,7 @@ right: -3px;
                   &.show {
                     .btn {
                       svg {
-                        transform: rotate(180deg); // arrow up
+                        transform: rotate(180deg);
                       }
                     }
                   }
@@ -1638,7 +1624,7 @@ right: -3px;
                 font-style: normal;
                 font-weight: 400;
                 line-height: 100%;
-                /* 12px */
+
               }
 
               input {
@@ -1655,7 +1641,7 @@ right: -3px;
                 font-style: normal;
                 font-weight: 400;
                 line-height: 100%;
-                /* 12px */
+
                 width: 100%;
                 border: none;
 
@@ -1711,7 +1697,7 @@ right: -3px;
               font-style: normal;
               font-weight: 500;
               line-height: 100%;
-              /* 16px */
+
               border: none;
 
               &.dull {
@@ -1770,7 +1756,7 @@ right: -3px;
             font-style: normal;
             font-weight: 500;
             line-height: 100%;
-            /* 20px */
+
           }
 
           .claimpara {
@@ -1823,7 +1809,7 @@ right: -3px;
                 font-style: normal;
                 font-weight: 400;
                 line-height: 130%;
-                /* 18.2px */
+
               }
             }
 
@@ -1837,7 +1823,6 @@ right: -3px;
 
                 .progress-bar {
                   background: #70e852;
-                  // border-radius: 50px;
                 }
               }
             }
@@ -1846,4 +1831,85 @@ right: -3px;
       }
     }
   }
+}
+
+@media(max-width:991px) {
+  .profilemodal .modal-dialog {
+    margin: 0;
+    align-items: flex-end;
+    height: 100%;
+    min-height: 100%;
+
+    .modal-content {
+      border-radius: 20px 20px 0 0;
+    }
+  }
+
+  .claimmodal .modal-dialog {
+    margin: 0;
+    align-items: flex-end;
+    height: 100%;
+    min-height: 100%;
+
+    .modal-content {
+      border-radius: 20px 20px 0 0;
+    }
+  }
+
+  .deposit .modal-dialog {
+    margin: 0;
+    align-items: flex-end;
+    height: 100%;
+    min-height: 100%;
+
+    .modal-content {
+      border-radius: 20px 20px 0 0;
+    }
+  }
+    .withdraw .modal-dialog {
+    margin: 0;
+    align-items: flex-end;
+    height: 100%;
+    min-height: 100%;
+
+    .modal-content {
+      border-radius: 20px 20px 0 0;
+    }
+  }
+}
+@media(max-width:430px) {
+.deposit .modal-dialog .modal-content .modal-body .depositcontent .firstbox .left p{
+  font-size: 12px;
+}
+.deposit .modal-dialog .modal-content .modal-body .depositcontent .firstbox .right .usdtpara{
+   font-size: 12px;
+}
+.deposit .modal-dialog .modal-content .modal-body .depositcontent .qrtextbottom .left h6{
+     font-size: 12px;
+}
+.deposit .modal-dialog .modal-content .modal-body .depositcontent .qrtextbottom .right p{
+  font-size: 9px;
+}
+.profilemodal .modal-dialog .modal-content .modal-body .claimedsucess .box .maintextmodal .speedtext .speedright .mainimg{
+  width: 100%;
+  height: 100%;
+}
+}
+@media(max-width:380px) {
+  .profilemodal .modal-dialog .modal-content .modal-body .claimedsucess .sharebox {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .deposit .modal-dialog .modal-content .modal-body .depositcontent .firstbox .left p{
+  font-size: 11px;
+}
+.deposit .modal-dialog .modal-content .modal-body .depositcontent .firstbox .right .usdtpara{
+   font-size: 11px;
+}
+.deposit .modal-dialog .modal-content .modal-body .depositcontent .qrtextbottom .left h6{
+     font-size: 11px;
+}
+.deposit .modal-dialog .modal-content .modal-body .depositcontent .qrtextbottom .right p{
+  font-size: 8px;
+}
 }

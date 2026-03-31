@@ -3,14 +3,9 @@ import React, { FC, useState } from "react";
 import { Dropdown, Offcanvas } from "react-bootstrap";
 import Icon from "../Icon";
 import Createprofilemodal from "../modals/Createprofilemodal";
-import Shareresultsmodal from "../modals/Shareresultsmodal";
-import { showToast } from "@/app/hooks/showToast";
-import Claimprocessedmodal from "../modals/Claimprocessedmodal";
-import Claimedsuccessfullymodal from "../modals/Claimedsuccessfullymodal";
-import Sharemarketmodal from "../modals/Sharemarketmodal";
-import Sharebetmodal from "../modals/Sharebetmodal";
 import Withdrawmodal from "../modals/Withdrawmodal";
 import Depositmodal from "../modals/Depositmodal";
+import Link from "next/link";
 
 type ModalKeys =
   | "createprofile"
@@ -31,9 +26,9 @@ const Header: FC = () => {
     Claimprocessed: false,
     Claimsuccessfully: false,
     Sharemarket: false,
-     Sharebet: false,
-     withdraw: false,
-     deposit: false,
+    Sharebet: false,
+    withdraw: false,
+    deposit: false,
   });
   const [open, setOpen] = useState(false);
 
@@ -41,6 +36,11 @@ const Header: FC = () => {
 
   const handleCloseNav = () => setShowNav(false);
   const handleShowNav = () => setShowNav(true);
+
+  const [showConnect, setShowConnect] = useState(false);
+
+  const handleCloseConnect = () => setShowConnect(false);
+  const handleShowConnect = () => setShowConnect(true);
 
   const openModal = (name: ModalKeys) => {
     setModals((prev) => ({ ...prev, [name]: true }));
@@ -58,7 +58,15 @@ const Header: FC = () => {
               <img src="/logo.svg" alt="logoimg" className="logoimg" />
             </a>
             <div className="navbtns">
-              <button className="yellowbtn">Deposit</button>
+              {/* <button
+                onClick={() => openModal("deposit")}
+                className="yellowbtn"
+              >
+                Deposit
+              </button> */}
+              <button onClick={handleShowConnect} className="yellowbtnmbl d-none">
+                Connect Wallet
+              </button>
               <Dropdown className="connectbtn" align="end">
                 <Dropdown.Toggle
                   variant="success"
@@ -83,7 +91,7 @@ const Header: FC = () => {
                       <p className="walletpara">MetaMask</p>
                     </div>
                     <div
-                      onClick={() => openModal("deposit")}
+                      onClick={() => openModal("createprofile")}
                       className="innerwallet"
                     >
                       <img
@@ -130,7 +138,7 @@ const Header: FC = () => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  <div className="lowerdrop">
+                  <Link href="/profile" className="lowerdrop">
                     <div className="lowerlink">
                       <div className="linkimg">
                         <Icon name="profilelink" className="profilelink" />
@@ -144,7 +152,7 @@ const Header: FC = () => {
                       </div>
                       <p className="linkpara">Logout</p>
                     </div>
-                  </div>
+                  </Link>
                 </Dropdown.Menu>
               </Dropdown>
               <button onClick={handleShowNav} className="menubtn d-none">
@@ -162,12 +170,12 @@ const Header: FC = () => {
           </Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          <div className="lowerlink">
+          <Link href="/profile" className="lowerlink">
             <div className="linkimg">
               <Icon name="profilelink" className="profilelink" />
             </div>
             <p className="linkpara">Profile</p>
-          </div>
+          </Link>
         </Offcanvas.Body>
         <div className="bottombtn">
           <button className="logoutbtn">
@@ -179,35 +187,64 @@ const Header: FC = () => {
         </div>
       </Offcanvas>
 
+      <Offcanvas
+        show={showConnect}
+        onHide={handleCloseConnect}
+        className="mobilenav"
+      >
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>
+            <img src="/logo.svg" alt="logoimg" className="logoimg" />
+          </Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+            <div className="mainwallets">
+                    <div
+                      onClick={() => openModal("createprofile")}
+                      className="innerwallet"
+                    >
+                      <img
+                        src="/importantassets/metamask.svg"
+                        alt="walletimg"
+                        className="walletimg"
+                      />
+                      <p className="walletpara">MetaMask</p>
+                    </div>
+                    <div
+                      onClick={() => openModal("createprofile")}
+                      className="innerwallet"
+                    >
+                      <img
+                        src="/importantassets/walletconnect.svg"
+                        alt="walletimg"
+                        className="walletimg"
+                      />
+                      <p className="walletpara">WalletConnect</p>
+                    </div>
+                    <div
+                      onClick={() => openModal("createprofile")}
+                      className="innerwallet"
+                    >
+                      <img
+                        src="/importantassets/coinbase.svg"
+                        alt="walletimg"
+                        className="walletimg"
+                      />
+                      <p className="walletpara">Coinbase Wallet</p>
+                    </div>
+                  </div>
+        </Offcanvas.Body>
+      </Offcanvas>
+
       <Createprofilemodal
         show={modals.createprofile}
         onHide={() => closeModal("createprofile")}
       />
-      <Shareresultsmodal
-        show={modals.Shareresults}
-        onHide={() => closeModal("Shareresults")}
-      />
-      <Claimprocessedmodal
-        show={modals.Claimprocessed}
-        onHide={() => closeModal("Claimprocessed")}
-      />
-            <Claimedsuccessfullymodal
-        show={modals.Claimsuccessfully}
-        onHide={() => closeModal("Claimsuccessfully")}
-      />
-                  <Sharemarketmodal
-        show={modals.Sharemarket}
-        onHide={() => closeModal("Sharemarket")}
-      />
-                       <Sharebetmodal
-        show={modals.Sharebet}
-        onHide={() => closeModal("Sharebet")}
-      />
-                           <Withdrawmodal
+      <Withdrawmodal
         show={modals.withdraw}
         onHide={() => closeModal("withdraw")}
       />
-                            <Depositmodal
+      <Depositmodal
         show={modals.deposit}
         onHide={() => closeModal("deposit")}
       />

@@ -7,7 +7,6 @@ const ProgressSlider: React.FC = () => {
   const [value, setValue] = useState(10);
   const [isDragging, setIsDragging] = useState(false);
 
-  // 🔥 Core logic
   const updateValue = (clientX: number) => {
     if (!trackRef.current) return;
 
@@ -18,7 +17,6 @@ const ProgressSlider: React.FC = () => {
     setValue(newValue);
   };
 
-  // 🖱 Mouse Events
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     updateValue(e.clientX);
@@ -33,7 +31,6 @@ const ProgressSlider: React.FC = () => {
     setIsDragging(false);
   };
 
-  // 📱 Touch Events
   const handleTouchStart = (e: React.TouchEvent) => {
     setIsDragging(true);
     updateValue(e.touches[0].clientX);
@@ -48,13 +45,10 @@ const ProgressSlider: React.FC = () => {
     setIsDragging(false);
   };
 
-  // 🎯 Attach global listeners
   useEffect(() => {
-    // Mouse
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseup", handleMouseUp);
 
-    // Touch
     window.addEventListener("touchmove", handleTouchMove);
     window.addEventListener("touchend", handleTouchEnd);
 
@@ -75,7 +69,6 @@ const ProgressSlider: React.FC = () => {
         onTouchStart={handleTouchStart}
         className="mainslider"
       >
-        {/* Progress Fill */}
         <div
           style={{
             width: `${value}%`,
@@ -83,7 +76,6 @@ const ProgressSlider: React.FC = () => {
           className="innerslider"
         />
 
-        {/* Handle */}
         <div
           style={{
             left: `${value}%`,

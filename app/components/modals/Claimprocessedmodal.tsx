@@ -1,7 +1,6 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React from "react";
 import { Modal, ProgressBar } from "react-bootstrap";
-import Icon from "../Icon";
 
 interface ClaimprocessedmodalProps {
   show: boolean;

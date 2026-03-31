@@ -51,12 +51,10 @@ const MARKETS = [
 ];
 
 const Market: FC = () => {
-    // Type the ref with ConfettiHandle — gives you autocomplete on .launch()
   const confettiRef = useRef<ConfettiHandle>(null);
  
   function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
     confettiRef.current?.launch(e.currentTarget);
-    // add your own logic here too, e.g. navigate, submit, etc.
   }
   const [activeTrade, setActiveTrade] = useState<ActiveTrade | null>(null);
   const { isOpen: isPositionsOpen, toggle } = usePositions();

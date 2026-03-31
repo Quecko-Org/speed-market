@@ -86,6 +86,7 @@
                             align-items: center;
                             gap: 13px;
                             width: 100%;
+                            cursor: pointer;
 
                             .walletpara {
                                 color: #FFF;
@@ -250,6 +251,32 @@
     .offcanvas-body {
         padding: 14px;
 
+              .mainwallets {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 4px;
+
+                        .innerwallet {
+                            border-radius: 10px;
+                            background: #16192A;
+                            display: flex;
+                    padding: 18px 12px;
+                            align-items: center;
+                            gap: 13px;
+                            width: 100%;
+                            cursor: pointer;
+
+                            .walletpara {
+                                color: #FFF;
+                                font-size: 14px;
+                                font-style: normal;
+                                font-weight: 500;
+                                line-height: 100%;
+                            }
+                        }
+                    }
+
         .lowerlink {
             border-radius: 10px;
             background: #16192A;
@@ -338,6 +365,23 @@
             align-items: center;
             height: 44px;
         }
+
+             .yellowbtnmbl {
+                display: flex !important;
+                padding: 14px 22px;
+                justify-content: center;
+                align-items: center;
+                border-radius: 14px;
+                background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
+                color: #FFF;
+                text-align: center;
+                font-feature-settings: 'dlig' on, 'salt' on;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 100%;
+                border: none;
+            }
     }
 
     .mainheader .innerheader .mainlogo .logoimg {
