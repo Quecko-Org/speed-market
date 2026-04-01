@@ -35,6 +35,12 @@ body {
     color: #FFF;
     overflow: hidden;
 }
+@media (max-width: 991px) {
+    body{
+        height: 100%;
+        overflow: auto;
+    }
+}
 
 a {
     text-decoration: none !important;

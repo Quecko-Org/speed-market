@@ -4,6 +4,7 @@ import Icon from "../Icon";
 import ProgressSlider from "./ProgressSlider";
 import { usePositions } from "../positions/PositionsContext";
 import ConfettiCanvas, { ConfettiHandle } from "./ConfettiCanvas";
+import Link from "next/link";
 
 interface ActiveTrade {
   marketIndex: number;
@@ -114,9 +115,10 @@ const Market: FC = () => {
               const direction = getDirection(marketIndex, cardIndex);
 
               return (
-                <div
+                <Link
                   key={cardIndex}
                   className={`marketcard${tradeOpen ? " card--trade-open" : ""}`}
+                  href={'/exploredetail'}
                 >
                   {card.isLive && (
                     <div className="cardlive">
@@ -141,14 +143,22 @@ const Market: FC = () => {
                   <div className="cardbtns">
                     <button
                       className={`upbtn${direction === "UP" ? " btn--active" : ""}`}
-                      onClick={() => handleDirectionClick(marketIndex, cardIndex, "UP")}
+                    onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleDirectionClick(marketIndex, cardIndex, "UP");
+  }}
                     >
                       <span className="innerbtn"><Icon name="up" className="up" /></span>
                       UP
                     </button>
                     <button
                       className={`downbtn${direction === "DOWN" ? " btn--active" : ""}`}
-                      onClick={() => handleDirectionClick(marketIndex, cardIndex, "DOWN")}
+       onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleDirectionClick(marketIndex, cardIndex, "DOWN");
+  }}
                     >
                       <span className="innerbtn"><Icon name="down" className="down" /></span>
                       DOWN
@@ -164,7 +174,11 @@ const Market: FC = () => {
                           </div>
                           <h5 className="tokenpara">{card.pair}</h5>
                         </div>
-                        <button className="closebtn" onClick={handleClose}>
+                        <button className="closebtn"   onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleClose();
+  }}>
                           <Icon name="close" />
                         </button>
                       </div>
@@ -187,13 +201,17 @@ const Market: FC = () => {
 
                       <ProgressSlider />
 
-                      <button className={`tradebtn ${direction === "UP" ? "upbtn" : "downbtn"}`} onClick={handleClick}>
+                      <button className={`tradebtn ${direction === "UP" ? "upbtn" : "downbtn"}`}  onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleClick(e);
+  }}>
                         {direction}
                         <span className="winpara">Potential Win {card.potentialWin}</span>
                       </button>
                     </div>
                   )}
-                </div>
+                </Link>
               );
             })}
           </div>

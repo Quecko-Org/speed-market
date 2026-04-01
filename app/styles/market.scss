@@ -1,4 +1,3 @@
-
 @keyframes tradeSlideIn {
     from {
         opacity: 0;
@@ -20,14 +19,18 @@
     .app-main {
         overflow: auto;
         height: 100%;
-        &::-webkit-scrollbar{
+
+        &::-webkit-scrollbar {
             display: none;
         }
     }
 }
-.explore-layout{
-        height: calc(100vh - 93px);
+
+.explore-layout {
+    height: calc(100vh - 93px);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
+
 .mainpositions {
     border-left: 1px solid rgba(255, 255, 255, 0.12);
     background: linear-gradient(180deg, #1D2031 0%, #0A0B1D 106.85%);
@@ -151,7 +154,8 @@
     .historytable {
         overflow: auto;
         height: 100%;
-             &::-webkit-scrollbar{
+
+        &::-webkit-scrollbar {
             display: none;
         }
 
@@ -820,6 +824,11 @@
 }
 
 @media (max-width: 991px) {
+    .app-layout {
+        height: 100%;
+        overflow: hidden;
+        border: none !important;
+    }
 
     .speedmarket .markethead {
         font-size: 22px;
@@ -868,9 +877,9 @@
 
     .app-layout {
         grid-template-columns: 1fr;
-           height: calc(100vh - 100px);
+        height: 100%;
         position: relative;
-        padding-bottom: 40px;
+        padding-bottom: 0;
     }
 
     .mainpositions {
@@ -902,6 +911,10 @@
         &.show {
             transform: translateY(0);
             width: 100% !important;
+
+            .positions-handle {
+                top: -28px;
+            }
         }
 
         .positions-handle {
@@ -965,11 +978,25 @@
             max-height: calc(70vh - 40px - 60px - 41px);
         }
     }
-}
 
-@media (max-width: 400px) {
-    .speedmarket .innermarket .mainmarketcards .marketcard {
-        min-width: 300px;
-        max-width: 300px;
+    .explore-layout {
+        .positions-handle {
+            top: -132px !important;
+        }
+
+        .mainpositions {
+            &.show {
+                .positions-handle {
+                    top: -28px !important;
+                }
+            }
+        }
     }
 }
+
+    @media (max-width: 400px) {
+        .speedmarket .innermarket .mainmarketcards .marketcard {
+            min-width: 300px;
+            max-width: 300px;
+        }
+    }

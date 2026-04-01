@@ -665,6 +665,10 @@
 }
 
 @media(max-width:991px) {
+     .profilesettings {
+        height: 100%;
+        overflow: hidden;
+     }
     .profilesettings .mainprofile .upperprofile {
         display: flex;
         flex-direction: column-reverse;

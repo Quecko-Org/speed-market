@@ -4,12 +4,16 @@ import Icon from "../Icon";
 import { usePositions } from "./PositionsContext";
 
 const MainPositions: FC = () => {
-  const { isOpen, close, toggle } = usePositions();
+  const { isOpen, toggle, close, activeTab } = usePositions();
 
   return (
     <aside className={`mainpositions ${isOpen ? "show" : "hide"}`}>
 
-      <button className="positions-handle" onClick={toggle}>
+      <button   className={`positions-handle ${
+    activeTab === "activity" || activeTab === "comments"
+      ? "active-style"
+      : ""
+  }`} onClick={toggle}>
         <span className="mainnumber">13</span>
         <p className="openpara">My Positions</p>
         <Icon name="openarrow" className={isOpen ? "rotate" : ""} />
