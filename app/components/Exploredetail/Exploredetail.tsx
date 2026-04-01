@@ -13,6 +13,7 @@ import Marketinfo from "./Marketinfo";
 import Positiontable from "./Positiontable";
 import Activity from "./Activity";
 import History from "./History";
+import Sharemarket from "./Sharemarket";
 
 const Exploredetail: FC = () => {
   const { activeTab, setActiveTab } = usePositions();
@@ -63,29 +64,7 @@ const Exploredetail: FC = () => {
                   <TradingChart />
                 </div>
                 <Positiontable />
-                <div className="sharemain">
-                  <p className="sharepara">SHARE</p>
-                  <div className="iconsmain">
-                    <span className="innericon">
-                      <Icon name="x" />
-                    </span>
-                    <span className="innericon">
-                      <Icon name="facebook" />
-                    </span>
-                    <span className="innericon">
-                      <Icon name="telegram" />
-                    </span>
-                    <span className="innericon">
-                      <Icon name="whatsapp" />
-                    </span>
-                    <span className="innericon">
-                      <Icon name="mail" />
-                    </span>
-                    <span className="innericon">
-                      <Icon name="link" />
-                    </span>
-                  </div>
-                </div>
+               <Sharemarket />
                 <Marketinfo />
                 <div className="placemain d-none">
                   <button
@@ -147,29 +126,7 @@ const Exploredetail: FC = () => {
           </div>
         </div>
         <div className="detailright">
-          <div className="sharemain">
-            <p className="sharepara">SHARE</p>
-            <div className="iconsmain">
-              <span className="innericon">
-                <Icon name="x" />
-              </span>
-              <span className="innericon">
-                <Icon name="facebook" />
-              </span>
-              <span className="innericon">
-                <Icon name="telegram" />
-              </span>
-              <span className="innericon">
-                <Icon name="whatsapp" />
-              </span>
-              <span className="innericon">
-                <Icon name="mail" />
-              </span>
-              <span className="innericon">
-                <Icon name="link" />
-              </span>
-            </div>
-          </div>
+     <Sharemarket />
           <TradeForm
             direction={direction}
             setDirection={setDirection}

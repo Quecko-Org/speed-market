@@ -19,10 +19,46 @@ const MARKETS = [
     icon: "timer",
     description: "Popular choice — Balance speed and strategy",
     cards: [
-      { pair: "ETH/USDT",  price: "$3,198.89",  baseToken: "eth",  quoteToken: "usdt", balance: "500 USDT", balanceToken: "usdt", potentialWin: "$10.20", isLive: true  },
-      { pair: "BTC/USDT",  price: "$67,432.10", baseToken: "btc",  quoteToken: "usdt", balance: "500 USDT", balanceToken: "usdt", potentialWin: "$18.50", isLive: false },
-      { pair: "SOL/USDT",  price: "$182.44",    baseToken: "sol",  quoteToken: "usdt", balance: "500 USDT", balanceToken: "usdt", potentialWin: "$9.80",  isLive: true  },
-      { pair: "EUR/USDT",  price: "$594.20",    baseToken: "euro", quoteToken: "usdt", balance: "500 USDT", balanceToken: "usdt", potentialWin: "$12.40", isLive: false },
+      {
+        pair: "ETH/USDT",
+        price: "$3,198.89",
+        baseToken: "eth",
+        quoteToken: "usdt",
+        balance: "500 USDT",
+        balanceToken: "usdt",
+        potentialWin: "$10.20",
+        isLive: true,
+      },
+      {
+        pair: "BTC/USDT",
+        price: "$67,432.10",
+        baseToken: "btc",
+        quoteToken: "usdt",
+        balance: "500 USDT",
+        balanceToken: "usdt",
+        potentialWin: "$18.50",
+        isLive: false,
+      },
+      {
+        pair: "SOL/USDT",
+        price: "$182.44",
+        baseToken: "sol",
+        quoteToken: "usdt",
+        balance: "500 USDT",
+        balanceToken: "usdt",
+        potentialWin: "$9.80",
+        isLive: true,
+      },
+      {
+        pair: "EUR/USDT",
+        price: "$594.20",
+        baseToken: "euro",
+        quoteToken: "usdt",
+        balance: "500 USDT",
+        balanceToken: "usdt",
+        potentialWin: "$12.40",
+        isLive: false,
+      },
     ],
   },
   {
@@ -31,10 +67,46 @@ const MARKETS = [
     icon: "timer",
     description: "Extended trading — More time to analyze",
     cards: [
-      { pair: "SOL/USDT",  price: "$182.44",    baseToken: "sol",  quoteToken: "usdt", balance: "500 USDT", balanceToken: "usdt", potentialWin: "$9.80",  isLive: true  },
-      { pair: "ETH/USDT",  price: "$3,198.89",  baseToken: "eth",  quoteToken: "usdt", balance: "500 USDT", balanceToken: "usdt", potentialWin: "$10.20", isLive: true  },
-      { pair: "BTC/USDT",  price: "$67,432.10", baseToken: "btc",  quoteToken: "usdt", balance: "500 USDT", balanceToken: "usdt", potentialWin: "$18.50", isLive: false },
-      { pair: "EUR/USDT",  price: "$594.20",    baseToken: "euro", quoteToken: "usdt", balance: "500 USDT", balanceToken: "usdt", potentialWin: "$12.40", isLive: false },
+      {
+        pair: "SOL/USDT",
+        price: "$182.44",
+        baseToken: "sol",
+        quoteToken: "usdt",
+        balance: "500 USDT",
+        balanceToken: "usdt",
+        potentialWin: "$9.80",
+        isLive: true,
+      },
+      {
+        pair: "ETH/USDT",
+        price: "$3,198.89",
+        baseToken: "eth",
+        quoteToken: "usdt",
+        balance: "500 USDT",
+        balanceToken: "usdt",
+        potentialWin: "$10.20",
+        isLive: true,
+      },
+      {
+        pair: "BTC/USDT",
+        price: "$67,432.10",
+        baseToken: "btc",
+        quoteToken: "usdt",
+        balance: "500 USDT",
+        balanceToken: "usdt",
+        potentialWin: "$18.50",
+        isLive: false,
+      },
+      {
+        pair: "EUR/USDT",
+        price: "$594.20",
+        baseToken: "euro",
+        quoteToken: "usdt",
+        balance: "500 USDT",
+        balanceToken: "usdt",
+        potentialWin: "$12.40",
+        isLive: false,
+      },
     ],
   },
   {
@@ -43,24 +115,64 @@ const MARKETS = [
     icon: "timer",
     description: "Maximum duration — For the pros",
     cards: [
-      { pair: "SOL/USDT",  price: "$182.44",    baseToken: "sol",  quoteToken: "usdt", balance: "500 USDT", balanceToken: "usdt", potentialWin: "$9.80",  isLive: true  },
-      { pair: "EUR/USDT",  price: "$594.20",    baseToken: "euro", quoteToken: "usdt", balance: "500 USDT", balanceToken: "usdt", potentialWin: "$12.40", isLive: false },
-      { pair: "ETH/USDT",  price: "$3,198.89",  baseToken: "eth",  quoteToken: "usdt", balance: "500 USDT", balanceToken: "usdt", potentialWin: "$10.20", isLive: true  },
-      { pair: "BTC/USDT",  price: "$67,432.10", baseToken: "btc",  quoteToken: "usdt", balance: "500 USDT", balanceToken: "usdt", potentialWin: "$18.50", isLive: false },
+      {
+        pair: "SOL/USDT",
+        price: "$182.44",
+        baseToken: "sol",
+        quoteToken: "usdt",
+        balance: "500 USDT",
+        balanceToken: "usdt",
+        potentialWin: "$9.80",
+        isLive: true,
+      },
+      {
+        pair: "EUR/USDT",
+        price: "$594.20",
+        baseToken: "euro",
+        quoteToken: "usdt",
+        balance: "500 USDT",
+        balanceToken: "usdt",
+        potentialWin: "$12.40",
+        isLive: false,
+      },
+      {
+        pair: "ETH/USDT",
+        price: "$3,198.89",
+        baseToken: "eth",
+        quoteToken: "usdt",
+        balance: "500 USDT",
+        balanceToken: "usdt",
+        potentialWin: "$10.20",
+        isLive: true,
+      },
+      {
+        pair: "BTC/USDT",
+        price: "$67,432.10",
+        baseToken: "btc",
+        quoteToken: "usdt",
+        balance: "500 USDT",
+        balanceToken: "usdt",
+        potentialWin: "$18.50",
+        isLive: false,
+      },
     ],
   },
 ];
 
 const Market: FC = () => {
   const confettiRef = useRef<ConfettiHandle>(null);
- 
+
   function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
     confettiRef.current?.launch(e.currentTarget);
   }
   const [activeTrade, setActiveTrade] = useState<ActiveTrade | null>(null);
   const { isOpen: isPositionsOpen, toggle } = usePositions();
 
-  const handleDirectionClick = (marketIndex: number, cardIndex: number, direction: "UP" | "DOWN") => {
+  const handleDirectionClick = (
+    marketIndex: number,
+    cardIndex: number,
+    direction: "UP" | "DOWN",
+  ) => {
     if (
       activeTrade?.marketIndex === marketIndex &&
       activeTrade?.cardIndex === cardIndex &&
@@ -75,9 +187,13 @@ const Market: FC = () => {
   const handleClose = () => setActiveTrade(null);
 
   const isTradeOpen = (marketIndex: number, cardIndex: number) =>
-    activeTrade?.marketIndex === marketIndex && activeTrade?.cardIndex === cardIndex;
+    activeTrade?.marketIndex === marketIndex &&
+    activeTrade?.cardIndex === cardIndex;
 
-  const getDirection = (marketIndex: number, cardIndex: number): "UP" | "DOWN" | null =>
+  const getDirection = (
+    marketIndex: number,
+    cardIndex: number,
+  ): "UP" | "DOWN" | null =>
     isTradeOpen(marketIndex, cardIndex) ? activeTrade!.direction : null;
 
   return (
@@ -118,7 +234,8 @@ const Market: FC = () => {
                 <Link
                   key={cardIndex}
                   className={`marketcard${tradeOpen ? " card--trade-open" : ""}`}
-                  href={'/exploredetail'}
+                  href={"/exploredetail"}
+                   draggable={false} 
                 >
                   {card.isLive && (
                     <div className="cardlive">
@@ -129,11 +246,19 @@ const Market: FC = () => {
 
                   <div className="tokenimages">
                     <div className="innertoken">
-                      <img src={`/tokenimages/${card.baseToken}.png`} alt={card.baseToken} className="tokenimg" />
+                      <img
+                        src={`/tokenimages/${card.baseToken}.png`}
+                        alt={card.baseToken}
+                        className="tokenimg"
+                      />
                     </div>
                     <Icon name="energy" className="energy" />
                     <div className="innertoken">
-                      <img src={`/tokenimages/${card.quoteToken}.png`} alt={card.quoteToken} className="tokenimg" />
+                      <img
+                        src={`/tokenimages/${card.quoteToken}.png`}
+                        alt={card.quoteToken}
+                        className="tokenimg"
+                      />
                     </div>
                   </div>
 
@@ -143,42 +268,61 @@ const Market: FC = () => {
                   <div className="cardbtns">
                     <button
                       className={`upbtn${direction === "UP" ? " btn--active" : ""}`}
-                    onClick={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    handleDirectionClick(marketIndex, cardIndex, "UP");
-  }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleDirectionClick(marketIndex, cardIndex, "UP");
+                      }}
                     >
-                      <span className="innerbtn"><Icon name="up" className="up" /></span>
+                      <span className="innerbtn">
+                        <Icon name="up" className="up" />
+                      </span>
                       UP
                     </button>
                     <button
                       className={`downbtn${direction === "DOWN" ? " btn--active" : ""}`}
-       onClick={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    handleDirectionClick(marketIndex, cardIndex, "DOWN");
-  }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleDirectionClick(marketIndex, cardIndex, "DOWN");
+                      }}
                     >
-                      <span className="innerbtn"><Icon name="down" className="down" /></span>
+                      <span className="innerbtn">
+                        <Icon name="down" className="down" />
+                      </span>
                       DOWN
                     </button>
                   </div>
 
                   {tradeOpen && (
-                    <div className={`maintrade maintrade--${direction?.toLowerCase()}`}>
+                    <div
+                      className={`maintrade maintrade--${direction?.toLowerCase()}`}
+                       onClick={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    }}
+    onMouseDown={(e) => e.stopPropagation()}
+    onTouchStart={(e) => e.stopPropagation()}
+                    >
                       <div className="tradetop">
                         <div className="maintoken">
                           <div className="tokenimg">
-                            <img src={`/tokenimages/${card.baseToken}.png`} alt={card.baseToken} className="innerimg" />
+                            <img
+                              src={`/tokenimages/${card.baseToken}.png`}
+                              alt={card.baseToken}
+                              className="innerimg"
+                            />
                           </div>
                           <h5 className="tokenpara">{card.pair}</h5>
                         </div>
-                        <button className="closebtn"   onClick={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    handleClose();
-  }}>
+                        <button
+                          className="closebtn"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleClose();
+                          }}
+                        >
                           <Icon name="close" />
                         </button>
                       </div>
@@ -188,26 +332,39 @@ const Market: FC = () => {
                         <div className="mainbalance">
                           <p className="balancepara">Balance:</p>
                           <div className="tokenimg">
-                            <img src={`/tokenimages/${card.balanceToken}.png`} alt={card.balanceToken} className="innerimg" />
+                            <img
+                              src={`/tokenimages/${card.balanceToken}.png`}
+                              alt={card.balanceToken}
+                              className="innerimg"
+                            />
                           </div>
                           <p className="innerbalance">{card.balance}</p>
                         </div>
                       </div>
 
                       <div className="maininput">
-                        <input type="text" className="innerinput" placeholder="Amount" />
+                        <input
+                          type="text"
+                          className="innerinput"
+                          placeholder="Amount"
+                        />
                         <button className="maxbtn">MAX</button>
                       </div>
 
                       <ProgressSlider />
 
-                      <button className={`tradebtn ${direction === "UP" ? "upbtn" : "downbtn"}`}  onClick={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    handleClick(e);
-  }}>
+                      <button
+                        className={`tradebtn ${direction === "UP" ? "upbtn" : "downbtn"}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleClick(e);
+                        }}
+                      >
                         {direction}
-                        <span className="winpara">Potential Win {card.potentialWin}</span>
+                        <span className="winpara">
+                          Potential Win {card.potentialWin}
+                        </span>
                       </button>
                     </div>
                   )}
@@ -217,7 +374,6 @@ const Market: FC = () => {
           </div>
         </div>
       ))}
-
     </section>
   );
 };

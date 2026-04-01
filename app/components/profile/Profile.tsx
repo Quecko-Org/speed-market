@@ -3,12 +3,40 @@ import React, { FC } from "react";
 import Icon from "../Icon";
 import ReactPaginate from "react-paginate";
 import { useState } from "react";
-
+import Depositmodal from "../modals/Depositmodal";
+import Withdrawmodal from "../modals/Withdrawmodal";
+type ModalKeys =
+  | "createprofile"
+  | "Shareresults"
+  | "Claimprocessed"
+  | "Claimsuccessfully"
+  | "Sharemarket"
+  | "Sharebet"
+  | "withdraw"
+  | "deposit";
+type ModalState = Record<ModalKeys, boolean>;
 const Profile: FC = () => {
+    const [modals, setModals] = useState<ModalState>({
+      createprofile: false,
+      Shareresults: false,
+      Claimprocessed: false,
+      Claimsuccessfully: false,
+      Sharemarket: false,
+      Sharebet: false,
+      withdraw: false,
+      deposit: false,
+    });
   const [currentPage, setCurrentPage] = useState(0);
 
   const handlePageClick = (event: any) => {
     setCurrentPage(event.selected);
+  };
+    const openModal = (name: ModalKeys) => {
+    setModals((prev) => ({ ...prev, [name]: true }));
+  };
+
+  const closeModal = (name: ModalKeys) => {
+    setModals((prev) => ({ ...prev, [name]: false }));
   };
   return (
     <>
@@ -74,8 +102,12 @@ const Profile: FC = () => {
                   </div>
                 </div>
                 <div className="fundsbtns">
-                  <button className="depositbtn">Deposit</button>
-                  <button className="withdrawbtn">Withdraw</button>
+                  <button onClick={()=>{
+                    openModal("deposit");
+                  }} className="depositbtn">Deposit</button>
+                  <button onClick={()=>{
+                    openModal("withdraw");
+                  }} className="withdrawbtn">Withdraw</button>
                 </div>
               </div>
             </div>
@@ -385,6 +417,15 @@ const Profile: FC = () => {
           </div>
         </div>
       </section>
+
+          <Depositmodal
+        show={modals.deposit}
+        onHide={() => closeModal("deposit")}
+      />
+                <Withdrawmodal
+        show={modals.withdraw}
+        onHide={() => closeModal("withdraw")}
+      />
     </>
   );
 };

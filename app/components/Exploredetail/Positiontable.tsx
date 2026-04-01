@@ -1,7 +1,37 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import Icon from "../Icon";
-
+import Claimprocessedmodal from "../modals/Claimprocessedmodal";
+import Shareresultsmodal from "../modals/Shareresultsmodal";
+import Sharebetmodal from "../modals/Sharebetmodal";
+type ModalKeys =
+  | "createprofile"
+  | "Shareresults"
+  | "Claimprocessed"
+  | "Claimsuccessfully"
+  | "Sharemarket"
+  | "Sharebet"
+  | "withdraw"
+  | "deposit";
+type ModalState = Record<ModalKeys, boolean>;
 const Positiontable: FC = () => {
+  const [modals, setModals] = useState<ModalState>({
+    createprofile: false,
+    Shareresults: false,
+    Claimprocessed: false,
+    Claimsuccessfully: false,
+    Sharemarket: false,
+    Sharebet: false,
+    withdraw: false,
+    deposit: false,
+  });
+
+  const openModal = (name: ModalKeys) => {
+    setModals((prev) => ({ ...prev, [name]: true }));
+  };
+
+  const closeModal = (name: ModalKeys) => {
+    setModals((prev) => ({ ...prev, [name]: false }));
+  };
   return (
     <>
       <div className="mainpositiontable">
@@ -40,7 +70,12 @@ const Positiontable: FC = () => {
                 <td>
                   <div className="tablebuttons">
                     <button className="timerbtn">2m 49s</button>
-                    <button className="sharebtn">
+                    <button
+                      onClick={() => {
+                        openModal("Sharebet");
+                      }}
+                      className="sharebtn"
+                    >
                       <Icon name="predictionshare" />
                     </button>
                   </div>
@@ -64,8 +99,20 @@ const Positiontable: FC = () => {
                 <td>$92,200.45</td>
                 <td>
                   <div className="tablebuttons">
-                    <button className="claimbtn">Claim</button>
-                    <button className="sharebtn">
+                    <button
+                      onClick={() => {
+                        openModal("Claimprocessed");
+                      }}
+                      className="claimbtn"
+                    >
+                      Claim
+                    </button>
+                    <button
+                      onClick={() => {
+                        openModal("Sharebet");
+                      }}
+                      className="sharebtn"
+                    >
                       <Icon name="predictionshare" />
                     </button>
                   </div>
@@ -103,7 +150,12 @@ const Positiontable: FC = () => {
               <div className="box">
                 <div className="tablebuttons">
                   <button className="timerbtn">2m 49s</button>
-                  <button className="sharebtn">
+                  <button
+                    onClick={() => {
+                      openModal("Sharebet");
+                    }}
+                    className="sharebtn"
+                  >
                     <Icon name="predictionshare" />
                   </button>
                 </div>
@@ -136,8 +188,20 @@ const Positiontable: FC = () => {
               </div>
               <div className="box">
                 <div className="tablebuttons">
-                  <button className="claimbtn">Claim</button>
-                  <button className="sharebtn">
+                  <button
+                    onClick={() => {
+                      openModal("Claimprocessed");
+                    }}
+                    className="claimbtn"
+                  >
+                    Claim
+                  </button>
+                  <button
+                    onClick={() => {
+                      openModal("Sharebet");
+                    }}
+                    className="sharebtn"
+                  >
                     <Icon name="predictionshare" />
                   </button>
                 </div>
@@ -146,6 +210,15 @@ const Positiontable: FC = () => {
           </div>
         </div>
       </div>
+
+      <Claimprocessedmodal
+        show={modals.Claimprocessed}
+        onHide={() => closeModal("Claimprocessed")}
+      />
+      <Sharebetmodal
+        show={modals.Sharebet}
+        onHide={() => closeModal("Sharebet")}
+      />
     </>
   );
 };
