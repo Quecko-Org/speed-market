@@ -59,16 +59,23 @@ const Createprofilemodal: React.FC<CreateprofilemodalProps> = ({
                   onChange={handleUpload}
                 />
 
-                <button
-                  className={image ? "upload active" : "upload"}
-                  onClick={handleButtonClick}
-                >
-                  Upload
-                </button>
-
-                {image && (
+                {image ? (
+                  <>
                   <button className="change" onClick={handleButtonClick}>
                     Change
+                  </button>
+                      <button
+                    className="upload active"
+                  >
+                    Delete
+                  </button>
+                  </>
+                ) : (
+                  <button
+                    className={image ? "upload active" : "upload"}
+                    onClick={handleButtonClick}
+                  >
+                    Upload
                   </button>
                 )}
               </div>

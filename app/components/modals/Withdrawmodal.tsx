@@ -44,39 +44,17 @@ const Withdrawmodal: React.FC<WithdrawmodalProps> = ({ show, onHide }) => {
                   USDT
                 </span>
               </div>
+  <div className="lefttoken">
+                <p className="tokenpar">Chain</p>
 
-              <div className="righttoken">
-                <div className="drop">
-                  <Dropdown>
-                    <Dropdown.Toggle id="dropdown-basic">
-                      <div className="parent">
-                        <p>Chain</p>
-
-                        <div className="inner">
-                          <img
+                <span>
+                  <img
                             src="/tokenimages/arbitrum.svg"
                             alt="img"
                             className="img-fluid arb"
                           />
-                          <h6>Arbitrum</h6>
-                          <Icon name="droparrowsmall" />
-                        </div>
-                      </div>
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                      <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-
-                      <Dropdown.Item href="#/action-2">
-                        Another action
-                      </Dropdown.Item>
-
-                      <Dropdown.Item href="#/action-3">
-                        Something else
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </div>
+                  Arbitrum
+                </span>
               </div>
             </div>
 

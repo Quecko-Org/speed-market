@@ -1900,16 +1900,59 @@
       text-transform: capitalize;
       background-color: transparent;
 
-      &.up {
-        background: #70e852;
-        color: #000;
-        border: none;
-      }
+          .upimg {
+                        border-radius: 106.452px;
+                        background: rgba(0, 0, 0, 0.18);
+                        display: flex;
+                        width: 30px;
+                        height: 30px;
+                        align-items: center;
+                        justify-content: center;
 
-      &.down {
-        color: #000;
-        background: #ff4646;
-      }
+                        svg {
+                            width: 19.161px;
+                            height: 19.161px;
+                        }
+                    }
+
+                    .downimg {
+                        border-radius: 107.143px;
+                        background: rgba(254, 92, 50, 0.11);
+                        display: flex;
+                        width: 30px;
+                        height: 30px;
+                        align-items: center;
+                        justify-content: center;
+
+                        svg {
+                            width: 19.161px;
+                            height: 19.161px;
+                        }
+                    }
+
+                    &.up {
+                        background: #70E852;
+                        color: #000;
+
+                        .upimg {
+                            path {
+                                stroke: #000;
+                            }
+                        }
+                    }
+
+                    &.down {
+                        background: #FF4646;
+                        color: white;
+
+                        .downimg {
+                            background: rgba(0, 0, 0, 0.11);
+
+                            path {
+                                stroke: #000;
+                            }
+                        }
+                    }
     }
   }
 

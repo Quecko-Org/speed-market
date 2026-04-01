@@ -172,6 +172,9 @@
                 vertical-align: middle;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.08);
                 white-space: nowrap;
+                &:last-child{
+                    text-align: end;
+                }
             }
 
             tbody tr {
@@ -547,7 +550,7 @@
                             color: #FFF;
                             font-size: 14px;
                             font-weight: 500;
-                            padding: 5px 10px 5px 15px;
+                            padding: 5px 60px 5px 15px;
                             border: none;
                             outline: none;
                             width: 100%;
@@ -616,7 +619,6 @@
                         flex-direction: column;
                         justify-content: center;
                         align-items: center;
-                        gap: 6px;
                         border-radius: 10px;
                         font-size: 14px;
                         font-weight: 500;
@@ -628,6 +630,9 @@
                         .winpara {
                             font-size: 11px;
                             font-weight: 500;
+                            .bold{
+                                  font-weight: 600;
+                            }
                         }
                     }
 
@@ -663,7 +668,36 @@
                         width: 9.333px;
                         height: 9.333px;
                         background-color: #5FC363;
-                        border-radius: 20px;
+                        border-radius: 50%;
+                        position: relative;
+                    }
+
+                    /* Pulse effect */
+                    .livecircle::after {
+                        content: "";
+                        position: absolute;
+                        inset: 0;
+                        border-radius: 50%;
+                        background-color: #5FC363;
+       animation: pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+                        // z-index: -1;
+                    }
+
+                    @keyframes pulse {
+                        0% {
+                            transform: scale(1);
+                            opacity: 0.7;
+                        }
+
+                        70% {
+                            transform: scale(2.5);
+                            opacity: 0;
+                        }
+
+                        100% {
+                            transform: scale(2.5);
+                            opacity: 0;
+                        }
                     }
 
                     .livepara {
@@ -855,7 +889,7 @@
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
 
-    
+
 
         &::-webkit-scrollbar {
             display: none;
@@ -876,7 +910,8 @@
         margin-right: 14px;
         scroll-snap-align: start;
         scroll-snap-stop: always;
-            .maintrade {
+
+        .maintrade {
             touch-action: pan-y;
         }
     }

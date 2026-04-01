@@ -172,7 +172,7 @@ export default function TradingChart() {
 
       ctx.strokeStyle = "#312F47";
       ctx.lineWidth = 1;
-      ctx.font = "12px 'SF Mono'";
+      ctx.font = "12px ";
       ctx.fillStyle = "#74728B";
       ctx.textAlign = "right";
 
@@ -288,7 +288,7 @@ export default function TradingChart() {
       const priceLabel = formatPriceFull(currentPrice);
       const timeLabel = formatTimeFull(Date.now());
 
-      ctx.font = "bold 12px 'SF Mono', 'Fira Code', monospace";
+      ctx.font = "bold 12px";
       const priceLabelW = ctx.measureText(priceLabel).width + 14;
       const timeLabelW = ctx.measureText(timeLabel).width + 14;
 
@@ -303,6 +303,7 @@ export default function TradingChart() {
       ctx.textAlign = "left";
       ctx.fillText(priceLabel, badgeX + 7, badgeY + 14);
 
+      
       // VWAP label (green badge)
       const vwapLabel = formatPriceFull(vwap);
       const vwapLabelW = ctx.measureText(vwapLabel).width + 14;
@@ -317,10 +318,10 @@ export default function TradingChart() {
       const vwapTimeLabel = formatTimeFull(Date.now());
       const vwapTimeLabelW = ctx.measureText(vwapTimeLabel).width + 14;
       ctx.fillStyle = "rgba(61,220,132,0.15)";
-      roundRect(ctx, badgeX + vwapLabelW + 2, vwapBadgeY, vwapTimeLabelW, 20, 3);
-      ctx.fill();
-      ctx.fillStyle = "#70E852";
-      ctx.fillText(vwapTimeLabel, badgeX + vwapLabelW + 9, vwapBadgeY + 14);
+    roundRect(ctx, badgeX, vwapBadgeY + 22, vwapTimeLabelW, 20, 3);
+ctx.fill();
+ctx.fillStyle = "#70E852";
+ctx.fillText(vwapTimeLabel, badgeX + 7, vwapBadgeY + 36);
 
       // Tooltip crosshair
       if (tooltip) {
@@ -344,7 +345,7 @@ export default function TradingChart() {
         const ttPrice = formatPriceFull(tooltip.price);
         const ttTime = formatTime(tooltip.time);
         const ttText = `${ttPrice}  ${ttTime}`;
-        ctx.font = "bold 12px 'SF Mono', 'Fira Code', monospace";
+        ctx.font = "bold 12px";
         const ttW = ctx.measureText(ttText).width + 20;
         const ttH = 28;
         const ttX = Math.min(tooltip.x - ttW / 2, W - ttW - 10);
@@ -431,7 +432,7 @@ export default function TradingChart() {
         background: "linear-gradient(117deg, #2C2D42 0%, #1B1C31 99.9%)",
         display: "flex",
         flexDirection: "column",
-        fontFamily: "'SF Mono'",
+        fontFamily: "",
       }}
     >
 

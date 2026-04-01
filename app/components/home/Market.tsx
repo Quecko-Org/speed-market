@@ -363,7 +363,7 @@ const Market: FC = () => {
                       >
                         {direction}
                         <span className="winpara">
-                          Potential Win {card.potentialWin}
+                          Potential Win <span className="bold">{card.potentialWin}</span>
                         </span>
                       </button>
                     </div>
