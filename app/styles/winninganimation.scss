@@ -1,0 +1,60 @@
+.mainanimation {
+    background: #171A2B;
+    padding: 20px 0;
+    overflow: hidden;
+
+    .inneranimation {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-right: 30px; 
+        flex-shrink: 0; 
+
+        .userimg {
+            width: 20px;
+            height: 20px;
+            border-radius: 191px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            object-fit: cover;
+            object-position: center;
+
+            .innerimg {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
+        }
+
+        .animationtexts {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+
+            .whitepara {
+                color: #FFF;
+                text-align: center;
+                font-feature-settings: 'dlig' on, 'salt' on;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 100%;
+                white-space: nowrap;
+            }
+
+            .greypara {
+                color: #5F5D72;
+                text-align: center;
+                font-feature-settings: 'dlig' on, 'salt' on;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 100%;
+                white-space: nowrap;
+            }
+        }
+    }
+}

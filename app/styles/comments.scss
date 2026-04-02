@@ -1,0 +1,202 @@
+        .cs-desktop {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .cs-card {
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: linear-gradient(117deg, #2C2D42 0%, #1B1C31 99.9%);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+        }
+
+        .cs-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #fff;
+        }
+
+        /* ─── Desktop comment input ────────────── */
+        .desktop-input-wrap {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+
+        .desktop-input-box {
+            flex: 1;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #16192A;
+            overflow: hidden;
+        }
+
+        .desktop-input-box textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 14px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .desktop-input-box textarea::placeholder {
+            color: #74728B;
+        }
+
+        .desktop-input-foot {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 15px;
+            padding: 8px 14px;
+            font-size: 12px;
+            color: #74728B;
+        }
+
+        .desktop-input-post {
+            background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
+            color: #fff;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .desktop-input-post:hover {
+            opacity: 0.85;
+        }
+
+        /* ─── Comment buttons ──────────────────── */
+        .cmt-like-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            color: #74728B;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 0;
+            transition: color 0.2s;
+        }
+
+        .cmt-like-btn:hover {
+            color: #f97316;
+        }
+
+        .cmt-reply-btn {
+            background: none;
+            border: none;
+            color: #74728B;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+
+        .cmt-reply-btn:hover {
+            color: #74728B;
+        }
+
+        /* ─── Mobile comment bar ───────────────── */
+        .mob-cmt-bar-wrap {
+            display: none;
+        }
+
+        .mob-cmt-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, #1D2031 0%, #0A0B1D 100%);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-top: 1px solid #19273e;
+            z-index: 999;
+        }
+
+        .mob-cmt-bar input {
+            flex: 1;
+            background: linear-gradient(117deg, #2C2D42 0%, #1B1C31 99.9%);
+            border: 1px solid #1f3050;
+            border-radius: 14px;
+            padding: 10px 16px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .mob-cmt-bar input::placeholder {
+            color: #74728B;
+        }
+
+        .mob-cmt-bar-emoji {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .mob-cmt-bar-send {
+            background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: opacity 0.2s;
+        }
+
+        .mob-cmt-bar-send:hover {
+            opacity: 0.85;
+        }
+
+        /* ─── Responsive ───────────────────────── */
+        @media (max-width: 768px) {
+
+            .cs-card {
+                padding: 14px;
+                border-radius: 16px;
+            }
+
+            .desktop-input-wrap {
+                display: none;
+            }
+
+            .cs-title {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+
+            .cmt-reply {
+                margin-left: 36px !important;
+            }
+
+            .mob-cmt-bar-wrap {
+                display: block;
+            }
+
+            .cs-comments-scroll {
+                padding-bottom: 68px;
+            }
+        }
