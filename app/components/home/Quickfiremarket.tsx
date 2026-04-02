@@ -4,6 +4,29 @@ import Icon from "../Icon";
 import ProgressSlider from "./ProgressSlider";
 import ConfettiCanvas, { ConfettiHandle } from "./ConfettiCanvas";
 import Link from "next/link";
+import { formatNumberWithCommas } from "@/app/utils/helpers";
+
+interface CoinType {
+  _id: string;
+  coinId: string;
+  name: string;
+  slug: string;
+  symbol: string;
+  type: string;
+  currentPrice: string;
+  change24hr: string;
+  isActive: boolean;
+  isDefault: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+interface QuickFireMarketProps {
+  coinListing: CoinType[];
+  isLoading: boolean;
+  usdtBalance: number;
+}
 
 interface ActiveTrade {
   cardIndex: number;
@@ -15,51 +38,29 @@ const QUICK_FIRE = {
   duration: "5 min",
   icon: "timer",
   description: "Popular choice — Balance speed and strategy",
-  cards: [
-    {
-      pair: "ETH/USDT",
-      price: "$3,198.89",
-      baseToken: "eth",
-      quoteToken: "usdt",
-      balance: "500 USDT",
-      balanceToken: "usdt",
-      potentialWin: "$10.20",
-      isLive: true,
-    },
-    {
-      pair: "BTC/USDT",
-      price: "$67,432.10",
-      baseToken: "btc",
-      quoteToken: "usdt",
-      balance: "500 USDT",
-      balanceToken: "usdt",
-      potentialWin: "$18.50",
-      isLive: false,
-    },
-    {
-      pair: "SOL/USDT",
-      price: "$182.44",
-      baseToken: "sol",
-      quoteToken: "usdt",
-      balance: "500 USDT",
-      balanceToken: "usdt",
-      potentialWin: "$9.80",
-      isLive: true,
-    },
-    {
-      pair: "EUR/USDT",
-      price: "$594.20",
-      baseToken: "euro",
-      quoteToken: "usdt",
-      balance: "500 USDT",
-      balanceToken: "usdt",
-      potentialWin: "$12.40",
-      isLive: false,
-    },
-  ],
 };
 
-const QuickFireMarket: FC = () => {
+
+const FALLBACK_CARDS = [
+  { pair: "ETH/USDT", price: "$0.00", baseToken: "eth", quoteToken: "usdt", balance: "500 USDT", balanceToken: "usdt", potentialWin: "$0.00", isLive: true },
+  { pair: "BTC/USDT", price: "$0.00", baseToken: "btc", quoteToken: "usdt", balance: "500 USDT", balanceToken: "usdt", potentialWin: "$0.00", isLive: true },
+  { pair: "SOL/USDT", price: "$0.00", baseToken: "sol", quoteToken: "usdt", balance: "500 USDT", balanceToken: "usdt", potentialWin: "$0.00", isLive: true },
+];
+
+const buildCards = (coinListing: CoinType[]) => {
+  if (!coinListing.length) return FALLBACK_CARDS;
+  return coinListing.map((coin) => ({
+    pair: `${coin.symbol}/USDT`,
+    price: `$${Number(coin.currentPrice).toLocaleString(undefined, { maximumFractionDigits: 2 })}`,
+    baseToken: coin.slug,
+    quoteToken: "usdt",
+    balanceToken: "usdt",
+    potentialWin: "$0.00",
+    isLive: coin.isActive,
+  }));
+};
+
+const QuickFireMarket: FC<QuickFireMarketProps> = ({ coinListing, isLoading, usdtBalance }) => {
   const confettiRef = useRef<ConfettiHandle>(null);
   const [activeTrade, setActiveTrade] = useState<ActiveTrade | null>(null);
 
@@ -96,7 +97,18 @@ const QuickFireMarket: FC = () => {
       <p className="innerpara">{QUICK_FIRE.description}</p>
 
       <div className="mainmarketcards">
-        {QUICK_FIRE.cards.map((card, cardIndex) => {
+        {isLoading ? (
+          [1, 2, 3].map((i) => (
+            <div key={i} className="marketcard skeleton-card">
+              <div className="skeleton-shimmer" />
+            </div>
+          ))
+        ) : !coinListing.length ? (
+          <div className="no-data-found">
+            <p>No data found</p>
+          </div>
+        ) : null}
+        {!isLoading && coinListing.length > 0 && buildCards(coinListing).map((card, cardIndex) => {
           const tradeOpen = isTradeOpen(cardIndex);
           const direction = getDirection(cardIndex);
 
@@ -170,7 +182,7 @@ const QuickFireMarket: FC = () => {
                       <div className="tokenimg">
                         <img src={`/tokenimages/${card.balanceToken}.png`} alt={card.balanceToken} className="innerimg" />
                       </div>
-                      <p className="innerbalance">{card.balance}</p>
+                      <p className="innerbalance">{formatNumberWithCommas(usdtBalance)}</p>
                     </div>
                   </div>
 
