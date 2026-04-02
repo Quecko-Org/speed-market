@@ -1,8 +1,15 @@
 "use client";
 import React, { FC } from "react";
 import Icon from "../Icon";
+import { getFormattedAddress } from "@/app/utils/helpers";
+import { useAtomValue } from "jotai";
+import { userProfileData, userSmartAccount } from "@/app/store/atoms";
 
 const ProfileHeader: FC = () => {
+
+  const smartAccount = useAtomValue(userSmartAccount);
+  const userProfileInfo = useAtomValue(userProfileData);
+
   return (
     <div className="upperinner">
       <div className="profilemain">
@@ -15,10 +22,10 @@ const ProfileHeader: FC = () => {
             />
           </div>
           <div className="profiletexts">
-            <h6 className="upperhead">Felix Hogan</h6>
+            <h6 className="upperhead">{userProfileInfo?.displayName}</h6>
             <div className="smartmain">
               <h6 className="smartpara">Smart Wallet</h6>
-              <h5 className="walletpara">0x1256...5911xa</h5>
+              <h5 className="walletpara">{getFormattedAddress(smartAccount)}</h5>
               <button className="copybtn">
                 <Icon name="copy" />
               </button>

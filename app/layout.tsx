@@ -10,6 +10,7 @@ import "./styles/modals.scss";
 import "./styles/exploredetail.scss";
 import "./styles/comments.scss";
 import { ToastContainer } from "react-toastify";
+import Web3Provider from "@/app/providers/Web3Provider";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -67,7 +68,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Web3Provider>
         {children}
+        </Web3Provider>
         <ToastContainer
           position="top-right"
           autoClose={3000}
