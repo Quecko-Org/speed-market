@@ -1,49 +1,67 @@
 "use client";
 import React, { useState } from "react";
 import { Dropdown, Modal } from "react-bootstrap";
+import QRCode from "react-qr-code";
 import Icon from "../Icon";
+import { useAtomValue } from "jotai";
+import { userSmartAccount } from "@/app/store/atoms";
+import {
+  DEPOSIT_TOKENS,
+  DEPOSIT_CHAINS,
+  DEFAULT_TOKEN,
+  DEFAULT_CHAIN,
+  TOKEN_USDT,
+  CHAIN_ARBITRUM,
+} from "@/app/config/deposit";
+import { getFormattedAddress } from "@/app/utils/helpers";
 
 interface DepositmodalProps {
   show: boolean;
   onHide: () => void;
 }
 
-type OptionType = {
-  name: string;
-  img: string | null;
-};
-
 const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
-  const tokens: OptionType[] = [
-    { name: "RAIN", img: "/tokenimages/rain.png" },
-    { name: "USDT", img: "/tokenimages/usdt.png" },
-    { name: "USDC", img: "/tokenimages/usdc.png" },
-    { name: "ETH", img: "/tokenimages/eth.png" },
-    { name: "BTC", img: "/tokenimages/btc.png" },
-  ];
+  const smartAccount = useAtomValue(userSmartAccount);
 
-  const chains: OptionType[] = [
-    { name: "Arbitrum", img: "/tokenimages/arbitrum.svg" },
-    { name: "Base", img: "/tokenimages/base.svg" },
-    { name: "Ethereum", img: "/tokenimages/eth.png" },
-    { name: "Bitcoin", img: "/tokenimages/btc.png" },
-  ];
+  const [selectedToken, setSelectedToken] = useState<string>(TOKEN_USDT);
+  const [selectedChain, setSelectedChain] = useState<string>(CHAIN_ARBITRUM);
+  const [isCopied, setIsCopied] = useState(false);
 
-  const [selectedToken, setSelectedToken] = useState<OptionType>({
-    name: "Select Token",
-    img: null,
-  });
+  // The deposit address is always the smart account (USDT on Arbitrum = direct deposit)
+  const depositAddress = smartAccount || "";
 
-  const [selectedChain, setSelectedChain] = useState<OptionType>({
-    name: "Select Chain",
-    img: null,
-  });
+  const tokenDisplay = DEPOSIT_TOKENS.find((t) => t.key === selectedToken);
+  const chainDisplay = DEPOSIT_CHAINS.find((c) => c.key === selectedChain);
+
+  const handleCopy = (text: string) => {
+    if (!text) return;
+    navigator.clipboard.writeText(text);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
+  const resetState = () => {
+    setSelectedToken(TOKEN_USDT);
+    setSelectedChain(CHAIN_ARBITRUM);
+    setIsCopied(false);
+  };
+
+  const handleClose = () => {
+    resetState();
+    onHide();
+  };
+
+  // Show deposit area once both token and chain are selected
+  const showDepositArea =
+    selectedToken !== DEFAULT_TOKEN &&
+    selectedChain !== DEFAULT_CHAIN &&
+    !!depositAddress;
 
   return (
-    <Modal className="deposit" show={show} onHide={onHide} centered>
+    <Modal className="deposit" show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          <span onClick={onHide} className="cursorpointer">
+          <span onClick={handleClose} className="cursorpointer">
             <Icon name="backarrow" />
           </span>
           Via deposit address
@@ -76,6 +94,7 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
           </div>
 
           <div className="parentdropdowns">
+            {/* Token Dropdown */}
             <div className="maindrop">
               <p className="heading">Token</p>
               <Dropdown>
@@ -84,40 +103,43 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
                   className="d-flex align-items-center gap-2"
                 >
                   <div className="forstyling">
-                    {selectedToken.img && (
+                    {tokenDisplay?.img && (
                       <img
-                        src={selectedToken.img}
+                        src={tokenDisplay.img}
                         alt="token"
                         className="raintoken"
                         style={{ width: "20px", height: "20px" }}
                       />
                     )}
-                    {selectedToken.name}
+                    {tokenDisplay?.label ?? selectedToken}
                   </div>
-
-                  <Icon name="droparrowbig" />
+                  {/* <Icon name="droparrowbig" /> */}
                 </Dropdown.Toggle>
 
-                <Dropdown.Menu>
-                  {tokens.map((token, index) => (
+                {/* <Dropdown.Menu>
+                  {DEPOSIT_TOKENS.map((token) => (
                     <Dropdown.Item
-                      key={index}
-                      onClick={() => setSelectedToken(token)}
+                      key={token.key}
+                      onClick={() => {
+                        setSelectedToken(token.key);
+                        setIsCopied(false);
+                      }}
                       className="d-flex align-items-center gap-2"
                     >
                       <img
-                        src={token.img || ""}
+                        src={token.img}
                         alt="img"
                         className="raintoken"
                         style={{ width: "22px", height: "22px" }}
                       />
-                      {token.name}
+                      {token.label}
                     </Dropdown.Item>
                   ))}
-                </Dropdown.Menu>
+                </Dropdown.Menu> */}
               </Dropdown>
             </div>
 
+            {/* Chain Dropdown */}
             <div className="maindrop">
               <p className="heading">Chain</p>
               <Dropdown>
@@ -127,111 +149,92 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
                 >
                   <div className="d-flex align-items-center gap-2">
                     <div className="forstyling">
-                      {selectedChain.img && (
+                      {chainDisplay?.img && (
                         <img
-                          src={selectedChain.img}
+                          src={chainDisplay.img}
                           alt="chain"
                           className="raintoken"
                           style={{ width: "20px", height: "20px" }}
                         />
                       )}
-                      {selectedChain.name}
+                      {chainDisplay?.label ?? "Select Chain"}
                     </div>
                   </div>
-                  <Icon name="droparrowbig" />
+                  {/* <Icon name="droparrowbig" /> */}
                 </Dropdown.Toggle>
 
-                <Dropdown.Menu>
-                  {chains.map((chain, index) => (
+                {/* <Dropdown.Menu>
+                  {DEPOSIT_CHAINS.map((chain) => (
                     <Dropdown.Item
-                      key={index}
-                      onClick={() => setSelectedChain(chain)}
+                      key={chain.key}
+                      onClick={() => {
+                        setSelectedChain(chain.key);
+                        setIsCopied(false);
+                      }}
                       className="d-flex align-items-center gap-2"
                     >
                       <img
-                        src={chain.img || ""}
+                        src={chain.img}
                         alt="img"
                         className="raintoken"
                         style={{ width: "22px", height: "22px" }}
                       />
-                      {chain.name}
+                      {chain.label}
                     </Dropdown.Item>
                   ))}
-                </Dropdown.Menu>
+                </Dropdown.Menu> */}
               </Dropdown>
             </div>
           </div>
 
-          {/* <div className="finalblancebox">
-            <div className="parentboxmain">
-              <div className="left">
-                <h5 className="blance">Final balance:</h5>
-              </div>
-              <div className="right">
-                <img
-                  src="/tokenimages/usdt.png"
-                  alt="img"
-                  className="img-fluid imag"
-                />
-                <h6>
-                  USDT <span>(Arbitrum)</span>
-                </h6>
-              </div>
-            </div>
-
-            <div className="brdrsec"></div>
-
-            <h6 className="endpara">
-              Note: All deposits will be automatically swapped to USDT on
-              Arbitrum.
-            </h6>
-          </div> */}
-
           <div className="brdr"></div>
 
-          <div className="mainqr">
-            <span className="forfilter"></span>
-            <img
-              src="/modalassets/qr.png"
-              alt="img"
-              className="img-fluid qrimg"
-            />
-          </div>
+          {/* QR code + deposit address — only shown after token & chain selected */}
+          {showDepositArea && (
+            <>
+              <div className="mainqr">
+                <QRCode
+                  value={depositAddress}
+                  size={180}
+                  bgColor="#FFFFFF"
+                  fgColor="#000000"
+                  level="M"
+                />
+              </div>
 
-          <div className="qrtextbottom">
-            <div className="left">
-              <h6>
-                Refund Wallet Address <Icon name="iicon" />
-              </h6>
-            </div>
-            <div className="right">
-              <p>Please pay attention that you provide a BTC address</p>
-            </div>
-          </div>
+              <div className="innerbox">
+                <div className="leftinput">
+                  <label htmlFor="rewardToken">Your deposit address:</label>
+                  <input
+                    type="text"
+                    id="rewardToken"
+                    value={getFormattedAddress(depositAddress)}
+                    readOnly
+                  />
+                </div>
+                <button
+                  className="copy"
+                  onClick={() => handleCopy(depositAddress)}
+                >
+                  <Icon name="copywhite" />
+                  {isCopied ? "COPIED" : "COPY"}
+                </button>
+              </div>
+            </>
+          )}
 
-          <div className="lastinput">
-            <input
-              type="text"
-              placeholder="Enter a valid BTC wallet address"
-            />
-            {/* <p className="errortext">Invalid Wallet Address</p> */}
-          </div>
-          <div className="innerbox">
-            <div className="leftinput">
-              <label htmlFor="rewardToken">Your deposit address:</label>
-              <input
-                type="text"
-                id="rewardToken"
-                placeholder="3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy"
-              />
-            </div>
-            <button className="copy">
-              <Icon name="copywhite" />
-              COPY
-            </button>
-          </div>
-
-          <button className="address">Generate Address</button>
+          {!showDepositArea && !depositAddress && (
+            <p
+              style={{
+                color: "#9a9a9a",
+                fontSize: "13px",
+                marginTop: "12px",
+                textAlign: "center",
+              }}
+            >
+              Please connect your wallet to get a deposit address.
+            </p>
+          )}
         </div>
       </Modal.Body>
     </Modal>

@@ -5,11 +5,13 @@ import { Modal } from "react-bootstrap";
 interface WithdrawsuccessmodalProps {
   show: boolean;
   onHide: () => void;
+  amount?: string;
 }
 
 const Withdrawsuccessmodal: React.FC<WithdrawsuccessmodalProps> = ({
   show,
   onHide,
+  amount,
 }) => {
   return (
     <Modal className="withdraw" show={show} onHide={onHide} centered>
@@ -28,7 +30,8 @@ const Withdrawsuccessmodal: React.FC<WithdrawsuccessmodalProps> = ({
             <h4>Withdrawal Completed!</h4>
 
             <p>
-              Your funds <span>(300 USDT)</span> were successfully transferred
+              Your funds <span>({amount || "0"} USDT)</span> were successfully
+              transferred
             </p>
           </div>
 

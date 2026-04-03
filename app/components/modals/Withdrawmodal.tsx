@@ -1,30 +1,127 @@
 "use client";
 import React, { useState } from "react";
-import { Dropdown, Modal } from "react-bootstrap";
-import Icon from "../Icon";
+import { Modal } from "react-bootstrap";
 import Withdrawsuccessmodal from "./Withdrawsuccessmodal";
+import { useAtomValue } from "jotai";
+import { userSmartAccountUsdtBalance, userSmartAccount } from "@/app/store/atoms";
+import { formatNumberWithCommas } from "@/app/utils/helpers";
+import { useWithdraw } from "@/app/hooks/useWithdraw";
+import { useGetUsdtBalance } from "@/app/hooks/useBalance";
+import { toast } from "react-toastify";
 
 interface WithdrawmodalProps {
   show: boolean;
   onHide: () => void;
 }
-type ModalKeys = "withdrawsuccess";
 
+const isValidEthAddress = (address: string): boolean =>
+  /^0x[a-fA-F0-9]{40}$/.test(address);
+
+type ModalKeys = "withdrawsuccess";
 type ModalState = Record<ModalKeys, boolean>;
+
 const Withdrawmodal: React.FC<WithdrawmodalProps> = ({ show, onHide }) => {
+  const usdtBalance = useAtomValue(userSmartAccountUsdtBalance);
+  const smartAccount = useAtomValue(userSmartAccount);
+  const { withdraw } = useWithdraw();
+  const fetchUsdtBalance = useGetUsdtBalance();
+
+  const [recipientAddress, setRecipientAddress] = useState("");
+  const [amount, setAmount] = useState("");
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
+  const [withdrawnAmount, setWithdrawnAmount] = useState("");
+
   const [modals, setModals] = useState<ModalState>({
     withdrawsuccess: false,
   });
-  const openModal = (name: ModalKeys) => {
+
+  const openModal = (name: ModalKeys) =>
     setModals((prev) => ({ ...prev, [name]: true }));
+  const closeModal = (name: ModalKeys) =>
+    setModals((prev) => ({ ...prev, [name]: false }));
+
+  const resetForm = () => {
+    setRecipientAddress("");
+    setAmount("");
   };
 
-  const closeModal = (name: ModalKeys) => {
-    setModals((prev) => ({ ...prev, [name]: false }));
+  const handleClose = () => {
+    resetForm();
+    onHide();
   };
+
+  const handleMax = () => {
+    setAmount(usdtBalance > 0 ? usdtBalance.toString() : "");
+  };
+
+  const handleAmountChange = (value: string) => {
+    // Allow only numbers and one decimal point
+    if (/^\d*\.?\d*$/.test(value)) {
+      setAmount(value);
+    }
+  };
+
+  const handleWithdraw = async () => {
+    // Validations
+    if (!smartAccount) {
+      toast.error("Please connect your wallet first.");
+      return;
+    }
+
+    if (!recipientAddress.trim()) {
+      toast.error("Please enter a recipient address.");
+      return;
+    }
+
+    if (!isValidEthAddress(recipientAddress.trim())) {
+      toast.error("Please enter a valid Ethereum address.");
+      return;
+    }
+
+    const numAmount = parseFloat(amount);
+    if (!amount || isNaN(numAmount) || numAmount <= 0) {
+      toast.error("Please enter a valid amount.");
+      return;
+    }
+
+    if (numAmount > usdtBalance) {
+      toast.error("Insufficient balance.");
+      return;
+    }
+
+    try {
+      setIsWithdrawing(true);
+
+      const result = await withdraw(
+        recipientAddress.trim(),
+        numAmount,
+        usdtBalance
+      );
+
+      if (result.receipt && !result.error) {
+        setWithdrawnAmount(amount);
+        resetForm();
+        onHide();
+        openModal("withdrawsuccess");
+        // Refresh balance
+        await fetchUsdtBalance();
+      } else {
+        const errorMsg =
+          result.error?.code === 4001
+            ? "Transaction rejected by user."
+            : "Withdrawal failed. Please try again.";
+        toast.error(errorMsg);
+      }
+    } catch {
+      toast.error("Withdrawal failed. Please try again.");
+    } finally {
+      setIsWithdrawing(false);
+    }
+  };
+
   return (
     <>
-      <Modal className="withdraw" show={show} onHide={onHide} centered>
+      <Modal className="withdraw" show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>Withdraw</Modal.Title>
         </Modal.Header>
@@ -34,7 +131,6 @@ const Withdrawmodal: React.FC<WithdrawmodalProps> = ({ show, onHide }) => {
             <div className="parenttoken">
               <div className="lefttoken">
                 <p className="tokenpar">Token</p>
-
                 <span>
                   <img
                     src="/tokenimages/usdt.png"
@@ -44,15 +140,14 @@ const Withdrawmodal: React.FC<WithdrawmodalProps> = ({ show, onHide }) => {
                   USDT
                 </span>
               </div>
-  <div className="lefttoken">
+              <div className="lefttoken">
                 <p className="tokenpar">Chain</p>
-
                 <span>
                   <img
-                            src="/tokenimages/arbitrum.svg"
-                            alt="img"
-                            className="img-fluid arb"
-                          />
+                    src="/tokenimages/arbitrum.svg"
+                    alt="img"
+                    className="img-fluid arb"
+                  />
                   Arbitrum
                 </span>
               </div>
@@ -61,14 +156,18 @@ const Withdrawmodal: React.FC<WithdrawmodalProps> = ({ show, onHide }) => {
             <div className="maininputss">
               <div className="innerinput">
                 <p>Address</p>
-
-                <input type="text" placeholder="0x..." />
+                <input
+                  type="text"
+                  placeholder="0x..."
+                  value={recipientAddress}
+                  onChange={(e) => setRecipientAddress(e.target.value)}
+                  disabled={isWithdrawing}
+                />
               </div>
 
               <div className="innerinput">
                 <div className="parentmaintext">
                   <p>Amount</p>
-
                   <h6>
                     Balance
                     <img
@@ -76,28 +175,44 @@ const Withdrawmodal: React.FC<WithdrawmodalProps> = ({ show, onHide }) => {
                       alt="img"
                       className="img-fluid usd"
                     />
-                    <span>$2,432.54</span>
+                    <span>${formatNumberWithCommas(usdtBalance)}</span>
                   </h6>
                 </div>
 
                 <div className="parentmaininput">
-                  <input type="text" placeholder="0.00" />
-                  <button className="max">MAX</button>
+                  <input
+                    type="text"
+                    placeholder="0.00"
+                    value={amount}
+                    onChange={(e) => handleAmountChange(e.target.value)}
+                    disabled={isWithdrawing}
+                  />
+                  <button
+                    className="max"
+                    onClick={handleMax}
+                    disabled={isWithdrawing}
+                  >
+                    MAX
+                  </button>
                 </div>
               </div>
             </div>
 
             <div className="buttonlast">
-              <button className="close">Close</button>
+              <button
+                className="close"
+                onClick={handleClose}
+                disabled={isWithdrawing}
+              >
+                Close
+              </button>
 
               <button
-                onClick={() => {
-                  onHide();
-                  openModal("withdrawsuccess");
-                }}
+                onClick={handleWithdraw}
                 className="withdraw"
+                disabled={isWithdrawing || !amount || !recipientAddress}
               >
-                Withdraw
+                {isWithdrawing ? "Processing..." : "Withdraw"}
               </button>
             </div>
           </div>
@@ -107,6 +222,7 @@ const Withdrawmodal: React.FC<WithdrawmodalProps> = ({ show, onHide }) => {
       <Withdrawsuccessmodal
         show={modals.withdrawsuccess}
         onHide={() => closeModal("withdrawsuccess")}
+        amount={withdrawnAmount}
       />
     </>
   );
