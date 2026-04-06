@@ -15,19 +15,19 @@ const system_ENV = process.env.NEXT_PUBLIC_ENV;
 if (system_ENV === "development") {
   api_url = "https://rain-speed-markets-dev-api.quecko.org";
   aqua_base_url = "https://dev-aqua-backend.quecko.org";
-  SPEED_MARKET_CONTRACT = "0xB292c8E18c1bD5861A2734412F0078C18aCBc50e";
+  SPEED_MARKET_CONTRACT = "0x6614026bE38171C30eFD82297242097b0B57Bb06";
   usdt_token = "0xCa4f77A38d8552Dd1D5E44e890173921B67725F4";
   ACTIVE_SESSION_TIME = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 1;
 } else if (system_ENV === "stage") {
   api_url = "";
   aqua_base_url = "https://stg-api.aqua.cash";
   SPEED_MARKET_CONTRACT = "";
-  usdt_token = "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9";
+  usdt_token = "";
   ACTIVE_SESSION_TIME = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 1;
 } else {
   api_url = "";
   aqua_base_url = "https://prod-api.aqua.cash";
   SPEED_MARKET_CONTRACT = "";
-  usdt_token = "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9";
+  usdt_token = "";
   ACTIVE_SESSION_TIME = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 1;
 }

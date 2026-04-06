@@ -1,26 +1,43 @@
 import React, { FC } from "react";
 import Icon from "../Icon";
 
-const Token: FC = () => {
+interface TokenProps {
+  coinDetail: any;
+  duration: string | null;
+  loading: boolean;
+}
+
+const Token: FC<TokenProps> = ({ coinDetail, duration, loading }) => {
+  const symbol = coinDetail?.symbol ?? "BTC";
+  const slug = coinDetail?.slug ?? "btc";
+  const currentPrice = coinDetail?.currentPrice
+    ? `$${Number(coinDetail.currentPrice).toLocaleString(undefined, { maximumFractionDigits: 2 })}`
+    : "$0.00";
+  const imageUrl = coinDetail?.imageurl ?? `/tokenimages/${slug}.png`;
+
   return (
     <>
       <div className="maintoken">
               <div className="innertoken">
                 <div className="tokenimg">
-                  <img
-                    src="/tokenimages/btc.png"
-                    alt="innerimg"
-                    className="innerimg"
-                  />
+                  {loading ? (
+                    <div className="skeleton-shimmer" style={{ width: 32, height: 32, borderRadius: "50%" }} />
+                  ) : (
+                    <img
+                      src={imageUrl}
+                      alt={slug}
+                      className="innerimg"
+                    />
+                  )}
                 </div>
                 <div className="tokentexts">
                   <h6 className="tokenhead">
-                    BTC/USDT
+                    {loading ? "Loading..." : `${symbol}/USDT`}
                     <span className="maintimer">
-                      <Icon name="timer" />5 min
+                      <Icon name="timer" />{duration ?? "5 min"}
                     </span>
                   </h6>
-                  <p className="tokenpara">$90,298.5</p>
+                  <p className="tokenpara">{loading ? "—" : currentPrice}</p>
                 </div>
               </div>
             </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { getSocket } from "@/app/services/socket";
 
 // --- Types ---
 interface PricePoint {
@@ -13,6 +14,11 @@ interface TooltipData {
   y: number;
   time: number;
   price: number;
+}
+
+interface TradingChartProps {
+  coinDetail: any;
+  symbol: string | null;
 }
 
 // --- Utility functions ---
@@ -41,19 +47,20 @@ function formatTimeFull(ts: number): string {
   return `${h}:${m}:${s}`;
 }
 
-// --- Generate realistic price data ---
-function generateInitialData(): PricePoint[] {
+// --- Generate initial data from a base price ---
+function generateInitialData(basePrice: number): PricePoint[] {
   const now = Date.now();
   const points: PricePoint[] = [];
   const startTime = now - 60 * 60 * 1000; // 1 hour ago
-  let price = 90500;
+  let price = basePrice;
+  const variance = basePrice * 0.005; // 0.5% volatility range
 
   for (let i = 0; i < 360; i++) {
     const t = startTime + i * (60000 / 6);
-    const volatility = (Math.random() - 0.48) * 120;
-    const drift = Math.sin(i / 40) * 300;
+    const volatility = (Math.random() - 0.48) * (variance * 0.3);
+    const drift = Math.sin(i / 40) * (variance * 0.5);
     price += volatility;
-    price = Math.max(84000, Math.min(94000, price));
+    price = Math.max(basePrice - variance, Math.min(basePrice + variance, price));
     points.push({ time: t, price: price + drift });
   }
 
@@ -61,21 +68,31 @@ function generateInitialData(): PricePoint[] {
 }
 
 // --- Main Component ---
-export default function TradingChart() {
+export default function TradingChart({ coinDetail, symbol }: TradingChartProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const animFrameRef = useRef<number>(0);
-  const [data, setData] = useState<PricePoint[]>(generateInitialData);
+  const basePrice = coinDetail?.currentPrice ? Number(coinDetail.currentPrice) : 0;
+  const [data, setData] = useState<PricePoint[]>([]);
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
   const [dimensions, setDimensions] = useState({ width: 1200, height: 500 });
+  const initializedRef = useRef(false);
 
   // Chart config
   const PADDING = { top: 20, right: 100, bottom: 50, left: 20 };
 
+  // Initialize chart data when coinDetail loads
+  useEffect(() => {
+    if (basePrice > 0 && !initializedRef.current) {
+      initializedRef.current = true;
+      setData(generateInitialData(basePrice));
+    }
+  }, [basePrice]);
+
   // Price boundaries from data
   const { minPrice, maxPrice, currentPrice, openPrice, vwap } = useMemo(() => {
     if (data.length === 0)
-      return { minPrice: 84000, maxPrice: 94000, currentPrice: 90000, openPrice: 90000, vwap: 90300 };
+      return { minPrice: 0, maxPrice: 0, currentPrice: 0, openPrice: 0, vwap: 0 };
     const prices = data.map((d) => d.price);
     const min = Math.min(...prices);
     const max = Math.max(...prices);
@@ -103,20 +120,36 @@ export default function TradingChart() {
     return () => ro.disconnect();
   }, []);
 
-  // Simulate live data
+  // Listen to socket for real-time price updates for this symbol
   useEffect(() => {
-    const interval = setInterval(() => {
-      setData((prev) => {
-        const last = prev[prev.length - 1];
-        const volatility = (Math.random() - 0.48) * 80;
-        const newPrice = Math.max(84000, Math.min(94000, last.price + volatility));
-        const newPoint: PricePoint = { time: Date.now(), price: newPrice };
-        const cutoff = Date.now() - 65 * 60 * 1000;
-        return [...prev.filter((p) => p.time > cutoff), newPoint];
-      });
-    }, 1500);
-    return () => clearInterval(interval);
-  }, []);
+    if (!symbol) return;
+
+    const socket = getSocket();
+
+    const handler = (eventData: any) => {
+      if (eventData?.eventType !== "CoinPricesV1") return;
+
+      const coins = eventData?.data?.coins ?? eventData?.coins ?? eventData?.data;
+      if (!Array.isArray(coins)) return;
+
+      const coin = coins.find(
+        (c: any) => c.symbol?.toUpperCase() === symbol.toUpperCase()
+      );
+      if (!coin?.currentPrice) return;
+
+      const newPrice = Number(coin.currentPrice);
+      const newPoint: PricePoint = { time: Date.now(), price: newPrice };
+      const cutoff = Date.now() - 65 * 60 * 1000;
+
+      setData((prev) => [...prev.filter((p) => p.time > cutoff), newPoint]);
+    };
+
+    socket.on("speed_market_event", handler);
+
+    return () => {
+      socket.off("speed_market_event", handler);
+    };
+  }, [symbol]);
 
   // Coordinate mapping
   const mapX = useCallback(
@@ -189,7 +222,6 @@ export default function TradingChart() {
       const times = data.map((d) => d.time);
       const minT = Math.min(...times);
       const maxT = Math.max(...times);
-      const timeRange = maxT - minT;
       const timeStep = 10 * 60 * 1000; // 10 min
       const startT = Math.ceil(minT / timeStep) * timeStep;
 
@@ -286,11 +318,9 @@ export default function TradingChart() {
 
       // Current price label (orange badge)
       const priceLabel = formatPriceFull(currentPrice);
-      const timeLabel = formatTimeFull(Date.now());
 
       ctx.font = "bold 12px";
       const priceLabelW = ctx.measureText(priceLabel).width + 14;
-      const timeLabelW = ctx.measureText(timeLabel).width + 14;
 
       const badgeX = W - PADDING.right + 4;
       const badgeY = dotY - 10;
@@ -418,11 +448,6 @@ ctx.fillText(vwapTimeLabel, badgeX + 7, vwapBadgeY + 36);
   );
 
   const handleMouseLeave = useCallback(() => setTooltip(null), []);
-
-  // Price change calculation
-  const priceChange = currentPrice - openPrice;
-  const priceChangePct = ((priceChange / openPrice) * 100).toFixed(2);
-  const isPositive = priceChange >= 0;
 
   return (
     <div
