@@ -14,6 +14,7 @@ interface TradeFormProps {
   effectiveAmount: number;
   potentialWin: number;
   onPlacePrediction: () => void;
+  isTradeLoading?: boolean;
 }
 
 const TradeForm: React.FC<TradeFormProps> = ({
@@ -28,8 +29,10 @@ const TradeForm: React.FC<TradeFormProps> = ({
   effectiveAmount,
   potentialWin,
   onPlacePrediction,
+  isTradeLoading = false,
 }) => {
-  const pct = ((amount - 5) / 495) * 100;
+  const range = maxPosition - 5;
+  const pct = range > 0 ? ((amount - 5) / range) * 100 : 0;
   return (
     <>
       <div className="for-detail-component">
@@ -44,8 +47,8 @@ const TradeForm: React.FC<TradeFormProps> = ({
             className={`predict-btn ${direction === "DOWN" ? "down" : ""}`}
             onClick={() => setDirection("DOWN")}
           >
-           
-            <span className="downimg"> <Icon name="down"  /></span>
+
+            <span className="downimg"> <Icon name="down" /></span>
             DOWN
           </button>
         </div>
@@ -69,7 +72,7 @@ const TradeForm: React.FC<TradeFormProps> = ({
             className="custom-range"
             type="range"
             min={5}
-            max={500}
+            max={maxPosition}
             value={amount}
             onChange={(e) => setAmount(Number(e.target.value))}
             style={{
@@ -80,12 +83,12 @@ const TradeForm: React.FC<TradeFormProps> = ({
         </div>
 
         <div className="quick-amounts">
-          {quickValues.map((val) => (
+          {quickValues.filter((val) => val <= maxPosition).map((val) => (
             <button key={val} onClick={() => setAmount(val)}>
               ${val}
             </button>
           ))}
-          <button onClick={() => setAmount(500)}>MAX</button>
+          <button onClick={() => setAmount(maxPosition)}>MAX</button>
         </div>
 
         <div className="stats-card">
@@ -103,8 +106,15 @@ const TradeForm: React.FC<TradeFormProps> = ({
           </div>
         </div>
 
-        <Button className="place-btn" onClick={onPlacePrediction}>
-          PLACE PREDICTION
+        <Button className="place-btn" onClick={onPlacePrediction} disabled={isTradeLoading}>
+          {isTradeLoading ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+              Processing...
+            </>
+          ) : (
+            "PLACE PREDICTION"
+          )}
         </Button>
       </div>
     </>

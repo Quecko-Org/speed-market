@@ -5,27 +5,14 @@ import ProgressSlider from "./ProgressSlider";
 import ConfettiCanvas, { ConfettiHandle } from "./ConfettiCanvas";
 import Link from "next/link";
 import { formatNumberWithCommas } from "@/app/utils/helpers";
-
-interface CoinType {
-  _id: string;
-  coinId: string;
-  name: string;
-  slug: string;
-  symbol: string;
-  type: string;
-  currentPrice: string;
-  change24hr: string;
-  isActive: boolean;
-  isDefault: boolean;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
+import type { CoinType, HandleCreateTrade, MarketDuration } from "./Market";
 
 interface MasterModeMarketProps {
   coinListing: CoinType[];
   isLoading: boolean;
   usdtBalance: number;
+  onCreateTrade: HandleCreateTrade;
+  isTradeLoading: boolean;
 }
 
 interface ActiveTrade {
@@ -33,17 +20,19 @@ interface ActiveTrade {
   direction: "UP" | "DOWN";
 }
 
+const DURATION: MarketDuration = "15 min";
+
 const MASTER_MODE = {
   title: "Master Mode",
-  duration: "15 min",
+  duration: DURATION,
   icon: "timer",
   description: "Maximum duration — For the pros",
 };
 
 const FALLBACK_CARDS = [
-  { pair: "ETH/USDT", price: "$0.00", baseToken: "eth", quoteToken: "usdt", balanceToken: "usdt", potentialWin: "$0.00", isLive: true },
-  { pair: "BTC/USDT", price: "$0.00", baseToken: "btc", quoteToken: "usdt", balanceToken: "usdt", potentialWin: "$0.00", isLive: true },
-  { pair: "SOL/USDT", price: "$0.00", baseToken: "sol", quoteToken: "usdt", balanceToken: "usdt", potentialWin: "$0.00", isLive: true },
+  { pair: "ETH/USDT", price: "$0.00", imageurl: "/tokenimages/eth.png", baseToken: "eth", quoteToken: "usdt", balanceToken: "usdt", potentialWin: "$0.00", isLive: true, symbol: "ETH" },
+  { pair: "BTC/USDT", price: "$0.00", imageurl: "/tokenimages/btc.png", baseToken: "btc", quoteToken: "usdt", balanceToken: "usdt", potentialWin: "$0.00", isLive: true, symbol: "BTC" },
+  { pair: "SOL/USDT", price: "$0.00", imageurl: "/tokenimages/sol.png", baseToken: "sol", quoteToken: "usdt", balanceToken: "usdt", potentialWin: "$0.00", isLive: true, symbol: "SOL" },
 ];
 
 const buildCards = (coinListing: CoinType[]) => {
@@ -55,18 +44,23 @@ const buildCards = (coinListing: CoinType[]) => {
     quoteToken: "usdt",
     balance: "500 USDT",
     balanceToken: "usdt",
+    imageurl: coin.imageurl,
     potentialWin: "$0.00",
     isLive: coin.isActive,
+    symbol: coin.symbol,
   }));
 };
 
-const MasterModeMarket: FC<MasterModeMarketProps> = ({ coinListing, isLoading, usdtBalance }) => {
+const MasterModeMarket: FC<MasterModeMarketProps> = ({
+  coinListing,
+  isLoading,
+  usdtBalance,
+  onCreateTrade,
+  isTradeLoading,
+}) => {
   const confettiRef = useRef<ConfettiHandle>(null);
   const [activeTrade, setActiveTrade] = useState<ActiveTrade | null>(null);
-
-  function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
-    confettiRef.current?.launch(e.currentTarget);
-  }
+  const [tradeAmounts, setTradeAmounts] = useState<Record<number, string>>({});
 
   const handleDirectionClick = (cardIndex: number, direction: "UP" | "DOWN") => {
     if (activeTrade?.cardIndex === cardIndex && activeTrade?.direction === direction) {
@@ -82,6 +76,55 @@ const MasterModeMarket: FC<MasterModeMarketProps> = ({ coinListing, isLoading, u
 
   const getDirection = (cardIndex: number): "UP" | "DOWN" | null =>
     isTradeOpen(cardIndex) ? activeTrade!.direction : null;
+
+  const handleAmountChange = (cardIndex: number, value: string) => {
+    if (value === "" || /^\d*\.?\d*$/.test(value)) {
+      setTradeAmounts((prev) => ({ ...prev, [cardIndex]: value }));
+    }
+  };
+
+  const maxPosition = usdtBalance >= 100 ? 100 : usdtBalance;
+
+  const handleSliderChange = (cardIndex: number, percent: number) => {
+    if (maxPosition <= 0) return;
+    const amount = Math.max(5, (percent / 100) * maxPosition);
+    const rounded = Math.floor(amount * 100) / 100;
+    setTradeAmounts((prev) => ({ ...prev, [cardIndex]: rounded > 0 ? String(rounded) : "" }));
+  };
+
+  const getSliderPercent = (cardIndex: number): number => {
+    const amount = Number(tradeAmounts[cardIndex] || 0);
+    if (maxPosition <= 0 || amount <= 0) return 0;
+    return Math.min((amount / maxPosition) * 100, 100);
+  };
+
+  const handleMaxClick = (cardIndex: number) => {
+    setTradeAmounts((prev) => ({ ...prev, [cardIndex]: String(maxPosition) }));
+  };
+
+  const handleTradeSubmit = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    asset: string,
+    cardIndex: number,
+    direction: "UP" | "DOWN"
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const amount = tradeAmounts[cardIndex] || "";
+    const success = await onCreateTrade({
+      amount,
+      asset,
+      duration: DURATION,
+      type: direction,
+    });
+
+    if (success) {
+      confettiRef.current?.launch(e.currentTarget);
+      setTradeAmounts((prev) => ({ ...prev, [cardIndex]: "" }));
+      setActiveTrade(null);
+    }
+  };
 
   return (
     <div className="innermarket">
@@ -111,12 +154,16 @@ const MasterModeMarket: FC<MasterModeMarketProps> = ({ coinListing, isLoading, u
         {!isLoading && coinListing.length > 0 && buildCards(coinListing).map((card, cardIndex) => {
           const tradeOpen = isTradeOpen(cardIndex);
           const direction = getDirection(cardIndex);
+          const currentAmount = tradeAmounts[cardIndex] || "";
+          const potentialWin = currentAmount && !isNaN(Number(currentAmount))
+            ? `$${(Number(currentAmount) * 1.92).toFixed(2)}`
+            : card.potentialWin;
 
           return (
             <Link
               key={cardIndex}
               className={`marketcard${tradeOpen ? " card--trade-open" : ""}`}
-              href="/exploredetail"
+              href={`/exploredetail?symbol=${card.symbol}&duration=${encodeURIComponent(DURATION)}`}
               draggable={false}
             >
               {card.isLive && (
@@ -128,7 +175,7 @@ const MasterModeMarket: FC<MasterModeMarketProps> = ({ coinListing, isLoading, u
 
               <div className="tokenimages">
                 <div className="innertoken">
-                  <img src={`/tokenimages/${card.baseToken}.png`} alt={card.baseToken} className="tokenimg" />
+                  <img src={card.imageurl} alt={card.baseToken} className="tokenimg" />
                 </div>
                 <Icon name="energy" className="energy" />
                 <div className="innertoken">
@@ -142,6 +189,7 @@ const MasterModeMarket: FC<MasterModeMarketProps> = ({ coinListing, isLoading, u
               <div className="cardbtns">
                 <button
                   className={`upbtn${direction === "UP" ? " btn--active" : ""}`}
+                  disabled={isTradeLoading}
                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDirectionClick(cardIndex, "UP"); }}
                 >
                   <span className="innerbtn"><Icon name="up" className="up" /></span>
@@ -149,6 +197,7 @@ const MasterModeMarket: FC<MasterModeMarketProps> = ({ coinListing, isLoading, u
                 </button>
                 <button
                   className={`downbtn${direction === "DOWN" ? " btn--active" : ""}`}
+                  disabled={isTradeLoading}
                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDirectionClick(cardIndex, "DOWN"); }}
                 >
                   <span className="innerbtn"><Icon name="down" className="down" /></span>
@@ -156,9 +205,9 @@ const MasterModeMarket: FC<MasterModeMarketProps> = ({ coinListing, isLoading, u
                 </button>
               </div>
 
-              {tradeOpen && (
+              {tradeOpen && direction && (
                 <div
-                  className={`maintrade maintrade--${direction?.toLowerCase()}`}
+                  className={`maintrade maintrade--${direction.toLowerCase()}`}
                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
                   onMouseDown={(e) => e.stopPropagation()}
                   onTouchStart={(e) => e.stopPropagation()}
@@ -166,7 +215,7 @@ const MasterModeMarket: FC<MasterModeMarketProps> = ({ coinListing, isLoading, u
                   <div className="tradetop">
                     <div className="maintoken">
                       <div className="tokenimg">
-                        <img src={`/tokenimages/${card.baseToken}.png`} alt={card.baseToken} className="innerimg" />
+                        <img src={card.imageurl} alt={card.baseToken} className="innerimg" />
                       </div>
                       <h5 className="tokenpara">{card.pair}</h5>
                     </div>
@@ -187,19 +236,35 @@ const MasterModeMarket: FC<MasterModeMarketProps> = ({ coinListing, isLoading, u
                   </div>
 
                   <div className="maininput">
-                    <input type="text" className="innerinput" placeholder="Amount" />
-                    <button className="maxbtn">MAX</button>
+                    <input
+                      type="text"
+                      className="innerinput"
+                      placeholder="Amount"
+                      value={currentAmount}
+                      onChange={(e) => handleAmountChange(cardIndex, e.target.value)}
+                      disabled={isTradeLoading}
+                    />
+                    <button
+                      className="maxbtn"
+                      onClick={() => handleMaxClick(cardIndex)}
+                      disabled={isTradeLoading}
+                    >
+                      MAX
+                    </button>
                   </div>
-
-                  <ProgressSlider />
+                  <ProgressSlider
+                    value={getSliderPercent(cardIndex)}
+                    onChange={(p) => handleSliderChange(cardIndex, p)}
+                  />
 
                   <button
                     className={`tradebtn ${direction === "UP" ? "upbtn" : "downbtn"}`}
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleClick(e); }}
+                    disabled={isTradeLoading}
+                    onClick={(e) => handleTradeSubmit(e, card.symbol, cardIndex, direction)}
                   >
-                    {direction}
+                    {isTradeLoading ? "Processing..." : direction}
                     <span className="winpara">
-                      Potential Win <span className="bold">{card.potentialWin}</span>
+                      Potential Win <span className="bold">{potentialWin}</span>
                     </span>
                   </button>
                 </div>

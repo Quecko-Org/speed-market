@@ -8,7 +8,41 @@ export const getCoinsPrices = async () => {
         const response = await axios.get(`${api_url}/coins/price?offset=1&limit=10`);
         return response.data?.data?.coins;
     } catch (error) {
-        console.error("Error fetching user profile:", error);
+        console.error("Error fetching coin prices:", error);
+        return null;
+    }
+};
+
+export const getCoinDetail = async (symbol: string) => {
+
+    try {
+        const response = await axios.get(`${api_url}/coins/price/${symbol}`);
+        return response.data?.data;
+    } catch (error) {
+        console.error("Error fetching coin detail:", error);
+        return null;
+    }
+};
+
+
+export interface SignaturePayload {
+    amount: string;
+    asset: string;
+    duration: string;
+    type: "UP" | "DOWN";
+}
+
+export const getSignature = async (payload: SignaturePayload) => {
+    const token = localStorage.getItem("accessToken");
+    try {
+        const response = await axios.post(`${api_url}/bets/create-option-sign`, payload, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        return response?.data?.data;
+    } catch (error) {
+        console.error("Error fetching signature:", error);
         return null;
     }
 };
