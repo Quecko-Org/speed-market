@@ -310,7 +310,7 @@ const Exploredetail: FC = () => {
                 </div>
               </Tab>
               <Tab eventKey="comments" title="Comments">
-                <CommentSection />
+                <CommentSection coinId={coinDetail?._id ?? coinDetail?._id ?? ""} />
               </Tab>
             </Tabs>
           </div>
@@ -328,8 +328,8 @@ const Exploredetail: FC = () => {
                 id="uncontrolled-tab-example"
                 className="detailtabs"
               >
-                <Tab eventKey="comments" title="Comments (98)">
-                  <CommentSection />
+                <Tab eventKey="comments" title="Comments">
+                  <CommentSection coinId={coinDetail?._id ?? coinDetail?._id ?? ""} />
                 </Tab>
                 <Tab eventKey="activity" title="Activity">
                   <Activity />
