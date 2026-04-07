@@ -213,7 +213,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       await loginOrRegister(signData, address, smartAddr ?? "");
       toast.success(LOGIN_SUCCESS);
 
-      await fetchUsdtBalance();
+      await fetchUsdtBalance(smartAddr ?? undefined);
       const profile = await getUserProfile();
       if (profile) setUserProfile(profile);
 

@@ -20,8 +20,9 @@ export const useGetUsdtBalance = () => {
   const smartAccount = useAtomValue(userSmartAccount);
   const [, setSmartAccountUsdtBalance] = useAtom(userSmartAccountUsdtBalance);
 
-  const fetchUsdtBalance = useCallback(async () => {
-    if (!smartAccount) return;
+  const fetchUsdtBalance = useCallback(async (overrideAddress?: string) => {
+    const account = overrideAddress || smartAccount;
+    if (!account) return;
 
     try {
       const client = getPublicClient();
@@ -29,7 +30,7 @@ export const useGetUsdtBalance = () => {
         address: usdt_token as `0x${string}`,
         abi: erc20Abi,
         functionName: "balanceOf",
-        args: [smartAccount as `0x${string}`],
+        args: [account as `0x${string}`],
       });
 
       const formatted = Number(formatUnits(balance, USDT_DECIMALS));
