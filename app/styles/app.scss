@@ -35,8 +35,9 @@ body {
     color: #FFF;
     overflow: hidden;
 }
+
 @media (max-width: 991px) {
-    body{
+    body {
         height: 100%;
         overflow: auto;
     }
@@ -127,10 +128,10 @@ textarea:focus {
             box-shadow: none;
             outline: none;
             background-color: transparent;
-            margin-top: 70px;
             min-height: unset !important;
             max-height: unset !important;
             width: 100%;
+            margin-top: 20px;
 
             .toast-positionOpenedup {
                 border-radius: 8px;
@@ -398,6 +399,83 @@ textarea:focus {
                 }
             }
 
+            .toast-profileupdated {
+                border-radius: 20px;
+                border: 1px solid #70E852;
+                background: #2A2B40;
+                box-shadow: 0 90px 25px 0 rgba(0, 0, 0, 0.00), 0 58px 23px 0 rgba(0, 0, 0, 0.01), 0 32px 19px 0 rgba(0, 0, 0, 0.03), 0 14px 14px 0 rgba(0, 0, 0, 0.04), 0 4px 8px 0 rgba(0, 0, 0, 0.05);
+                display: flex;
+                padding: 20px;
+                align-items: center;
+                gap: 18px;
+                width: 100%;
+
+                .lefttoast {
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    gap: 12px;
+
+                    .tickimg {
+                        display: flex;
+                        width: 28px;
+                        height: 28px;
+                        border-radius: 43.75px;
+                        background: rgba(112, 232, 82, 0.20);
+                        justify-content: center;
+                        align-items: center;
+
+                        div {
+                            width: 16px;
+                            height: 16px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+
+                            div {
+                                width: 16px;
+                                height: 16px;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+
+                                svg {
+                                    width: 16px;
+                                    height: 16px;
+                                }
+                            }
+                        }
+                    }
+
+                    .toasttexts {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 4px;
+
+                        .positionhead {
+                            color: #FFF;
+                            font-size: 14px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: 100%;
+                        }
+
+                        .positionpara {
+                            color: #5F5D72;
+                            font-size: 12px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: 130%;
+
+                            .white {
+                                color: #FFF;
+                            }
+                        }
+                    }
+                }
+            }
+
             .Toastify__close-button {
                 width: 24px;
                 height: 24px;
@@ -421,8 +499,8 @@ textarea:focus {
     }
 }
 
-@media(max-width:600px){
-    .Toastify .Toastify__toast-container{
+@media(max-width:600px) {
+    .Toastify .Toastify__toast-container {
         width: 100%;
     }
 }

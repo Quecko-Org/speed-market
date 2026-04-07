@@ -4,7 +4,12 @@ import React from "react";
 import Icon from "../components/Icon";
 
 interface Props {
-  type: "positionOpenedup" | "positionOpeneddown" | "roundWon" | "roundLost";
+  type:
+    | "positionOpenedup"
+    | "positionOpeneddown"
+    | "roundWon"
+    | "roundLost"
+    | "profileupdated";
 }
 
 const CustomToast: React.FC<Props> = ({ type }) => {
@@ -64,6 +69,20 @@ const CustomToast: React.FC<Props> = ({ type }) => {
             </span>
             <div className="toasttexts">
               <h6 className="positionhead">Round Won: BTC/USDT - 5 min </h6>
+            </div>
+          </div>
+        </div>
+      )}
+      {type === "profileupdated" && (
+        <div className={`toast-${type}`}>
+          <div className="lefttoast">
+            <span className="tickimg">
+              <Icon name="tick" />
+            </span>
+            <div className="toasttexts">
+              <h6 className="positionhead">
+                Your profile has been updated successfully.
+              </h6>
             </div>
           </div>
         </div>

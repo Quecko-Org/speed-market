@@ -6,14 +6,18 @@ import ProfileHeader from "./Profileheader";
 import PortfolioCard from "./Portfoliocard";
 import StatsBar from "./Statsbar";
 import PredictionsTable from "./Predictionstable";
+import Editprofilemodal from "../modals/Editprofilemodal";
+import Shareprofilemodal from "../modals/Shareprofilemodal";
 
-type ModalKeys = "withdraw" | "deposit";
+type ModalKeys = "withdraw" | "deposit" | "editprofile" | "shareprofile";
 type ModalState = Record<ModalKeys, boolean>;
 
 const Profile: FC = () => {
   const [modals, setModals] = useState<ModalState>({
     withdraw: false,
     deposit: false,
+    editprofile: false,
+    shareprofile: false
   });
 
   const openModal = (name: ModalKeys) => {
@@ -29,7 +33,7 @@ const Profile: FC = () => {
       <section className="mainprofile">
         <div className="custom-container">
           <div className="upperprofile">
-            <ProfileHeader />
+            <ProfileHeader onEdit={() => openModal("editprofile")} onShare={() => openModal("shareprofile")} />
             <PortfolioCard
               onDeposit={() => openModal("deposit")}
               onWithdraw={() => openModal("withdraw")}
@@ -47,6 +51,14 @@ const Profile: FC = () => {
       <Withdrawmodal
         show={modals.withdraw}
         onHide={() => closeModal("withdraw")}
+      />
+      <Editprofilemodal
+        show={modals.editprofile}
+        onHide={() => closeModal("editprofile")}
+      />
+            <Shareprofilemodal
+        show={modals.shareprofile}
+        onHide={() => closeModal("shareprofile")}
       />
     </>
   );
