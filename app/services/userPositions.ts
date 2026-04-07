@@ -21,11 +21,13 @@ export const getUserPosition = async (symbol?: string) => {
 };
 
 
-export const getUserHistory = async (symbol: string, offset = 1, limit = 10) => {
+export const getUserHistory = async (symbol?: string, offset = 1, limit = 10) => {
     const token = localStorage.getItem("accessToken");
     if (!token) return null;
     try {
-        const response = await axios.get(`${api_url}/bets/history?offset=${offset}&limit=${limit}&symbol=${symbol}`, {
+        let url = `${api_url}/bets/history?offset=${offset}&limit=${limit}`;
+        if (symbol) url += `&symbol=${symbol}`;
+        const response = await axios.get(url, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Exploredetail from "../components/Exploredetail/Exploredetail";
 import Header from "../components/header/Header";
 import { PositionsProvider } from "../components/positions/PositionsContext";
@@ -11,7 +11,9 @@ const page = () => {
       <PositionsProvider>
         <div className="app-layout explore-layout">
           <main className="app-main">
-            <Exploredetail />
+            <Suspense fallback={null}>
+              <Exploredetail />
+            </Suspense>
           </main>
           <MainPositions />
         </div>
