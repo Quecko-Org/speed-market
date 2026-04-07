@@ -22,13 +22,10 @@ jobs:
           node-version: ${{ env.node-version }}
 
       - name: Clean workspace
-        run: rm -rf node_modules .next
+        run: rm -rf node_modules .next package-lock.json
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
-
-      - name: Install lightningcss linux binary
-        run: npm install lightningcss-linux-x64-gnu --save-optional --legacy-peer-deps
 
       - name: Create build
         run: npm run build
