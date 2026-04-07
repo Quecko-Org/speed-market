@@ -17,6 +17,7 @@ type ModalState = Record<ModalKeys, boolean>;
 
 interface HistoryProps {
   symbol: string | null;
+  refreshKey?: number;
 }
 
 function formatDate(dateStr?: string) {
@@ -27,27 +28,33 @@ function formatDate(dateStr?: string) {
   return { time, date };
 }
 
-const History: FC<HistoryProps> = ({ symbol }) => {
+const ITEMS_PER_PAGE = 10;
+
+const History: FC<HistoryProps> = ({ symbol, refreshKey }) => {
   const [history, setHistory] = useState<any[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const fetchHistory = async (page: number, background = false) => {
+    if (!symbol) return;
+    if (!background) setHistoryLoading(true);
+    try {
+      const response = await getUserHistory(symbol, page + 1, ITEMS_PER_PAGE);
+      if (response) {
+        setHistory(response.bets ?? response.data ?? []);
+        setTotalPages(response.pages ?? Math.ceil((response.count ?? 0) / ITEMS_PER_PAGE));
+      }
+    } catch (err) {
+      console.error("Failed to fetch history:", err);
+    } finally {
+      if (!background) setHistoryLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (!symbol) return;
-
-    const fetchHistory = async () => {
-      setHistoryLoading(true);
-      try {
-        const response = await getUserHistory(symbol);
-        setHistory(Array.isArray(response) ? response : []);
-      } catch (err) {
-        console.error("Failed to fetch history:", err);
-      } finally {
-        setHistoryLoading(false);
-      }
-    };
-
-    fetchHistory();
-  }, [symbol]);
+    fetchHistory(currentPage, history.length > 0);
+  }, [symbol, currentPage, refreshKey]);
 
   const [modals, setModals] = useState<ModalState>({
     createprofile: false,
@@ -59,12 +66,11 @@ const History: FC<HistoryProps> = ({ symbol }) => {
     withdraw: false,
     deposit: false,
   });
-  const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 10;
 
   const handlePageClick = (event: any) => {
     setCurrentPage(event.selected);
   };
+
   const openModal = (name: ModalKeys) => {
     setModals((prev) => ({ ...prev, [name]: true }));
   };
@@ -72,12 +78,6 @@ const History: FC<HistoryProps> = ({ symbol }) => {
   const closeModal = (name: ModalKeys) => {
     setModals((prev) => ({ ...prev, [name]: false }));
   };
-
-  const pageCount = Math.ceil(history.length / itemsPerPage);
-  const paginatedHistory = history.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
-  );
 
   return (
     <>
@@ -101,14 +101,14 @@ const History: FC<HistoryProps> = ({ symbol }) => {
                     Loading history...
                   </td>
                 </tr>
-              ) : paginatedHistory.length === 0 ? (
+              ) : history.length === 0 ? (
                 <tr>
                   <td colSpan={6} style={{ textAlign: "center", color: "#74728B", padding: 24 }}>
                     No history yet
                   </td>
                 </tr>
               ) : (
-                paginatedHistory.map((item: any) => {
+                history.map((item: any) => {
                   const isUp = item.betType === "UP";
                   const isWon = item.result === "WIN";
                   const { time, date } = formatDate(item.createdAt);
@@ -152,10 +152,10 @@ const History: FC<HistoryProps> = ({ symbol }) => {
         <div className="mobileboxes d-none">
           {historyLoading ? (
             <p style={{ textAlign: "center", color: "#74728B", padding: 16 }}>Loading history...</p>
-          ) : paginatedHistory.length === 0 ? (
+          ) : history.length === 0 ? (
             <p style={{ textAlign: "center", color: "#74728B", padding: 16 }}>No history yet</p>
           ) : (
-            paginatedHistory.map((item: any) => {
+            history.map((item: any) => {
               const isUp = item.betType === "UP";
               const isWon = item.result === "won" || item.status === "won";
               const { time, date } = formatDate(item.createdAt);
@@ -206,12 +206,12 @@ const History: FC<HistoryProps> = ({ symbol }) => {
           )}
         </div>
 
-        {pageCount > 1 && (
+        {totalPages > 1 && (
           <ReactPaginate
             previousLabel={"←"}
             nextLabel={"→"}
             breakLabel={"..."}
-            pageCount={pageCount}
+            pageCount={totalPages}
             forcePage={currentPage}
             marginPagesDisplayed={1}
             pageRangeDisplayed={5}

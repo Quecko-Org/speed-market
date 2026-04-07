@@ -18,18 +18,18 @@ export const getUserPosition = async (symbol: string) => {
 };
 
 
-export const getUserHistory = async (symbol: string) => {
+export const getUserHistory = async (symbol: string, offset = 1, limit = 10) => {
     const token = localStorage.getItem("accessToken");
     if (!token) return null;
     try {
-        const response = await axios.get(`${api_url}/bets/history?offset=1&limit=10&symbol=${symbol}`, {
+        const response = await axios.get(`${api_url}/bets/history?offset=${offset}&limit=${limit}&symbol=${symbol}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
-        return response.data?.data?.bets;
+        return response.data?.data;
     } catch (error) {
-        console.error("Error fetching user position:", error);
+        console.error("Error fetching user history:", error);
         return null;
     }
 };

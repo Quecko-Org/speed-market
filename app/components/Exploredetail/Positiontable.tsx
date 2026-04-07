@@ -32,6 +32,8 @@ type ModalState = Record<ModalKeys, boolean>;
 
 interface PositiontableProps {
   symbol: string | null;
+  refreshKey?: number;
+  onTimerExpired?: () => void;
 }
 
 function formatDate(dateStr?: string) {
@@ -51,7 +53,7 @@ function getRemainingTime(expiresAt?: string): string {
   return `${mins}m ${secs}s`;
 }
 
-const Positiontable: FC<PositiontableProps> = ({ symbol }) => {
+const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpired }) => {
   const [positions, setPositions] = useState<any[]>([]);
   const [positionsLoading, setPositionsLoading] = useState(false);
   const [, setTick] = useState(0);
@@ -74,7 +76,9 @@ const Positiontable: FC<PositiontableProps> = ({ symbol }) => {
   const { grantPermissions } = useSessionPermissions();
   const fetchUsdtBalance = useGetUsdtBalance();
 
-  // Live countdown timer
+  // Live countdown timer + detect expiry
+  const expiredIdsRef = React.useRef<Set<string>>(new Set());
+
   useEffect(() => {
     if (positions.length === 0) return;
     const hasActive = positions.some(
@@ -82,28 +86,52 @@ const Positiontable: FC<PositiontableProps> = ({ symbol }) => {
     );
     if (!hasActive) return;
 
-    const interval = setInterval(() => setTick((t) => t + 1), 1000);
+    const interval = setInterval(() => {
+      setTick((t) => t + 1);
+
+      // Check if any position just expired
+      let newlyExpired = false;
+      positions.forEach((p: any) => {
+        if (
+          p.expiresAt &&
+          new Date(p.expiresAt).getTime() <= Date.now() &&
+          !expiredIdsRef.current.has(p._id)
+        ) {
+          expiredIdsRef.current.add(p._id);
+          newlyExpired = true;
+        }
+      });
+
+      if (newlyExpired && symbol) {
+        // Background refresh positions
+        getUserPosition(symbol).then((response) => {
+          setPositions(Array.isArray(response) ? response : []);
+        });
+        onTimerExpired?.();
+      }
+    }, 1000);
     return () => clearInterval(interval);
-  }, [positions]);
+  }, [positions, symbol, onTimerExpired]);
 
   // Fetch positions
   useEffect(() => {
     if (!symbol) return;
+    const isInitialLoad = positions.length === 0;
 
     const fetchPositions = async () => {
-      setPositionsLoading(true);
+      if (isInitialLoad) setPositionsLoading(true);
       try {
         const response = await getUserPosition(symbol);
         setPositions(Array.isArray(response) ? response : []);
       } catch (err) {
         console.error("Failed to fetch positions:", err);
       } finally {
-        setPositionsLoading(false);
+        if (isInitialLoad) setPositionsLoading(false);
       }
     };
 
     fetchPositions();
-  }, [symbol]);
+  }, [symbol, refreshKey]);
 
   // Claim handler
   const handleClaim = async (betId: string, optionId: string) => {

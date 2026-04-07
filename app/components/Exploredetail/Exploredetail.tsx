@@ -56,9 +56,16 @@ const Exploredetail: FC = () => {
   const [loading, setLoading] = useState(false);
   const [isTradeLoading, setIsTradeLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [positionRefreshKey, setPositionRefreshKey] = useState(0);
+  const [historyRefreshKey, setHistoryRefreshKey] = useState(0);
 
   const handleOpen = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
+
+  const handleTimerExpired = () => {
+    setPositionRefreshKey((k) => k + 1);
+    setHistoryRefreshKey((k) => k + 1);
+  };
 
   const usdtBalance = useAtomValue(userSmartAccountUsdtBalance);
   const smartAccount = useAtomValue(userSmartAccount);
@@ -278,6 +285,7 @@ const Exploredetail: FC = () => {
       // 5. Success
       showToast(direction === "UP" ? "positionOpenedup" : "positionOpeneddown");
       fetchUsdtBalance();
+      setTimeout(() => setPositionRefreshKey((k) => k + 1), 7000);
       handleClose();
     } catch (error: any) {
       console.error("Trade execution error:", error);
@@ -310,7 +318,7 @@ const Exploredetail: FC = () => {
                 <div className="chart-parent">
                   <TradingChart coinDetail={coinDetail} symbol={symbol} />
                 </div>
-                <Positiontable symbol={symbol} />
+                <Positiontable symbol={symbol} refreshKey={positionRefreshKey} onTimerExpired={handleTimerExpired} />
                 <Sharemarket />
                 <Marketinfo coinDetail={coinDetail} />
                 <div className="placemain d-none">
@@ -341,7 +349,7 @@ const Exploredetail: FC = () => {
                       />
                     </Tab>
                     <Tab eventKey="history" title="History">
-                      <History symbol={symbol} />
+                      <History symbol={symbol} refreshKey={historyRefreshKey} />
                     </Tab>
                   </Tabs>
                 </div>
@@ -357,7 +365,7 @@ const Exploredetail: FC = () => {
             <div className="chart-parent">
               <TradingChart coinDetail={coinDetail} symbol={symbol} />
             </div>
-            <Positiontable symbol={symbol} />
+            <Positiontable symbol={symbol} refreshKey={positionRefreshKey} onTimerExpired={handleTimerExpired} />
             <Marketinfo coinDetail={coinDetail} />
             <div className="maintabs">
               <Tabs
@@ -370,15 +378,15 @@ const Exploredetail: FC = () => {
                 </Tab>
                 <Tab eventKey="activity" title="Activity">
                   <Activity
-                        activities={activities}
-                        loading={activityLoading}
-                        currentPage={activityPage}
-                        totalPages={activityTotalPages}
-                        onPageChange={handleActivityPageChange}
-                      />
+                    activities={activities}
+                    loading={activityLoading}
+                    currentPage={activityPage}
+                    totalPages={activityTotalPages}
+                    onPageChange={handleActivityPageChange}
+                  />
                 </Tab>
                 <Tab eventKey="history" title="History">
-                  <History symbol={symbol} />
+                  <History symbol={symbol} refreshKey={historyRefreshKey} />
                 </Tab>
               </Tabs>
             </div>
