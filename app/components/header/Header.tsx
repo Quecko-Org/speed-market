@@ -29,6 +29,7 @@ const Header: FC = () => {
   const {
     isWalletConnected,
     isLoading,
+    loadingStep,
     walletAddress,
     connectWallet,
     disconnectWallet,
@@ -85,6 +86,7 @@ const Header: FC = () => {
       {isLoading && (
         <div className="wallet-loader-overlay">
           <div className="wallet-loader-spinner" />
+          {loadingStep && <p className="wallet-loader-text">{loadingStep}</p>}
         </div>
       )}
 

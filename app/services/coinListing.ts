@@ -23,9 +23,12 @@ export const getCoinDetail = async (symbol: string) => {
     }
 };
 
-export const getCoinActivity = async (symbol: string, offset = 1, limit = 10) => {
+export const getCoinActivity = async (symbol?: string, offset = 1, limit = 10, result?: string) => {
     try {
-        const response = await axios.get(`${api_url}/bets/activity?offset=${offset}&limit=${limit}&symbol=${symbol}`);
+        let url = `${api_url}/bets/activity?offset=${offset}&limit=${limit}`;
+        if (symbol) url += `&symbol=${symbol}`;
+        if (result) url += `&result=${result}`;
+        const response = await axios.get(url);
         return response.data?.data;
     } catch (error) {
         console.error("Error fetching coin activity:", error);

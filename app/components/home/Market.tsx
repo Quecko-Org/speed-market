@@ -26,6 +26,7 @@ import {
 } from "@/app/config/environment";
 import { USDT_DECIMALS, USDT_MOCK_VALUE, MAX_UINT256 } from "@/app/config/constants";
 import { sendGasFeeAsUsdt, sendSmartAccountTx, isSessionNotFoundError, clearStaleSession } from "@/app/utils/transaction";
+import { handleCheckSession } from "@/app/utils/helpers";
 import { toast } from "react-toastify";
 import { showToast } from "@/app/hooks/showToast";
 
@@ -71,7 +72,7 @@ const DURATION_TO_EXPIRY_INDEX: Record<MarketDuration, number> = {
 // ── Component ──────────────────────────────────────────────────────────
 
 const Market: FC = () => {
-  const { isOpen: isPositionsOpen, toggle } = usePositions();
+  const { isOpen: isPositionsOpen, toggle, triggerRefresh } = usePositions();
   const [coinListing, setCoinListing] = useState<CoinType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isTradeLoading, setIsTradeLoading] = useState(false);
@@ -80,7 +81,7 @@ const Market: FC = () => {
   const smartAccount = useAtomValue(userSmartAccount);
   const smartAccountClient = useAtomValue(userSmartAccountClient);
   const publicClient = useAtomValue(userPublicClient);
-  const { isWalletConnected } = useWalletContext();
+  const { isWalletConnected, setIsLoading: setWalletLoading, setLoadingStep } = useWalletContext();
   const { grantPermissions } = useSessionPermissions();
   const fetchUsdtBalance = useGetUsdtBalance();
 
@@ -150,6 +151,11 @@ const Market: FC = () => {
 
     try {
       // 1. Session permissions (with stale session recovery)
+      const needsPermission = await handleCheckSession();
+      if (needsPermission) {
+        setWalletLoading(true);
+        setLoadingStep("Confirm permission request from your wallet");
+      }
       let permResult = await grantPermissions();
       if (!permResult) {
         toast.error("Failed to grant session permissions");
@@ -189,6 +195,10 @@ const Market: FC = () => {
           throw err;
         }
       };
+
+      // Hide overlay after permissions granted
+      setWalletLoading(false);
+      setLoadingStep("");
 
       // 2. Check allowance & approve if needed
       const allowance = await publicClient.readContract({
@@ -262,6 +272,7 @@ const Market: FC = () => {
       // 5. Success
       showToast(type === "UP" ? "positionOpenedup" : "positionOpeneddown");
       fetchUsdtBalance();
+      triggerRefresh();
       return true;
     } catch (error: any) {
       console.error("Trade execution error:", error);
@@ -269,6 +280,8 @@ const Market: FC = () => {
       return false;
     } finally {
       setIsTradeLoading(false);
+      setLoadingStep("");
+      setWalletLoading(false);
     }
   };
 
@@ -279,7 +292,7 @@ const Market: FC = () => {
         onClick={toggle}
         style={{ right: isPositionsOpen ? "339px" : "0" }}
       >
-        <span className="mainnumber">13</span>
+        <span className="mainnumber"></span>
         <p className="openpara">Open Positions</p>
         <Icon name="openarrow" className={isPositionsOpen ? "rotate" : ""} />
       </button>

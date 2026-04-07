@@ -49,6 +49,9 @@ import { toast } from "react-toastify";
 interface WalletContextValue {
   isWalletConnected: boolean;
   isLoading: boolean;
+  loadingStep: string;
+  setLoadingStep: (step: string) => void;
+  setIsLoading: (loading: boolean) => void;
   walletAddress: string | undefined;
   connectWallet: (connector: any) => Promise<void>;
   disconnectWallet: () => void;
@@ -69,6 +72,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   const [, setPubClient] = useAtom(userPublicClient);
   const [, setUserProfile] = useAtom(userProfileData);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingStep, setLoadingStep] = useState("");
   const pendingSign = useRef(false);
   const fetchUsdtBalance = useGetUsdtBalance();
 
@@ -130,6 +134,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     async (walletAddr: string) => {
       try {
         setIsLoading(true);
+        setLoadingStep("Confirm signature request from your wallet");
 
         if (connectedChainId !== platform_chainId) {
           await switchChainAsync({ chainId: platform_chainId });
@@ -151,6 +156,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
 
         return signData;
       } catch (error) {
+        setLoadingStep("");
         setIsLoading(false);
         toast.error(SIGNATURE_REJECTED);
         disconnectWallet();
@@ -165,6 +171,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     async (connector: any) => {
       try {
         setIsLoading(true);
+        setLoadingStep("Confirm wallet connection from your wallet");
 
         const result = await connectAsync(
           connector?.name === "WalletConnect"
@@ -181,6 +188,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
         }
       } catch (error) {
         console.error("Wallet connection failed:", error);
+        setLoadingStep("");
         setIsLoading(false);
         localStorage.removeItem("connectorId");
         localStorage.removeItem("flag");
@@ -200,6 +208,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       const signData = await performSign(address);
       if (!signData) return;
 
+      setLoadingStep("Setting up your account...");
       const smartAddr = await createSmartAccountFn(walletClient);
       await loginOrRegister(signData, address, smartAddr ?? "");
       toast.success(LOGIN_SUCCESS);
@@ -208,6 +217,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       const profile = await getUserProfile();
       if (profile) setUserProfile(profile);
 
+      setLoadingStep("");
       setIsLoading(false);
     })();
   }, [address, walletClient, performSign, createSmartAccountFn, fetchUsdtBalance, setUserProfile]);
@@ -259,6 +269,9 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       value={{
         isWalletConnected: isConnected && !!address,
         isLoading,
+        loadingStep,
+        setLoadingStep,
+        setIsLoading,
         walletAddress: address,
         connectWallet,
         disconnectWallet,

@@ -1,16 +1,19 @@
 import axios from "axios";
 import { api_url } from "@/app/config/environment";
 
-export const getUserPosition = async (symbol: string) => {
+export const getUserPosition = async (symbol?: string) => {
     const token = localStorage.getItem("accessToken");
     if (!token) return null;
     try {
-        const response = await axios.get(`${api_url}/bets/my-positions?offset=1&limit=10&symbol=${symbol}`, {
+        const url = symbol
+            ? `${api_url}/bets/my-positions?offset=1&limit=10&symbol=${symbol}`
+            : `${api_url}/bets/my-positions?offset=1&limit=10`;
+        const response = await axios.get(url, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
-        return response.data?.data?.bets;
+        return response.data?.data;
     } catch (error) {
         console.error("Error fetching user position:", error);
         return null;

@@ -15,7 +15,7 @@ const system_ENV = process.env.NEXT_PUBLIC_ENV;
 if (system_ENV === "development") {
   api_url = "https://rain-speed-markets-dev-api.quecko.org";
   aqua_base_url = "https://dev-aqua-backend.quecko.org";
-  SPEED_MARKET_CONTRACT = "0x790406EB11B3a4FaB097a0c6791C6C6401AfC627";
+  SPEED_MARKET_CONTRACT = "0x35B4f9f775f236d66c53fC5F087015F4A1391FD3";
   usdt_token = "0xCa4f77A38d8552Dd1D5E44e890173921B67725F4";
   ACTIVE_SESSION_TIME = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 1;
 } else if (system_ENV === "stage") {
