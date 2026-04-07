@@ -192,10 +192,7 @@ const Positiontable: FC<PositiontableProps> = ({ symbol }) => {
 
       toast.success("Claim successful!");
       fetchUsdtBalance();
-      if (symbol) {
-        const response = await getUserPosition(symbol);
-        setPositions(Array.isArray(response) ? response : []);
-      }
+      setPositions((prev) => prev.filter((p) => p._id !== betId));
     } catch (error: any) {
       console.error("Claim error:", error);
       toast.error(error?.shortMessage || error?.message || "Claim failed");

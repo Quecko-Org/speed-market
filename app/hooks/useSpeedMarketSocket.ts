@@ -4,9 +4,11 @@ import type { CoinType } from "@/app/components/home/Market";
 
 const SPEED_MARKET_EVENT = "speed_market_event";
 const COIN_PRICES_EVENT_TYPE = "CoinPricesV1";
+const POSITION_UPDATED_EVENT_TYPE = "PositionUpdatedV1";
 
 interface SpeedMarketSocketCallbacks {
   onCoinPrices: (coins: CoinType[]) => void;
+  onPositionUpdated?: (data: any) => void;
 }
 
 export const useSpeedMarketSocket = (callbacks: SpeedMarketSocketCallbacks) => {
@@ -22,6 +24,11 @@ export const useSpeedMarketSocket = (callbacks: SpeedMarketSocketCallbacks) => {
         if (coins) {
           callbacksRef.current.onCoinPrices(Array.isArray(coins) ? coins : [coins]);
         }
+      }
+
+      if (data?.eventType === POSITION_UPDATED_EVENT_TYPE) {
+        console.log("PositionUpdatedV1:", data);
+        callbacksRef.current.onPositionUpdated?.(data?.data ?? data);
       }
     };
 

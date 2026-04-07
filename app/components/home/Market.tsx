@@ -102,6 +102,7 @@ const Market: FC = () => {
   // ── Socket: real-time price updates ──────────────────────────────
   useSpeedMarketSocket({
     onCoinPrices: (updatedCoins) => {
+      setIsLoading(false);
       setCoinListing(updatedCoins);
     },
   });
