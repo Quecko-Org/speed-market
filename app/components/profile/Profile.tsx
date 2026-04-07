@@ -7,6 +7,9 @@ import PortfolioCard from "./Portfoliocard";
 import StatsBar from "./Statsbar";
 import PredictionsTable from "./Predictionstable";
 import { getUserHistory } from "@/app/services/userPositions";
+import { getUserProfile } from "@/app/services/auth";
+import { useAtom } from "jotai";
+import { userProfileData } from "@/app/store/atoms";
 import Editprofilemodal from "../modals/Editprofilemodal";
 import Shareprofilemodal from "../modals/Shareprofilemodal";
 
@@ -16,12 +19,19 @@ type ModalState = Record<ModalKeys, boolean>;
 const ITEMS_PER_PAGE = 10;
 
 const Profile: FC = () => {
+  const [userProfile, setUserProfile] = useAtom(userProfileData);
+
   const [modals, setModals] = useState<ModalState>({
     withdraw: false,
     deposit: false,
     editprofile: false,
     shareprofile: false
   });
+
+  const handleProfileUpdated = async () => {
+    const profile = await getUserProfile();
+    if (profile) setUserProfile(profile);
+  };
 
   const [history, setHistory] = useState<any[]>([]);
   const [pnlData, setPnlData] = useState<any>(null);
@@ -94,6 +104,9 @@ const Profile: FC = () => {
       <Editprofilemodal
         show={modals.editprofile}
         onHide={() => closeModal("editprofile")}
+        currentName={userProfile?.displayName ?? ""}
+        currentImage={userProfile?.profileImage ?? ""}
+        onProfileUpdated={handleProfileUpdated}
       />
       <Shareprofilemodal
         show={modals.shareprofile}
