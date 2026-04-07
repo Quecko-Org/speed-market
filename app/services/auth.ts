@@ -36,6 +36,44 @@ export const loginOrRegister = async (
   return response.data;
 };
 
+export const uploadMedia = async (file: File) => {
+  const token = localStorage.getItem("accessToken");
+  if (!token) return null;
+
+  try {
+    const formData = new FormData();
+    formData.append("media", file);
+
+    const response = await axios.post(`${api_url}/medias/upload`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data?.data;
+  } catch (error) {
+    console.error("Error uploading media:", error);
+    return null;
+  }
+};
+
+export const updateUserProfile = async (payload: { displayName?: string; profileImage?: string }) => {
+  const token = localStorage.getItem("accessToken");
+  if (!token) return null;
+
+  try {
+    const response = await axios.patch(`${api_url}/users`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data?.data;
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    return null;
+  }
+};
+
 export const getUserProfile = async () => {
   const token = localStorage.getItem("accessToken");
   if (!token) return null;
