@@ -7,15 +7,26 @@ interface PositionsContextValue {
   open: () => void;
   close: () => void;
   toggle: () => void;
-    activeTab: TabType;
+  activeTab: TabType;
   setActiveTab: (tab: TabType) => void;
+  refreshKey: number;
+  triggerRefresh: () => void;
 }
 
 const PositionsContext = createContext<PositionsContextValue | null>(null);
 
 export const PositionsProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
-const [activeTab, setActiveTab] = useState<TabType>("trade");
+  const [activeTab, setActiveTab] = useState<TabType>("trade");
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const triggerRefresh = () => {
+    setTimeout(() => {
+      setIsOpen(true);
+      setRefreshKey((k) => k + 1);
+    }, 7000);
+  };
+
   return (
     <PositionsContext.Provider
       value={{
@@ -23,8 +34,10 @@ const [activeTab, setActiveTab] = useState<TabType>("trade");
         open: () => setIsOpen(true),
         close: () => setIsOpen(false),
         toggle: () => setIsOpen((prev) => !prev),
-          activeTab,
-    setActiveTab,
+        activeTab,
+        setActiveTab,
+        refreshKey,
+        triggerRefresh,
       }}
     >
       {children}

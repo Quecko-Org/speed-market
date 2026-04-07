@@ -51,7 +51,21 @@ export const getTxHashAndReceipt = async ({
 
   if (!txHash) throw new Error("Transaction hash not found within timeout");
 
-  const receipt = await publicClient.getTransactionReceipt({ hash: txHash });
+  // Retry getTransactionReceipt — receipt may not be available immediately
+  let receipt = null;
+  const receiptStart = Date.now();
+  while (Date.now() - receiptStart < timeout) {
+    try {
+      receipt = await publicClient.getTransactionReceipt({ hash: txHash });
+      if (receipt) break;
+    } catch {
+      // Receipt not yet available, retry
+    }
+    await new Promise((r) => setTimeout(r, interval));
+  }
+
+  if (!receipt) throw new Error("Transaction receipt not found within timeout");
+
   return { txHash, receipt };
 };
 

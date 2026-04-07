@@ -105,7 +105,7 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
       if (newlyExpired && symbol) {
         // Background refresh positions
         getUserPosition(symbol).then((response) => {
-          setPositions(Array.isArray(response) ? response : []);
+          setPositions(Array.isArray(response?.bets) ? response.bets : Array.isArray(response) ? response : []);
         });
         onTimerExpired?.();
       }
@@ -122,7 +122,7 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
       if (isInitialLoad) setPositionsLoading(true);
       try {
         const response = await getUserPosition(symbol);
-        setPositions(Array.isArray(response) ? response : []);
+        setPositions(Array.isArray(response?.bets) ? response.bets : Array.isArray(response) ? response : []);
       } catch (err) {
         console.error("Failed to fetch positions:", err);
       } finally {

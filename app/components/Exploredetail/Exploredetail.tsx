@@ -35,6 +35,7 @@ import {
 } from "@/app/config/environment";
 import { USDT_DECIMALS, USDT_MOCK_VALUE, MAX_UINT256 } from "@/app/config/constants";
 import { sendGasFeeAsUsdt, sendSmartAccountTx, isSessionNotFoundError, clearStaleSession } from "@/app/utils/transaction";
+import { handleCheckSession } from "@/app/utils/helpers";
 import { toast } from "react-toastify";
 import { showToast } from "@/app/hooks/showToast";
 import type { MarketDuration } from "../home/Market";
@@ -50,7 +51,7 @@ const Exploredetail: FC = () => {
   const symbol = searchParams.get("symbol");
   const duration = searchParams.get("duration") as MarketDuration | null;
 
-  const { activeTab, setActiveTab, isOpen: isPositionsOpen, toggle } = usePositions();
+  const { activeTab, setActiveTab, isOpen: isPositionsOpen, toggle, triggerRefresh } = usePositions();
 
   const [coinDetail, setCoinDetail] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -71,7 +72,7 @@ const Exploredetail: FC = () => {
   const smartAccount = useAtomValue(userSmartAccount);
   const smartAccountClient = useAtomValue(userSmartAccountClient);
   const publicClient = useAtomValue(userPublicClient);
-  const { isWalletConnected } = useWalletContext();
+  const { isWalletConnected, setIsLoading: setWalletLoading, setLoadingStep } = useWalletContext();
   const { grantPermissions } = useSessionPermissions();
   const fetchUsdtBalance = useGetUsdtBalance();
 
@@ -106,8 +107,7 @@ const Exploredetail: FC = () => {
       const response = await getCoinActivity(symbol, page + 1, ACTIVITY_LIMIT);
       if (response) {
         setActivities(response.bets ?? response.data ?? []);
-        const total = response.totalCount ?? response.total ?? 0;
-        setActivityTotalPages(Math.ceil(total / ACTIVITY_LIMIT));
+        setActivityTotalPages(response.pages ?? Math.ceil((response.count ?? 0) / ACTIVITY_LIMIT));
       }
     } catch (err) {
       console.error("Failed to fetch coin activity:", err);
@@ -173,6 +173,11 @@ const Exploredetail: FC = () => {
 
     try {
       // 1. Session permissions (with stale session recovery)
+      const needsPermission = await handleCheckSession();
+      if (needsPermission) {
+        setWalletLoading(true);
+        setLoadingStep("Confirm permission request from your wallet");
+      }
       let permResult = await grantPermissions();
       if (!permResult) {
         toast.error("Failed to grant session permissions");
@@ -212,6 +217,10 @@ const Exploredetail: FC = () => {
           throw err;
         }
       };
+
+      // Hide overlay after permissions granted
+      setWalletLoading(false);
+      setLoadingStep("");
 
       // 2. Check allowance & approve if needed
       const allowance = await publicClient.readContract({
@@ -285,13 +294,16 @@ const Exploredetail: FC = () => {
       // 5. Success
       showToast(direction === "UP" ? "positionOpenedup" : "positionOpeneddown");
       fetchUsdtBalance();
-      setTimeout(() => setPositionRefreshKey((k) => k + 1), 7000);
+      triggerRefresh();
+      setTimeout(() => setPositionRefreshKey((k) => k + 1), 5000);
       handleClose();
     } catch (error: any) {
       console.error("Trade execution error:", error);
       toast.error(error?.shortMessage || error?.message || "Transaction failed");
     } finally {
       setIsTradeLoading(false);
+      setLoadingStep("");
+      setWalletLoading(false);
     }
   };
   return (
@@ -302,7 +314,7 @@ const Exploredetail: FC = () => {
           onClick={toggle}
           style={{ right: isPositionsOpen ? "339px" : "0" }}
         >
-          <span className="mainnumber">13</span>
+          <span className="mainnumber"></span>
           <p className="openpara">Open Positions</p>
           <Icon name="openarrow" className={isPositionsOpen ? "rotate" : ""} />
         </button>

@@ -72,7 +72,7 @@ export default function RootLayout({
         {children}
         </Web3Provider>
         <ToastContainer
-          position="top-right"
+          position="top-center"
           autoClose={3000}
           hideProgressBar
           toastClassName="custom-toast"
