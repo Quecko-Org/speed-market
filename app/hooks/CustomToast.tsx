@@ -10,9 +10,12 @@ interface Props {
     | "roundWon"
     | "roundLost"
     | "profileupdated";
+  asset?: string;
+  amount?: string;
+  duration?: string;
 }
 
-const CustomToast: React.FC<Props> = ({ type }) => {
+const CustomToast: React.FC<Props> = ({ type, asset = "BTC/USDT", amount = "0", duration = "5 min" }) => {
   return (
     <>
       {type === "positionOpenedup" && (
@@ -23,10 +26,10 @@ const CustomToast: React.FC<Props> = ({ type }) => {
             </span>
             <div className="toasttexts">
               <h6 className="positionhead">
-                Position Opened: BTC/USDT - 5 min{" "}
+                Position Opened: {asset} - {duration}
               </h6>
               <p className="positionpara">
-                Position amount <span className="white">$10</span>
+                Position amount <span className="white">${amount}</span>
               </p>
             </div>
           </div>
@@ -40,10 +43,10 @@ const CustomToast: React.FC<Props> = ({ type }) => {
             </span>
             <div className="toasttexts">
               <h6 className="positionhead">
-                Position Opened: BTC/USDT - 5 min{" "}
+                Position Opened: {asset} - {duration}
               </h6>
               <p className="positionpara">
-                Position amount <span className="white">$10</span>
+                Position amount <span className="white">${amount}</span>
               </p>
             </div>
           </div>

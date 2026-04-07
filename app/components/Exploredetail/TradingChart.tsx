@@ -16,9 +16,16 @@ interface TooltipData {
   price: number;
 }
 
+interface PositionLine {
+  entryPrice: number;
+  betType: "UP" | "DOWN";
+}
+
 interface TradingChartProps {
   coinDetail: any;
   symbol: string | null;
+  positions?: PositionLine[];
+  onPriceUpdate?: (price: number) => void;
 }
 
 // --- Utility functions ---
@@ -68,7 +75,9 @@ function generateInitialData(basePrice: number): PricePoint[] {
 }
 
 // --- Main Component ---
-export default function TradingChart({ coinDetail, symbol }: TradingChartProps) {
+export default function TradingChart({ coinDetail, symbol, positions = [], onPriceUpdate }: TradingChartProps) {
+  const onPriceUpdateRef = useRef(onPriceUpdate);
+  onPriceUpdateRef.current = onPriceUpdate;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const animFrameRef = useRef<number>(0);
@@ -142,6 +151,7 @@ export default function TradingChart({ coinDetail, symbol }: TradingChartProps) 
       const cutoff = Date.now() - 65 * 60 * 1000;
 
       setData((prev) => [...prev.filter((p) => p.time > cutoff), newPoint]);
+      onPriceUpdateRef.current?.(newPrice);
     };
 
     socket.on("speed_market_event", handler);
@@ -259,6 +269,32 @@ export default function TradingChart({ coinDetail, symbol }: TradingChartProps) 
       ctx.lineTo(W - PADDING.right, openY);
       ctx.stroke();
       ctx.setLineDash([]);
+
+      // Position entry price lines
+      const posBadgeX = W - PADDING.right + 4;
+      positions.forEach((pos) => {
+        const posY = mapY(pos.entryPrice);
+        const isUp = pos.betType === "UP";
+        ctx.strokeStyle = isUp ? "#22c55e" : "#ef4444";
+        ctx.lineWidth = 1;
+        ctx.setLineDash([6, 4]);
+        ctx.beginPath();
+        ctx.moveTo(PADDING.left, posY);
+        ctx.lineTo(W - PADDING.right, posY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Position price label
+        const posLabel = formatPriceFull(pos.entryPrice);
+        ctx.font = "bold 11px sans-serif";
+        const posLabelW = ctx.measureText(posLabel).width + 14;
+        ctx.fillStyle = isUp ? "#22c55e" : "#ef4444";
+        roundRect(ctx, posBadgeX, posY - 10, posLabelW, 20, 3);
+        ctx.fill();
+        ctx.fillStyle = "#fff";
+        ctx.textAlign = "left";
+        ctx.fillText(posLabel, posBadgeX + 7, posY + 4);
+      });
 
       // Price line (orange)
       ctx.strokeStyle = "#EC8711";
@@ -404,7 +440,7 @@ ctx.fillText(vwapTimeLabel, badgeX + 7, vwapBadgeY + 36);
     draw();
 
     return () => cancelAnimationFrame(animFrameRef.current);
-  }, [data, dimensions, tooltip, mapX, mapY, minPrice, maxPrice, currentPrice, openPrice, vwap]);
+  }, [data, dimensions, tooltip, mapX, mapY, minPrice, maxPrice, currentPrice, openPrice, vwap, positions]);
 
   // Mouse interaction
   const handleMouseMove = useCallback(

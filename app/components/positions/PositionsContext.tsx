@@ -11,6 +11,7 @@ interface PositionsContextValue {
   setActiveTab: (tab: TabType) => void;
   refreshKey: number;
   triggerRefresh: () => void;
+  refreshNow: () => void;
 }
 
 const PositionsContext = createContext<PositionsContextValue | null>(null);
@@ -27,6 +28,10 @@ export const PositionsProvider: FC<{ children: ReactNode }> = ({ children }) => 
     }, 7000);
   };
 
+  const refreshNow = () => {
+    setRefreshKey((k) => k + 1);
+  };
+
   return (
     <PositionsContext.Provider
       value={{
@@ -38,6 +43,7 @@ export const PositionsProvider: FC<{ children: ReactNode }> = ({ children }) => 
         setActiveTab,
         refreshKey,
         triggerRefresh,
+        refreshNow,
       }}
     >
       {children}

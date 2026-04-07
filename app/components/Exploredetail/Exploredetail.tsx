@@ -59,6 +59,8 @@ const Exploredetail: FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [positionRefreshKey, setPositionRefreshKey] = useState(0);
   const [historyRefreshKey, setHistoryRefreshKey] = useState(0);
+  const [livePrice, setLivePrice] = useState<number | null>(null);
+  const [chartPositions, setChartPositions] = useState<{ entryPrice: number; betType: "UP" | "DOWN" }[]>([]);
 
   const handleOpen = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
@@ -292,7 +294,11 @@ const Exploredetail: FC = () => {
       }
 
       // 5. Success
-      showToast(direction === "UP" ? "positionOpenedup" : "positionOpeneddown");
+      showToast(direction === "UP" ? "positionOpenedup" : "positionOpeneddown", {
+        asset: `${symbol}/USDT`,
+        amount: String(amount),
+        duration: duration ?? "5 min",
+      });
       fetchUsdtBalance();
       triggerRefresh();
       setTimeout(() => setPositionRefreshKey((k) => k + 1), 5000);
@@ -333,11 +339,9 @@ const Exploredetail: FC = () => {
                 <Positiontable symbol={symbol} refreshKey={positionRefreshKey} onTimerExpired={handleTimerExpired} />
                 <Sharemarket />
                 <Marketinfo coinDetail={coinDetail} />
-                <div className="placemain d-none">
+                <div className="placemain">
                   <button
-                    onClick={() => {
-                      handleOpen();
-                    }}
+                    onClick={handleOpen}
                     className="placebtn"
                   >
                     Place Prediction
@@ -423,7 +427,22 @@ const Exploredetail: FC = () => {
         </div>
       </section>
       <Footer />
-      <PlacePredictionModal show={showModal} handleClose={handleClose} />
+      <PlacePredictionModal
+        show={showModal}
+        handleClose={handleClose}
+        direction={direction}
+        setDirection={setDirection}
+        amount={amount}
+        setAmount={setAmount}
+        maxPosition={maxPosition}
+        balance={usdtBalance}
+        quickValues={quickValues}
+        feeValue={feeValue}
+        effectiveAmount={effectiveAmount}
+        potentialWin={potentialWin}
+        onPlacePrediction={handlePlacePrediction}
+        isTradeLoading={isTradeLoading}
+      />
     </>
   );
 };

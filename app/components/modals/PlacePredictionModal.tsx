@@ -1,26 +1,40 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Modal } from 'react-bootstrap'
 import TradeForm from '../Exploredetail/PlaceTradeComponent';
 
-const PlacePredictionModal: React.FC<{ show: boolean; handleClose: () => void }> = ({
+interface PlacePredictionModalProps {
+  show: boolean;
+  handleClose: () => void;
+  direction: "UP" | "DOWN";
+  setDirection: (dir: "UP" | "DOWN") => void;
+  amount: number;
+  setAmount: (val: number) => void;
+  maxPosition: number;
+  balance: number;
+  quickValues: number[];
+  feeValue: number;
+  effectiveAmount: number;
+  potentialWin: number;
+  onPlacePrediction: () => void;
+  isTradeLoading?: boolean;
+}
+
+const PlacePredictionModal: React.FC<PlacePredictionModalProps> = ({
   show,
   handleClose,
+  direction,
+  setDirection,
+  amount,
+  setAmount,
+  maxPosition,
+  balance,
+  quickValues,
+  feeValue,
+  effectiveAmount,
+  potentialWin,
+  onPlacePrediction,
+  isTradeLoading,
 }) => {
-  const [direction, setDirection] = useState<'UP' | 'DOWN'>('UP')
-  const [amount, setAmount] = useState(5)
-
-  const maxPosition = 5
-  const balance = 500
-  const quickValues = [5, 10, 50, 100, 250]
-
-  const feeValue = amount * 0.05
-  const effectiveAmount = amount - feeValue
-  const potentialWin = effectiveAmount * 2
-
-  const handlePlacePrediction = () => {
-    handleClose()
-  }
-
   return (
     <Modal show={show} onHide={handleClose} centered className="prediction-modal">
       <Modal.Header closeButton>
@@ -38,7 +52,8 @@ const PlacePredictionModal: React.FC<{ show: boolean; handleClose: () => void }>
           feeValue={feeValue}
           effectiveAmount={effectiveAmount}
           potentialWin={potentialWin}
-          onPlacePrediction={handlePlacePrediction}
+          onPlacePrediction={onPlacePrediction}
+          isTradeLoading={isTradeLoading}
         />
       </Modal.Body>
     </Modal>

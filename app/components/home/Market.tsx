@@ -270,7 +270,11 @@ const Market: FC = () => {
       }
 
       // 5. Success
-      showToast(type === "UP" ? "positionOpenedup" : "positionOpeneddown");
+      showToast(type === "UP" ? "positionOpenedup" : "positionOpeneddown", {
+        asset: `${asset}/USDT`,
+        amount: trimmedAmount,
+        duration,
+      });
       fetchUsdtBalance();
       triggerRefresh();
       return true;

@@ -3,6 +3,7 @@ import Icon from "../Icon";
 import Claimprocessedmodal from "../modals/Claimprocessedmodal";
 import Sharebetmodal from "../modals/Sharebetmodal";
 import { getUserPosition, getClaimSignature } from "@/app/services/userPositions";
+import { usePositions } from "../positions/PositionsContext";
 import { useAtomValue } from "jotai";
 import {
   userSmartAccount,
@@ -54,6 +55,7 @@ function getRemainingTime(expiresAt?: string): string {
 }
 
 const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpired }) => {
+  const { refreshNow } = usePositions();
   const [positions, setPositions] = useState<any[]>([]);
   const [positionsLoading, setPositionsLoading] = useState(false);
   const [, setTick] = useState(0);
@@ -108,6 +110,7 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
           setPositions(Array.isArray(response?.bets) ? response.bets : Array.isArray(response) ? response : []);
         });
         onTimerExpired?.();
+        refreshNow();
       }
     }, 1000);
     return () => clearInterval(interval);
@@ -221,6 +224,7 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
       toast.success("Claim successful!");
       fetchUsdtBalance();
       setPositions((prev) => prev.filter((p) => p._id !== betId));
+      refreshNow();
     } catch (error: any) {
       console.error("Claim error:", error);
       toast.error(error?.shortMessage || error?.message || "Claim failed");
