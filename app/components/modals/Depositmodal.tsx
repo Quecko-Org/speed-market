@@ -14,24 +14,36 @@ import {
   CHAIN_ARBITRUM,
 } from "@/app/config/deposit";
 import { getFormattedAddress } from "@/app/utils/helpers";
+import Depositsuccessmodal from "./Depositsuccessmodal";
 
 interface DepositmodalProps {
   show: boolean;
   onHide: () => void;
 }
 
+type ModalKeys = "depositsuccess";
+type ModalState = Record<ModalKeys, boolean>;
 const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
   const smartAccount = useAtomValue(userSmartAccount);
 
   const [selectedToken, setSelectedToken] = useState<string>(TOKEN_USDT);
   const [selectedChain, setSelectedChain] = useState<string>(CHAIN_ARBITRUM);
   const [isCopied, setIsCopied] = useState(false);
+  const [depostiVia, setDepostiVia] = useState<string>("");
 
   // The deposit address is always the smart account (USDT on Arbitrum = direct deposit)
   const depositAddress = smartAccount || "";
 
   const tokenDisplay = DEPOSIT_TOKENS.find((t) => t.key === selectedToken);
   const chainDisplay = DEPOSIT_CHAINS.find((c) => c.key === selectedChain);
+  const [modals, setModals] = useState<ModalState>({
+    depositsuccess: false,
+  });
+
+  const openModal = (name: ModalKeys) =>
+    setModals((prev) => ({ ...prev, [name]: true }));
+  const closeModal = (name: ModalKeys) =>
+    setModals((prev) => ({ ...prev, [name]: false }));
 
   const handleCopy = (text: string) => {
     if (!text) return;
@@ -58,65 +70,91 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
     !!depositAddress;
 
   return (
+    <>
     <Modal className="deposit" show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          <span onClick={handleClose} className="cursorpointer">
-            <Icon name="backarrow" />
-          </span>
-          Via deposit address
+          {depostiVia === "Via deposit address" ? (
+            <>
+              <span
+                onClick={() => {
+                  setDepostiVia("");
+                }}
+                className="cursorpointer"
+              >
+                <Icon name="backarrow" />
+              </span>
+              Via deposit address
+            </>
+          ) : depostiVia === "Via connected wallet" ? (
+            <>
+              <span
+                onClick={() => {
+                  setDepostiVia("");
+                }}
+                className="cursorpointer"
+              >
+                <Icon name="backarrow" />
+              </span>
+              Via connected wallet
+            </>
+          ) : (
+            "Deposit"
+          )}
         </Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
-        <div className="depositcontent">
-          <div className="firstbox">
-            <div className="left">
-              <p>Choose the asset you wish to swap to</p>
-            </div>
-            <div className="right">
-              <div className="maintoken">
-                <img
-                  src="/tokenimages/usdt.png"
-                  alt="tokenimg"
-                  className="tokenimg"
-                />
-                <img
-                  src="/tokenimages/arbitrum.svg"
-                  alt="chainimg"
-                  className="chainimg"
-                />
-              </div>
-              <p className="usdtpara">
-                <span>USDT</span> (Arbitrum)
-              </p>
-            </div>
-          </div>
-
-          <div className="parentdropdowns">
-            {/* Token Dropdown */}
-            <div className="maindrop">
-              <p className="heading">Token</p>
-              <Dropdown>
-                <Dropdown.Toggle
-                  id="token-dropdown"
-                  className="d-flex align-items-center gap-2"
-                >
-                  <div className="forstyling">
-                    {tokenDisplay?.img && (
-                      <img
-                        src={tokenDisplay.img}
-                        alt="token"
-                        className="raintoken"
-                        style={{ width: "20px", height: "20px" }}
-                      />
-                    )}
-                    {tokenDisplay?.label ?? selectedToken}
+        {depostiVia === "Via deposit address" ? (
+          <>
+            <div className="depositcontent">
+              <div className="firstbox">
+                <div className="left">
+                  <p>Choose the asset you wish to swap to</p>
+                </div>
+                <div className="right">
+                  <div className="maintoken">
+                    <img
+                      src="/tokenimages/usdt.png"
+                      alt="tokenimg"
+                      className="tokenimg"
+                    />
+                    <img
+                      src="/tokenimages/arbitrum.svg"
+                      alt="chainimg"
+                      className="chainimg"
+                    />
                   </div>
-                  {/* <Icon name="droparrowbig" /> */}
-                </Dropdown.Toggle>
+                  <p className="usdtpara">
+                    <span>USDT</span> (Arbitrum)
+                  </p>
+                </div>
+              </div>
 
-                {/* <Dropdown.Menu>
+              <div className="parentdropdowns">
+                {/* Token Dropdown */}
+                <div className="maindrop">
+                  <p className="heading">Token</p>
+                  <Dropdown>
+                    <Dropdown.Toggle
+                      id="token-dropdown"
+                      className="d-flex align-items-center gap-2"
+                    >
+                      <div className="forstyling">
+                        {tokenDisplay?.img && (
+                          <img
+                            src={tokenDisplay.img}
+                            alt="token"
+                            className="raintoken"
+                            style={{ width: "20px", height: "20px" }}
+                          />
+                        )}
+                        {tokenDisplay?.label ?? selectedToken}
+                      </div>
+                      {/* <Icon name="droparrowbig" /> */}
+                    </Dropdown.Toggle>
+
+                    {/* <Dropdown.Menu>
                   {DEPOSIT_TOKENS.map((token) => (
                     <Dropdown.Item
                       key={token.key}
@@ -136,34 +174,34 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
                     </Dropdown.Item>
                   ))}
                 </Dropdown.Menu> */}
-              </Dropdown>
-            </div>
+                  </Dropdown>
+                </div>
 
-            {/* Chain Dropdown */}
-            <div className="maindrop">
-              <p className="heading">Chain</p>
-              <Dropdown>
-                <Dropdown.Toggle
-                  id="chain-dropdown"
-                  className="token-btn d-flex align-items-center"
-                >
-                  <div className="d-flex align-items-center gap-2">
-                    <div className="forstyling">
-                      {chainDisplay?.img && (
-                        <img
-                          src={chainDisplay.img}
-                          alt="chain"
-                          className="raintoken"
-                          style={{ width: "20px", height: "20px" }}
-                        />
-                      )}
-                      {chainDisplay?.label ?? "Select Chain"}
-                    </div>
-                  </div>
-                  {/* <Icon name="droparrowbig" /> */}
-                </Dropdown.Toggle>
+                {/* Chain Dropdown */}
+                <div className="maindrop">
+                  <p className="heading">Chain</p>
+                  <Dropdown>
+                    <Dropdown.Toggle
+                      id="chain-dropdown"
+                      className="token-btn d-flex align-items-center"
+                    >
+                      <div className="d-flex align-items-center gap-2">
+                        <div className="forstyling">
+                          {chainDisplay?.img && (
+                            <img
+                              src={chainDisplay.img}
+                              alt="chain"
+                              className="raintoken"
+                              style={{ width: "20px", height: "20px" }}
+                            />
+                          )}
+                          {chainDisplay?.label ?? "Select Chain"}
+                        </div>
+                      </div>
+                      {/* <Icon name="droparrowbig" /> */}
+                    </Dropdown.Toggle>
 
-                {/* <Dropdown.Menu>
+                    {/* <Dropdown.Menu>
                   {DEPOSIT_CHAINS.map((chain) => (
                     <Dropdown.Item
                       key={chain.key}
@@ -183,61 +221,232 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
                     </Dropdown.Item>
                   ))}
                 </Dropdown.Menu> */}
-              </Dropdown>
-            </div>
-          </div>
-
-          <div className="brdr"></div>
-
-          {/* QR code + deposit address — only shown after token & chain selected */}
-          {showDepositArea && (
-            <>
-              <div className="mainqr">
-                <QRCode
-                  value={depositAddress}
-                  size={180}
-                  bgColor="#FFFFFF"
-                  fgColor="#000000"
-                  level="M"
-                />
+                  </Dropdown>
+                </div>
               </div>
 
-              <div className="innerbox">
-                <div className="leftinput">
-                  <label htmlFor="rewardToken">Your deposit address:</label>
-                  <input
-                    type="text"
-                    id="rewardToken"
-                    value={getFormattedAddress(depositAddress)}
-                    readOnly
-                  />
-                </div>
-                <button
-                  className="copy"
-                  onClick={() => handleCopy(depositAddress)}
+              <div className="brdr"></div>
+
+              {/* QR code + deposit address — only shown after token & chain selected */}
+              {showDepositArea && (
+                <>
+                  <div className="mainqr">
+                    <QRCode
+                      value={depositAddress}
+                      size={180}
+                      bgColor="#FFFFFF"
+                      fgColor="#000000"
+                      level="M"
+                    />
+                  </div>
+
+                  <div className="innerbox">
+                    <div className="leftinput">
+                      <label htmlFor="rewardToken">Your deposit address:</label>
+                      <input
+                        type="text"
+                        id="rewardToken"
+                        value={getFormattedAddress(depositAddress)}
+                        readOnly
+                      />
+                    </div>
+                    <button
+                      className="copy"
+                      onClick={() => handleCopy(depositAddress)}
+                    >
+                      <Icon name="copywhite" />
+                      {isCopied ? "COPIED" : "COPY"}
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {!showDepositArea && !depositAddress && (
+                <p
+                  style={{
+                    color: "#9a9a9a",
+                    fontSize: "13px",
+                    marginTop: "12px",
+                    textAlign: "center",
+                  }}
                 >
-                  <Icon name="copywhite" />
-                  {isCopied ? "COPIED" : "COPY"}
+                  Please connect your wallet to get a deposit address.
+                </p>
+              )}
+            </div>
+          </>
+        ) : depostiVia === "Via connected wallet" ? (
+          <>
+             <div className="depositcontent">
+              <div className="parentdropdowns">
+                {/* Token Dropdown */}
+                <div className="maindrop">
+                  <p className="heading">Token</p>
+                  <Dropdown>
+                    <Dropdown.Toggle
+                      id="token-dropdown"
+                      className="d-flex align-items-center gap-2"
+                    >
+                      <div className="forstyling">
+                        {tokenDisplay?.img && (
+                          <img
+                            src={tokenDisplay.img}
+                            alt="token"
+                            className="raintoken"
+                            style={{ width: "20px", height: "20px" }}
+                          />
+                        )}
+                        {tokenDisplay?.label ?? selectedToken}
+                      </div>
+                      {/* <Icon name="droparrowbig" /> */}
+                    </Dropdown.Toggle>
+
+                    {/* <Dropdown.Menu>
+                  {DEPOSIT_TOKENS.map((token) => (
+                    <Dropdown.Item
+                      key={token.key}
+                      onClick={() => {
+                        setSelectedToken(token.key);
+                        setIsCopied(false);
+                      }}
+                      className="d-flex align-items-center gap-2"
+                    >
+                      <img
+                        src={token.img}
+                        alt="img"
+                        className="raintoken"
+                        style={{ width: "22px", height: "22px" }}
+                      />
+                      {token.label}
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Menu> */}
+                  </Dropdown>
+                </div>
+
+                {/* Chain Dropdown */}
+                <div className="maindrop">
+                  <p className="heading">Chain</p>
+                  <Dropdown>
+                    <Dropdown.Toggle
+                      id="chain-dropdown"
+                      className="token-btn d-flex align-items-center"
+                    >
+                      <div className="d-flex align-items-center gap-2">
+                        <div className="forstyling">
+                          {chainDisplay?.img && (
+                            <img
+                              src={chainDisplay.img}
+                              alt="chain"
+                              className="raintoken"
+                              style={{ width: "20px", height: "20px" }}
+                            />
+                          )}
+                          {chainDisplay?.label ?? "Select Chain"}
+                        </div>
+                      </div>
+                      {/* <Icon name="droparrowbig" /> */}
+                    </Dropdown.Toggle>
+
+                    {/* <Dropdown.Menu>
+                  {DEPOSIT_CHAINS.map((chain) => (
+                    <Dropdown.Item
+                      key={chain.key}
+                      onClick={() => {
+                        setSelectedChain(chain.key);
+                        setIsCopied(false);
+                      }}
+                      className="d-flex align-items-center gap-2"
+                    >
+                      <img
+                        src={chain.img}
+                        alt="img"
+                        className="raintoken"
+                        style={{ width: "22px", height: "22px" }}
+                      />
+                      {chain.label}
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Menu> */}
+                  </Dropdown>
+                </div>
+              </div>
+              <div className="amountheadings">
+                <p className="amountpara">
+                  Amount
+                </p>
+                <div className="mainbalance">
+                  <p className="balancepara">
+                    Balance
+                  </p>
+                  <div className="tokenimg">
+                      {tokenDisplay?.img && (
+                          <img
+                            src={tokenDisplay.img}
+                            alt="token"
+                  className="innerimg" 
+                          />
+                        )}
+                  </div>
+                  <p className="amountpara">$2,432.54</p>
+                </div>
+              </div>
+              <div className="maxinput">
+                <input type="text" placeholder="0.00" className="innerinput" />
+                <button className="maxbtn">
+                  MAX
                 </button>
               </div>
-            </>
-          )}
-
-          {!showDepositArea && !depositAddress && (
-            <p
-              style={{
-                color: "#9a9a9a",
-                fontSize: "13px",
-                marginTop: "12px",
-                textAlign: "center",
+              <div className="depositbtns">
+                <button className="closebtn">
+                  Close
+                </button>
+                <button onClick={()=>{
+                  onHide();
+                  openModal("depositsuccess");
+                }} className="depositbtn">
+                  Deposit
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="maindeposit">
+            <div
+              className="innerdeposit"
+              onClick={() => {
+                setDepostiVia("Via connected wallet");
               }}
             >
-              Please connect your wallet to get a deposit address.
-            </p>
-          )}
-        </div>
+              <div className="depositleft">
+                <Icon name="walleticon" />
+                <h6 className="innerhead">Via connected wallet</h6>
+                <p className="innerpara">0x125631...1xa</p>
+              </div>
+              <Icon name="rightarrow" className="arrowimg" />
+            </div>
+            <div
+              className="innerdeposit"
+              onClick={() => {
+                setDepostiVia("Via deposit address");
+              }}
+            >
+              <div className="depositleft">
+                <Icon name="addressicon" />
+                <h6 className="innerhead">Via deposit address</h6>
+                <p className="innerpara">No Limit - Instant</p>
+              </div>
+              <Icon name="rightarrow" className="arrowimg" />
+            </div>
+          </div>
+        )}
       </Modal.Body>
     </Modal>
+      <Depositsuccessmodal
+        show={modals.depositsuccess}
+        onHide={() => closeModal("depositsuccess")}
+      />
+      </>
   );
 };
 

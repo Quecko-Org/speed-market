@@ -1415,6 +1415,222 @@
               pointer-events: none;
             }
           }
+
+          .amountheadings {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            margin-top: 20px;
+
+            .amountpara {
+              color: #FFF;
+              font-size: 12px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: 100%;
+            }
+
+            .mainbalance {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+
+              .balancepara {
+                color: #5F5D72;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 100%;
+              }
+
+              .tokenimg {
+                width: 12px;
+                height: 12px;
+                max-width: 12px;
+                max-height: 12px;
+                min-width: 12px;
+                min-height: 12px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                object-fit: cover;
+                object-position: center;
+                border-radius: 200px;
+                overflow: hidden;
+
+                .innerimg {
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  object-position: center;
+                }
+              }
+
+              .amountpara {
+                color: #FFF;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 100%;
+              }
+            }
+          }
+
+          .maxinput {
+            width: 100%;
+            position: relative;
+            margin-bottom: 20px;
+
+            .innerinput {
+              border-radius: 10px;
+              background: #16192A;
+              height: 44px;
+              padding: 5px 10px 5px 15px;
+              color: #FFF;
+              border: none;
+              outline: none;
+              font-size: 12px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: 120%;
+              width: 100%;
+
+              &::placeholder {
+                color: #5F5D72;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 120%;
+              }
+            }
+
+            .maxbtn {
+              display: flex;
+              height: 22px;
+              padding: 6px 8px;
+              justify-content: center;
+              align-items: center;
+              border-radius: 17px;
+              background: rgba(255, 255, 255, 0.07);
+              color: #FFF;
+              border: none;
+              font-size: 12px;
+              font-style: normal;
+              font-weight: 500;
+              line-height: 100%;
+              position: absolute;
+              right: 10px;
+              top: 11px;
+            }
+          }
+
+          .depositbtns {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            justify-content: space-between;
+            width: 100%;
+
+            .closebtn {
+              display: flex;
+              padding: 17px 22px;
+              justify-content: center;
+              align-items: center;
+              border-radius: 14px;
+              background: rgba(255, 255, 255, 0.07);
+              border: none;
+              color: #FFF;
+              text-align: center;
+              font-feature-settings: 'dlig' on, 'salt' on;
+              font-size: 16px;
+              font-style: normal;
+              font-weight: 500;
+              line-height: 100%;
+              width: 100%;
+            }
+
+            .depositbtn {
+              display: flex;
+              padding: 17px 22px;
+              justify-content: center;
+              align-items: center;
+              border-radius: 14px;
+              background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%), #DAD9D9;
+              border: none;
+              color: #FFF;
+              text-align: center;
+              font-feature-settings: 'dlig' on, 'salt' on;
+              font-size: 16px;
+              font-style: normal;
+              font-weight: 500;
+              line-height: 100%;
+              width: 100%;
+              &.disabled{
+opacity: 0.4;
+background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%), #DAD9D9;
+              }
+                &:disabled{
+opacity: 0.4;
+background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%), #DAD9D9;
+              }
+            }
+          }
+        }
+
+        .maindeposit {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 15px;
+
+          .innerdeposit {
+            display: flex;
+            padding: 18px 20px;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 14px;
+            background: #16192A;
+            border: 1px solid transparent;
+            width: 100%;
+
+            .depositleft {
+              .innerhead {
+                color: #FFF;
+                font-feature-settings: 'salt' on;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 120%;
+                margin-top: 10px;
+                margin-bottom: 4px;
+              }
+
+              .innerpara {
+                color: #5F5D72;
+                font-feature-settings: 'salt' on;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 120%;
+              }
+            }
+
+            &:hover {
+              cursor: pointer;
+              border-radius: 14px;
+              border: 1px solid #EC8711;
+              background: #1C1F31;
+              transition: 0.3s ease-in-out;
+
+              .arrowimg {
+                path {
+                  fill: #EC8711;
+                  transition: 0.3s ease-in-out;
+                }
+              }
+            }
+          }
         }
       }
     }
