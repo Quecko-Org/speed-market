@@ -3,7 +3,7 @@ import ReactPaginate from "react-paginate";
 
 interface ActivityItem {
   _id: string;
-  userId?: { displayName?: string; internalWalletAddress?: string } | string;
+  userId?: { displayName?: string; internalWalletAddress?: string; profileImage?: string } | string;
   cryptoSymbol?: string;
   amount?: string;
   betType?: "UP" | "DOWN";
@@ -64,7 +64,7 @@ const Activity: FC<ActivityProps> = ({ activities, loading, currentPage, totalPa
               <div className="leftactivity">
                 <div className="userimg">
                   <img
-                    src="/dummyassets/dummyuser.png"
+                    src={(typeof item.userId === "object" && item.userId?.profileImage) || "/dummyassets/dummyuser.png"}
                     alt="user"
                     className="innerimg"
                   />

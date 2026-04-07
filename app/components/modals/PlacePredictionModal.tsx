@@ -18,7 +18,6 @@ const PlacePredictionModal: React.FC<{ show: boolean; handleClose: () => void }>
   const potentialWin = effectiveAmount * 2
 
   const handlePlacePrediction = () => {
-    console.log('Prediction placed:', { direction, amount })
     handleClose()
   }
 

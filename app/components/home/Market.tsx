@@ -92,7 +92,7 @@ const Market: FC = () => {
         const coinPriceResponse = await getCoinsPrices();
         setCoinListing(coinPriceResponse || []);
       } catch (error) {
-        console.log("Error fetching coin prices:", error);
+        console.error("Error fetching coin prices:", error);
       } finally {
         setIsLoading(false);
       }

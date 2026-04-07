@@ -22,7 +22,7 @@ export const useSessionPermissions = () => {
 
   const grantPermissions = async (): Promise<SessionResult | undefined> => {
     if (!smartAccountClient || !smartAccount) {
-      console.log("smartAccountClient or smartAccount is not ready yet");
+      console.error("smartAccountClient or smartAccount is not ready yet");
       return;
     }
 

@@ -27,7 +27,6 @@ export const useSpeedMarketSocket = (callbacks: SpeedMarketSocketCallbacks) => {
       }
 
       if (data?.eventType === POSITION_UPDATED_EVENT_TYPE) {
-        console.log("PositionUpdatedV1:", data);
         callbacksRef.current.onPositionUpdated?.(data?.data ?? data);
       }
     };

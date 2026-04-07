@@ -1,5 +1,6 @@
 "use client";
 import { FC, useState, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { Dropdown, Offcanvas } from "react-bootstrap";
 import Icon from "../Icon";
 import Createprofilemodal from "../modals/Createprofilemodal";
@@ -7,7 +8,7 @@ import Withdrawmodal from "../modals/Withdrawmodal";
 import Depositmodal from "../modals/Depositmodal";
 import Link from "next/link";
 import { useAtomValue } from "jotai";
-import { userSmartAccount } from "@/app/store/atoms";
+import { userSmartAccount, userProfileData } from "@/app/store/atoms";
 import { useWalletContext } from "@/app/context/WalletContext";
 import { useWalletList } from "@/app/hooks/useWalletList";
 import { getWalletImage, getFormattedAddress } from "@/app/utils/helpers";
@@ -36,6 +37,7 @@ const Header: FC = () => {
   } = useWalletContext();
 
   const smartAccount = useAtomValue(userSmartAccount);
+  const userProfile = useAtomValue(userProfileData);
 
   const wallets = useWalletList();
 
@@ -75,10 +77,16 @@ const Header: FC = () => {
     }
   };
 
+  const router = useRouter();
+  const pathname = usePathname();
+
   const handleLogout = () => {
     disconnectWallet();
     setOpen(false);
     handleCloseNav();
+    if (pathname !== "/") {
+      router.push("/");
+    }
   };
 
   return (
@@ -143,16 +151,20 @@ const Header: FC = () => {
                   <Dropdown.Toggle variant="success" id="dropdown-basic">
                     <div className="profileimg">
                       <img
-                        src="/dummyassets/dummyuser.png"
+                        src={userProfile?.profileImage || "/dummyassets/dummyuser.png"}
                         alt="innerprofileimg"
                         className="innerprofileimg"
                       />
                     </div>
-                    {smartAccount
-                      ? getFormattedAddress(smartAccount)
-                      : walletAddress
-                        ? getFormattedAddress(walletAddress)
-                        : ""}
+                    {userProfile?.displayName
+                      ? userProfile.displayName.length > 10
+                        ? userProfile.displayName.slice(0, 10) + "..."
+                        : userProfile.displayName
+                      : smartAccount
+                        ? getFormattedAddress(smartAccount)
+                        : walletAddress
+                          ? getFormattedAddress(walletAddress)
+                          : ""}
                     <Icon
                       name="droparrow"
                       className={`arrow ${open ? "rotate" : ""}`}

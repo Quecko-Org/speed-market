@@ -5,11 +5,13 @@ import { Modal } from "react-bootstrap";
 interface DepositsuccessmodalProps {
   show: boolean;
   onHide: () => void;
+  amount?: string;
 }
 
 const Depositsuccessmodal: React.FC<DepositsuccessmodalProps> = ({
   show,
   onHide,
+  amount = "0",
 }) => {
   return (
     <Modal className="withdraw" show={show} onHide={onHide} centered>
@@ -28,13 +30,13 @@ const Depositsuccessmodal: React.FC<DepositsuccessmodalProps> = ({
             <h4>Deposit Completed!</h4>
 
             <p>
-           <span>300 USDT</span> were successfully deposited to your account
+              <span>{amount} USDT</span> were successfully deposited to your account
             </p>
           </div>
 
           <div className="buttonlast">
             <button onClick={onHide} className="close">
-           View History
+              Okay
             </button>
           </div>
         </div>

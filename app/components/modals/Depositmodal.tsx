@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown, Modal } from "react-bootstrap";
 import QRCode from "react-qr-code";
 import Icon from "../Icon";
@@ -14,7 +14,10 @@ import {
   CHAIN_ARBITRUM,
 } from "@/app/config/deposit";
 import { getFormattedAddress } from "@/app/utils/helpers";
+import { useDepositTransfer } from "@/app/hooks/useDepositTransfer";
+import { useGetUsdtBalance } from "@/app/hooks/useBalance";
 import Depositsuccessmodal from "./Depositsuccessmodal";
+import { toast } from "react-toastify";
 
 interface DepositmodalProps {
   show: boolean;
@@ -23,19 +26,24 @@ interface DepositmodalProps {
 
 type ModalKeys = "depositsuccess";
 type ModalState = Record<ModalKeys, boolean>;
+
 const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
   const smartAccount = useAtomValue(userSmartAccount);
+  const { getWalletBalance, transferToSmartAccount, isTransferring, walletAddress } = useDepositTransfer();
+  const fetchUsdtBalance = useGetUsdtBalance();
 
   const [selectedToken, setSelectedToken] = useState<string>(TOKEN_USDT);
   const [selectedChain, setSelectedChain] = useState<string>(CHAIN_ARBITRUM);
   const [isCopied, setIsCopied] = useState(false);
   const [depostiVia, setDepostiVia] = useState<string>("");
+  const [walletBalance, setWalletBalance] = useState<string>("0");
+  const [depositAmount, setDepositAmount] = useState<string>("");
+  const [successAmount, setSuccessAmount] = useState<string>("0");
 
-  // The deposit address is always the smart account (USDT on Arbitrum = direct deposit)
   const depositAddress = smartAccount || "";
-
   const tokenDisplay = DEPOSIT_TOKENS.find((t) => t.key === selectedToken);
   const chainDisplay = DEPOSIT_CHAINS.find((c) => c.key === selectedChain);
+
   const [modals, setModals] = useState<ModalState>({
     depositsuccess: false,
   });
@@ -44,6 +52,50 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
     setModals((prev) => ({ ...prev, [name]: true }));
   const closeModal = (name: ModalKeys) =>
     setModals((prev) => ({ ...prev, [name]: false }));
+
+  // Fetch connected wallet balance when "Via connected wallet" is selected
+  useEffect(() => {
+    if (depostiVia === "Via connected wallet" && walletAddress) {
+      getWalletBalance().then((bal) => setWalletBalance(bal));
+    }
+  }, [depostiVia, walletAddress, getWalletBalance]);
+
+  const handleAmountChange = (value: string) => {
+    if (value === "" || /^\d*\.?\d*$/.test(value)) {
+      setDepositAmount(value);
+    }
+  };
+
+  const handleMaxClick = () => {
+    setDepositAmount(walletBalance);
+  };
+
+  const handleDeposit = async () => {
+    const amount = depositAmount.trim();
+    if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
+      toast.error("Please enter a valid amount");
+      return;
+    }
+    if (Number(amount) > Number(walletBalance)) {
+      toast.error("Insufficient balance");
+      return;
+    }
+    if (!smartAccount) {
+      toast.error("Smart account not available");
+      return;
+    }
+
+    const hash = await transferToSmartAccount(smartAccount, amount);
+    if (hash) {
+      setSuccessAmount(amount);
+      setDepositAmount("");
+      onHide();
+      openModal("depositsuccess");
+      // Fetch balance immediately and again after 3s to catch confirmation delay
+      fetchUsdtBalance();
+      setTimeout(() => fetchUsdtBalance(), 3000);
+    }
+  };
 
   const handleCopy = (text: string) => {
     if (!text) return;
@@ -56,6 +108,8 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
     setSelectedToken(TOKEN_USDT);
     setSelectedChain(CHAIN_ARBITRUM);
     setIsCopied(false);
+    setDepostiVia("");
+    setDepositAmount("");
   };
 
   const handleClose = () => {
@@ -63,7 +117,6 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
     onHide();
   };
 
-  // Show deposit area once both token and chain are selected
   const showDepositArea =
     selectedToken !== DEFAULT_TOKEN &&
     selectedChain !== DEFAULT_CHAIN &&
@@ -77,9 +130,7 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
           {depostiVia === "Via deposit address" ? (
             <>
               <span
-                onClick={() => {
-                  setDepostiVia("");
-                }}
+                onClick={() => setDepostiVia("")}
                 className="cursorpointer"
               >
                 <Icon name="backarrow" />
@@ -89,9 +140,7 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
           ) : depostiVia === "Via connected wallet" ? (
             <>
               <span
-                onClick={() => {
-                  setDepostiVia("");
-                }}
+                onClick={() => setDepostiVia("")}
                 className="cursorpointer"
               >
                 <Icon name="backarrow" />
@@ -114,16 +163,8 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
                 </div>
                 <div className="right">
                   <div className="maintoken">
-                    <img
-                      src="/tokenimages/usdt.png"
-                      alt="tokenimg"
-                      className="tokenimg"
-                    />
-                    <img
-                      src="/tokenimages/arbitrum.svg"
-                      alt="chainimg"
-                      className="chainimg"
-                    />
+                    <img src="/tokenimages/usdt.png" alt="tokenimg" className="tokenimg" />
+                    <img src="/tokenimages/arbitrum.svg" alt="chainimg" className="chainimg" />
                   </div>
                   <p className="usdtpara">
                     <span>USDT</span> (Arbitrum)
@@ -132,128 +173,51 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
               </div>
 
               <div className="parentdropdowns">
-                {/* Token Dropdown */}
                 <div className="maindrop">
                   <p className="heading">Token</p>
                   <Dropdown>
-                    <Dropdown.Toggle
-                      id="token-dropdown"
-                      className="d-flex align-items-center gap-2"
-                    >
+                    <Dropdown.Toggle id="token-dropdown" className="d-flex align-items-center gap-2">
                       <div className="forstyling">
                         {tokenDisplay?.img && (
-                          <img
-                            src={tokenDisplay.img}
-                            alt="token"
-                            className="raintoken"
-                            style={{ width: "20px", height: "20px" }}
-                          />
+                          <img src={tokenDisplay.img} alt="token" className="raintoken" style={{ width: "20px", height: "20px" }} />
                         )}
                         {tokenDisplay?.label ?? selectedToken}
                       </div>
-                      {/* <Icon name="droparrowbig" /> */}
                     </Dropdown.Toggle>
-
-                    {/* <Dropdown.Menu>
-                  {DEPOSIT_TOKENS.map((token) => (
-                    <Dropdown.Item
-                      key={token.key}
-                      onClick={() => {
-                        setSelectedToken(token.key);
-                        setIsCopied(false);
-                      }}
-                      className="d-flex align-items-center gap-2"
-                    >
-                      <img
-                        src={token.img}
-                        alt="img"
-                        className="raintoken"
-                        style={{ width: "22px", height: "22px" }}
-                      />
-                      {token.label}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu> */}
                   </Dropdown>
                 </div>
 
-                {/* Chain Dropdown */}
                 <div className="maindrop">
                   <p className="heading">Chain</p>
                   <Dropdown>
-                    <Dropdown.Toggle
-                      id="chain-dropdown"
-                      className="token-btn d-flex align-items-center"
-                    >
+                    <Dropdown.Toggle id="chain-dropdown" className="token-btn d-flex align-items-center">
                       <div className="d-flex align-items-center gap-2">
                         <div className="forstyling">
                           {chainDisplay?.img && (
-                            <img
-                              src={chainDisplay.img}
-                              alt="chain"
-                              className="raintoken"
-                              style={{ width: "20px", height: "20px" }}
-                            />
+                            <img src={chainDisplay.img} alt="chain" className="raintoken" style={{ width: "20px", height: "20px" }} />
                           )}
                           {chainDisplay?.label ?? "Select Chain"}
                         </div>
                       </div>
-                      {/* <Icon name="droparrowbig" /> */}
                     </Dropdown.Toggle>
-
-                    {/* <Dropdown.Menu>
-                  {DEPOSIT_CHAINS.map((chain) => (
-                    <Dropdown.Item
-                      key={chain.key}
-                      onClick={() => {
-                        setSelectedChain(chain.key);
-                        setIsCopied(false);
-                      }}
-                      className="d-flex align-items-center gap-2"
-                    >
-                      <img
-                        src={chain.img}
-                        alt="img"
-                        className="raintoken"
-                        style={{ width: "22px", height: "22px" }}
-                      />
-                      {chain.label}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu> */}
                   </Dropdown>
                 </div>
               </div>
 
               <div className="brdr"></div>
 
-              {/* QR code + deposit address — only shown after token & chain selected */}
               {showDepositArea && (
                 <>
                   <div className="mainqr">
-                    <QRCode
-                      value={depositAddress}
-                      size={180}
-                      bgColor="#FFFFFF"
-                      fgColor="#000000"
-                      level="M"
-                    />
+                    <QRCode value={depositAddress} size={180} bgColor="#FFFFFF" fgColor="#000000" level="M" />
                   </div>
 
                   <div className="innerbox">
                     <div className="leftinput">
                       <label htmlFor="rewardToken">Your deposit address:</label>
-                      <input
-                        type="text"
-                        id="rewardToken"
-                        value={getFormattedAddress(depositAddress)}
-                        readOnly
-                      />
+                      <input type="text" id="rewardToken" value={getFormattedAddress(depositAddress)} readOnly />
                     </div>
-                    <button
-                      className="copy"
-                      onClick={() => handleCopy(depositAddress)}
-                    >
+                    <button className="copy" onClick={() => handleCopy(depositAddress)}>
                       <Icon name="copywhite" />
                       {isCopied ? "COPIED" : "COPY"}
                     </button>
@@ -262,14 +226,7 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
               )}
 
               {!showDepositArea && !depositAddress && (
-                <p
-                  style={{
-                    color: "#9a9a9a",
-                    fontSize: "13px",
-                    marginTop: "12px",
-                    textAlign: "center",
-                  }}
-                >
+                <p style={{ color: "#9a9a9a", fontSize: "13px", marginTop: "12px", textAlign: "center" }}>
                   Please connect your wallet to get a deposit address.
                 </p>
               )}
@@ -277,135 +234,73 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
           </>
         ) : depostiVia === "Via connected wallet" ? (
           <>
-             <div className="depositcontent">
+            <div className="depositcontent">
               <div className="parentdropdowns">
-                {/* Token Dropdown */}
                 <div className="maindrop">
                   <p className="heading">Token</p>
                   <Dropdown>
-                    <Dropdown.Toggle
-                      id="token-dropdown"
-                      className="d-flex align-items-center gap-2"
-                    >
+                    <Dropdown.Toggle id="token-dropdown" className="d-flex align-items-center gap-2">
                       <div className="forstyling">
                         {tokenDisplay?.img && (
-                          <img
-                            src={tokenDisplay.img}
-                            alt="token"
-                            className="raintoken"
-                            style={{ width: "20px", height: "20px" }}
-                          />
+                          <img src={tokenDisplay.img} alt="token" className="raintoken" style={{ width: "20px", height: "20px" }} />
                         )}
                         {tokenDisplay?.label ?? selectedToken}
                       </div>
-                      {/* <Icon name="droparrowbig" /> */}
                     </Dropdown.Toggle>
-
-                    {/* <Dropdown.Menu>
-                  {DEPOSIT_TOKENS.map((token) => (
-                    <Dropdown.Item
-                      key={token.key}
-                      onClick={() => {
-                        setSelectedToken(token.key);
-                        setIsCopied(false);
-                      }}
-                      className="d-flex align-items-center gap-2"
-                    >
-                      <img
-                        src={token.img}
-                        alt="img"
-                        className="raintoken"
-                        style={{ width: "22px", height: "22px" }}
-                      />
-                      {token.label}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu> */}
                   </Dropdown>
                 </div>
 
-                {/* Chain Dropdown */}
                 <div className="maindrop">
                   <p className="heading">Chain</p>
                   <Dropdown>
-                    <Dropdown.Toggle
-                      id="chain-dropdown"
-                      className="token-btn d-flex align-items-center"
-                    >
+                    <Dropdown.Toggle id="chain-dropdown" className="token-btn d-flex align-items-center">
                       <div className="d-flex align-items-center gap-2">
                         <div className="forstyling">
                           {chainDisplay?.img && (
-                            <img
-                              src={chainDisplay.img}
-                              alt="chain"
-                              className="raintoken"
-                              style={{ width: "20px", height: "20px" }}
-                            />
+                            <img src={chainDisplay.img} alt="chain" className="raintoken" style={{ width: "20px", height: "20px" }} />
                           )}
                           {chainDisplay?.label ?? "Select Chain"}
                         </div>
                       </div>
-                      {/* <Icon name="droparrowbig" /> */}
                     </Dropdown.Toggle>
-
-                    {/* <Dropdown.Menu>
-                  {DEPOSIT_CHAINS.map((chain) => (
-                    <Dropdown.Item
-                      key={chain.key}
-                      onClick={() => {
-                        setSelectedChain(chain.key);
-                        setIsCopied(false);
-                      }}
-                      className="d-flex align-items-center gap-2"
-                    >
-                      <img
-                        src={chain.img}
-                        alt="img"
-                        className="raintoken"
-                        style={{ width: "22px", height: "22px" }}
-                      />
-                      {chain.label}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu> */}
                   </Dropdown>
                 </div>
               </div>
               <div className="amountheadings">
-                <p className="amountpara">
-                  Amount
-                </p>
+                <p className="amountpara">Amount</p>
                 <div className="mainbalance">
-                  <p className="balancepara">
-                    Balance
-                  </p>
+                  <p className="balancepara">Balance</p>
                   <div className="tokenimg">
-                      {tokenDisplay?.img && (
-                          <img
-                            src={tokenDisplay.img}
-                            alt="token"
-                  className="innerimg" 
-                          />
-                        )}
+                    {tokenDisplay?.img && (
+                      <img src={tokenDisplay.img} alt="token" className="innerimg" />
+                    )}
                   </div>
-                  <p className="amountpara">$2,432.54</p>
+                  <p className="amountpara">${Number(walletBalance).toLocaleString(undefined, { maximumFractionDigits: 2 })}</p>
                 </div>
               </div>
               <div className="maxinput">
-                <input type="text" placeholder="0.00" className="innerinput" />
-                <button className="maxbtn">
+                <input
+                  type="text"
+                  placeholder="0.00"
+                  className="innerinput"
+                  value={depositAmount}
+                  onChange={(e) => handleAmountChange(e.target.value)}
+                  disabled={isTransferring}
+                />
+                <button className="maxbtn" onClick={handleMaxClick} disabled={isTransferring}>
                   MAX
                 </button>
               </div>
               <div className="depositbtns">
-                <button className="closebtn">
+                <button className="closebtn" onClick={handleClose} disabled={isTransferring}>
                   Close
                 </button>
-                <button onClick={()=>{
-                  onHide();
-                  openModal("depositsuccess");
-                }} className="depositbtn">
-                  Deposit
+                <button
+                  className="depositbtn"
+                  onClick={handleDeposit}
+                  disabled={isTransferring || !depositAmount.trim()}
+                >
+                  {isTransferring ? "Depositing..." : "Deposit"}
                 </button>
               </div>
             </div>
@@ -414,22 +309,18 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
           <div className="maindeposit">
             <div
               className="innerdeposit"
-              onClick={() => {
-                setDepostiVia("Via connected wallet");
-              }}
+              onClick={() => setDepostiVia("Via connected wallet")}
             >
               <div className="depositleft">
                 <Icon name="walleticon" />
                 <h6 className="innerhead">Via connected wallet</h6>
-                <p className="innerpara">0x125631...1xa</p>
+                <p className="innerpara">{walletAddress ? getFormattedAddress(walletAddress) : "Not connected"}</p>
               </div>
               <Icon name="rightarrow" className="arrowimg" />
             </div>
             <div
               className="innerdeposit"
-              onClick={() => {
-                setDepostiVia("Via deposit address");
-              }}
+              onClick={() => setDepostiVia("Via deposit address")}
             >
               <div className="depositleft">
                 <Icon name="addressicon" />
@@ -445,8 +336,9 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
       <Depositsuccessmodal
         show={modals.depositsuccess}
         onHide={() => closeModal("depositsuccess")}
+        amount={successAmount}
       />
-      </>
+    </>
   );
 };
 

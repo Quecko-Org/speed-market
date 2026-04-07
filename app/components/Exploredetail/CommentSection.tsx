@@ -6,6 +6,7 @@ interface CommentUser {
   _id: string;
   displayName?: string;
   internalWalletAddress?: string;
+  profileImage?: string;
 }
 
 interface CommentData {
@@ -225,7 +226,7 @@ const CommentItem: React.FC<{
         }}
         className={isReply ? "cmt-reply" : ""}
       >
-        <Avatar src={comment.avatar || DEFAULT_AVATAR} size={isReply ? 30 : 36} />
+        <Avatar src={(typeof comment.user === "object" && comment.user?.profileImage) || DEFAULT_AVATAR} size={isReply ? 30 : 36} />
         <div
           style={{
             flex: 1,

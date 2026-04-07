@@ -4,6 +4,7 @@ import Icon from "../Icon";
 import { getFormattedAddress } from "@/app/utils/helpers";
 import { useAtomValue } from "jotai";
 import { userProfileData, userSmartAccount } from "@/app/store/atoms";
+import { toast } from "react-toastify";
 interface ProfileheaderProps {
   onEdit: () => void;
   onShare: () => void;
@@ -19,7 +20,7 @@ const Profileheader: FC<ProfileheaderProps> = ({ onEdit, onShare }) => {
         <div className="innerprofile">
           <div className="profileimg">
             <img
-              src="/dummyassets/dummyuser.png"
+              src={userProfileInfo?.profileImage || "/dummyassets/dummyuser.png"}
               alt="innerimg"
               className="innerimg"
             />
@@ -29,7 +30,11 @@ const Profileheader: FC<ProfileheaderProps> = ({ onEdit, onShare }) => {
             <div className="smartmain">
               <h6 className="smartpara">Smart Wallet</h6>
               <h5 className="walletpara">{getFormattedAddress(smartAccount)}</h5>
-              <button className="copybtn">
+              <button className="copybtn" onClick={() => {
+                if (!smartAccount) return;
+                navigator.clipboard.writeText(smartAccount);
+                toast.success("Address copied!");
+              }}>
                 <Icon name="copy" />
               </button>
             </div>

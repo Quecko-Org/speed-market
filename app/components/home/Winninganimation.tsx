@@ -5,7 +5,7 @@ import { getCoinActivity } from "@/app/services/coinListing";
 
 interface WinItem {
   _id: string;
-  userId?: { displayName?: string; internalWalletAddress?: string } | string;
+  userId?: { displayName?: string; internalWalletAddress?: string; profileImage?: string } | string;
   cryptoSymbol?: string;
   amount?: string;
 }
@@ -52,7 +52,7 @@ const Winninganimation: FC = () => {
           <div className="inneranimation" key={item._id}>
             <div className="userimg">
               <img
-                src="/dummyassets/dummyuser.png"
+                src={(typeof item.userId === "object" && item.userId?.profileImage) || "/dummyassets/dummyuser.png"}
                 alt="user"
                 className="innerimg"
               />
