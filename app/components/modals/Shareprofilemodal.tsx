@@ -20,7 +20,39 @@ const Shareprofilemodal: React.FC<ShareprofilemodalProps> = ({
       </Modal.Header>
 
       <Modal.Body>
-       
+        <div className="sharemodalmain">
+          <p className="sharepara">Profile Link</p>
+          <div className="mainlink">
+            <p className="linkpara">
+              https://speedmarkets.com/profile/felix-hogan
+            </p>
+            <button className="copybtn">
+              <Icon name="copywhite" />
+              Copy
+            </button>
+          </div>
+          <p className="sharepara">Share via</p>
+          <div className="socialicons">
+            <a href="" className="innerlink">
+              <Icon name="x" />
+            </a>
+            <a href="" className="innerlink">
+              <Icon name="facebook" />
+            </a>
+            <a href="" className="innerlink">
+              <Icon name="telegram" />
+            </a>
+            <a href="" className="innerlink">
+              <Icon name="whatsapp" />
+            </a>
+            <a href="" className="innerlink">
+              <Icon name="mail" />
+            </a>
+            <a href="" className="innerlink">
+              <Icon name="link" />
+            </a>
+          </div>
+        </div>
       </Modal.Body>
     </Modal>
   );

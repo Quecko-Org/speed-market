@@ -68,6 +68,83 @@
         padding: 20px;
         margin: 0px;
 
+        .sharemodalmain {
+          .sharepara {
+            color: #FFF;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 100%;
+            margin-bottom: 10px;
+          }
+
+          .mainlink {
+            border-radius: 10px;
+            background: #16192A;
+            display: flex;
+            padding: 12px 10px 12px 15px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 26px;
+
+            .linkpara {
+              color: #FFF;
+              font-size: 12px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: 100%;
+              overflow: hidden;
+              white-space: nowrap;
+              max-width: fit-content;
+              text-overflow: ellipsis;
+            }
+
+            .copybtn {
+              border-radius: 10px;
+              background: linear-gradient(90deg, #EC8711 0%, #EC8411 7.14%, #EB8212 14.29%, #EB7F12 21.43%, #EA7C12 28.57%, #E97912 35.71%, #E97613 42.86%, #E87413 50%, #E87113 57.14%, #E76E13 64.29%, #E76B13 71.43%, #E66814 78.57%, #E56514 85.71%, #E56214 92.86%, #E45F14 100%);
+              display: flex;
+              width: 88.188px;
+              padding: 7px 16px;
+              align-items: center;
+              gap: 8px;
+              color: #FFF;
+              text-align: center;
+              font-size: 14px;
+              font-style: normal;
+              font-weight: 500;
+              line-height: 21px;
+              border: none;
+
+              svg {
+                width: 16px;
+                height: 16px;
+              }
+            }
+          }
+
+          .socialicons {
+            display: flex;
+            align-items: center;
+            gap: 11.568px;
+            justify-content: space-between;
+
+            .innerlink {
+              display: flex;
+              width: 100%;
+              height: 61.694px;
+              justify-content: center;
+              align-items: center;
+              border-radius: 15.423px;
+              background: #16192A;
+
+              svg {
+                width: 24.677px;
+                height: 24.677px;
+              }
+            }
+          }
+        }
+
         .claimedsucess {
           .box {
             border-radius: 10px;
@@ -643,46 +720,48 @@
                 }
               }
 
-              .profiletexts{
+              .profiletexts {
                 display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: flex-start;
-gap: 12px;
-.profilehead{
-color: #FFF;
-font-feature-settings: 'dlig' on, 'salt' on;
-font-size: 20px;
-font-style: normal;
-font-weight: 500;
-line-height: 120%;
-}
-.profilepara{
-color: rgba(255, 255, 255, 0.50);
-font-feature-settings: 'dlig' on;
-font-size: 14px;
-font-style: normal;
-font-weight: 500;
-line-height: 100%; 
-}
+                flex-direction: column;
+                justify-content: center;
+                align-items: flex-start;
+                gap: 12px;
+
+                .profilehead {
+                  color: #FFF;
+                  font-feature-settings: 'dlig' on, 'salt' on;
+                  font-size: 20px;
+                  font-style: normal;
+                  font-weight: 500;
+                  line-height: 120%;
+                }
+
+                .profilepara {
+                  color: rgba(255, 255, 255, 0.50);
+                  font-feature-settings: 'dlig' on;
+                  font-size: 14px;
+                  font-style: normal;
+                  font-weight: 500;
+                  line-height: 100%;
+                }
               }
             }
 
-            .eidtbtn{
+            .eidtbtn {
               display: flex;
-width: 86px;
-padding: 12px;
-justify-content: center;
-align-items: center;
-gap: 10px;
-border-radius: 14px;
-background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
-color: #FFF;
-font-size: 14px;
-font-style: normal;
-font-weight: 400;
-line-height: 100%; 
-border: none;
+              width: 86px;
+              padding: 12px;
+              justify-content: center;
+              align-items: center;
+              gap: 10px;
+              border-radius: 14px;
+              background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
+              color: #FFF;
+              font-size: 14px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: 100%;
+              border: none;
             }
           }
 
