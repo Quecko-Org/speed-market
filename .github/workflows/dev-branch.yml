@@ -27,9 +27,6 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Rebuild native modules
-        run: npm rebuild lightningcss
-
       - name: Create build
         run: npm run build
 
