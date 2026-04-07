@@ -1,13 +1,27 @@
 "use client";
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import Icon from "../Icon";
 import ReactPaginate from "react-paginate";
 
-const PredictionsTable: FC = () => {
-  const [currentPage, setCurrentPage] = useState(0);
+interface PredictionsTableProps {
+  history: any[];
+  loading: boolean;
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
 
+function formatDate(dateStr?: string) {
+  if (!dateStr) return { time: "—", date: "—" };
+  const d = new Date(dateStr);
+  const time = d.toLocaleTimeString("en-US", { hour12: false });
+  const date = d.toISOString().split("T")[0];
+  return { time, date };
+}
+
+const PredictionsTable: FC<PredictionsTableProps> = ({ history, loading, currentPage, totalPages, onPageChange }) => {
   const handlePageClick = (event: any) => {
-    setCurrentPage(event.selected);
+    onPageChange(event.selected);
   };
 
   return (
@@ -28,277 +42,200 @@ const PredictionsTable: FC = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="maxwidth">
-                  <div className="mainpair">
-                    <div className="tokenimages">
-                      <div className="innertoken">
-                        <img
-                          src="/tokenimages/btc.png"
-                          alt="tokenimg"
-                          className="tokenimg"
-                        />
-                      </div>
-                      <Icon name="energy" className="energy" />
-                      <div className="innertoken">
-                        <img
-                          src="/tokenimages/usdt.png"
-                          alt="tokenimg"
-                          className="tokenimg"
-                        />
-                      </div>
-                    </div>
-                    <h6 className="tokenname">BTC/USDT</h6>
-                    <span className="innerspan">
-                      <Icon name="timer" className="timer" />
-                      15 MIN
-                    </span>
-                  </div>
-                </td>
-                <td>
-                  <div className="predictionmain upmain">
-                    <span className="predictionimg">
-                      <Icon name="up" className="up" />
-                    </span>
-                    <p className="predictionpara">Up</p>
-                  </div>
-                </td>
-                <td>$50</td>
-                <td>
-                  <p className="resultpara won">Won</p>
-                </td>
-                <td>$180</td>
-                <td>
-                  <div className="maintime">
-                    <h6 className="timehead">13:26:30</h6>
-                    <p className="timepara">2025-12-15</p>
-                  </div>
-                </td>
-                <td>
-                  <button className="sharebtn">
-                    <Icon name="predictionshare" />
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td className="maxwidth">
-                  <div className="mainpair">
-                    <div className="tokenimages">
-                      <div className="innertoken">
-                        <img
-                          src="/tokenimages/btc.png"
-                          alt="tokenimg"
-                          className="tokenimg"
-                        />
-                      </div>
-                      <Icon name="energy" className="energy" />
-                      <div className="innertoken">
-                        <img
-                          src="/tokenimages/usdt.png"
-                          alt="tokenimg"
-                          className="tokenimg"
-                        />
-                      </div>
-                    </div>
-                    <h6 className="tokenname">BTC/USDT</h6>
-                    <span className="innerspan">
-                      <Icon name="timer" className="timer" />
-                      15 MIN
-                    </span>
-                  </div>
-                </td>
-                <td>
-                  <div className="predictionmain downmain">
-                    <span className="predictionimg">
-                      <Icon name="down" className="down" />
-                    </span>
-                    <p className="predictionpara">Down</p>
-                  </div>
-                </td>
-                <td>$50</td>
-                <td>
-                  <p className="resultpara lost">Lost</p>
-                </td>
-                <td>$180</td>
-                <td>
-                  <div className="maintime">
-                    <h6 className="timehead">13:26:30</h6>
-                    <p className="timepara">2025-12-15</p>
-                  </div>
-                </td>
-                <td>
-                  <button className="sharebtn">
-                    <Icon name="predictionshare" />
-                  </button>
-                </td>
-              </tr>
+              {loading ? (
+                <tr>
+                  <td colSpan={7} style={{ textAlign: "center", color: "#74728B", padding: 24 }}>
+                    Loading predictions...
+                  </td>
+                </tr>
+              ) : history.length === 0 ? (
+                <tr>
+                  <td colSpan={7} style={{ textAlign: "center", color: "#74728B", padding: 24 }}>
+                    No predictions yet
+                  </td>
+                </tr>
+              ) : (
+                history.map((item: any) => {
+                  const isUp = item.betType === "UP";
+                  const isWon = item.result === "WIN";
+                  const { time, date } = formatDate(item.createdAt);
+                  const symbol = item.cryptoSymbol ?? "—";
+                  const slug = symbol.toLowerCase();
+
+                  return (
+                    <tr key={item._id}>
+                      <td className="maxwidth">
+                        <div className="mainpair">
+                          <div className="tokenimages">
+                            <div className="innertoken">
+                              <img
+                                src={item.imageurl ?? `/tokenimages/${slug}.png`}
+                                alt={symbol}
+                                className="tokenimg"
+                              />
+                            </div>
+                            <Icon name="energy" className="energy" />
+                            <div className="innertoken">
+                              <img
+                                src="/tokenimages/usdt.png"
+                                alt="usdt"
+                                className="tokenimg"
+                              />
+                            </div>
+                          </div>
+                          <h6 className="tokenname">{symbol}/USDT</h6>
+                          <span className="innerspan">
+                            <Icon name="timer" className="timer" />
+                            {item.timeframe ?? "—"}
+                          </span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className={`predictionmain ${isUp ? "upmain" : "downmain"}`}>
+                          <span className="predictionimg">
+                            <Icon name={isUp ? "up" : "down"} className={isUp ? "up" : "down"} />
+                          </span>
+                          <p className="predictionpara">{isUp ? "Up" : "Down"}</p>
+                        </div>
+                      </td>
+                      <td>${Number(item.amount ?? 0).toFixed(2)}</td>
+                      <td>
+                        <p className={`resultpara ${isWon ? "won" : "lost"}`}>
+                          {isWon ? "Won" : "Lost"}
+                        </p>
+                      </td>
+                      <td>${Number(item.earned ?? item.payout ?? 0).toFixed(2)}</td>
+                      <td>
+                        <div className="maintime">
+                          <h6 className="timehead">{time}</h6>
+                          <p className="timepara">{date}</p>
+                        </div>
+                      </td>
+                      <td>
+                        <button className="sharebtn">
+                          <Icon name="predictionshare" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
 
         {/* Mobile Cards */}
         <div className="mobileboxes d-none">
-          <div className="innerbox">
-            <div className="innerboxmain">
-              <div className="box">
-                <p className="boxpara">Pair</p>
-                <div className="mainpair">
-                  <div className="tokenimages">
-                    <div className="innertoken">
-                      <img
-                        src="/tokenimages/btc.png"
-                        alt="tokenimg"
-                        className="tokenimg"
-                      />
-                    </div>
-                    <Icon name="energy" className="energy" />
-                    <div className="innertoken">
-                      <img
-                        src="/tokenimages/usdt.png"
-                        alt="tokenimg"
-                        className="tokenimg"
-                      />
-                    </div>
-                  </div>
-                  <h6 className="tokenname">BTC/USDT</h6>
-                  <span className="innerspan">
-                    <Icon name="timer" className="timer" />
-                    15 MIN
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="innerboxmain">
-              <div className="box">
-                <p className="boxpara">Prediction</p>
-                <div className="predictionmain upmain">
-                  <span className="predictionimg">
-                    <Icon name="up" className="up" />
-                  </span>
-                  <p className="predictionpara">Up</p>
-                </div>
-              </div>
-              <div className="box">
-                <p className="boxpara">Amount</p>
-                <h6 className="boxhead">$50</h6>
-              </div>
-            </div>
-            <div className="innerboxmain">
-              <div className="box">
-                <p className="boxpara">Result</p>
-                <h6 className="boxhead won">Won</h6>
-              </div>
-              <div className="box">
-                <p className="boxpara">Earned</p>
-                <h6 className="boxhead">$50</h6>
-              </div>
-            </div>
-            <div className="innerboxmain">
-              <div className="box">
-                <p className="boxpara">Date & Time</p>
-                <div className="maintime">
-                  <h6 className="timehead">13:26:30</h6>
-                  <p className="timepara">2025-12-15</p>
-                </div>
-              </div>
-              <div className="box">
-                <button className="sharebtn">
-                  <Icon name="predictionshare" />
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="innerbox">
-            <div className="innerboxmain">
-              <div className="box">
-                <p className="boxpara">Pair</p>
-                <div className="mainpair">
-                  <div className="tokenimages">
-                    <div className="innertoken">
-                      <img
-                        src="/tokenimages/btc.png"
-                        alt="tokenimg"
-                        className="tokenimg"
-                      />
-                    </div>
-                    <Icon name="energy" className="energy" />
-                    <div className="innertoken">
-                      <img
-                        src="/tokenimages/usdt.png"
-                        alt="tokenimg"
-                        className="tokenimg"
-                      />
+          {loading ? (
+            <p style={{ textAlign: "center", color: "#74728B", padding: 16 }}>Loading predictions...</p>
+          ) : history.length === 0 ? (
+            <p style={{ textAlign: "center", color: "#74728B", padding: 16 }}>No predictions yet</p>
+          ) : (
+            history.map((item: any) => {
+              const isUp = item.betType === "UP";
+              const isWon = item.result === "WIN";
+              const { time, date } = formatDate(item.createdAt);
+              const symbol = item.cryptoSymbol ?? "—";
+              const slug = symbol.toLowerCase();
+
+              return (
+                <div className="innerbox" key={item._id}>
+                  <div className="innerboxmain">
+                    <div className="box">
+                      <p className="boxpara">Pair</p>
+                      <div className="mainpair">
+                        <div className="tokenimages">
+                          <div className="innertoken">
+                            <img
+                              src={item.imageurl ?? `/tokenimages/${slug}.png`}
+                              alt={symbol}
+                              className="tokenimg"
+                            />
+                          </div>
+                          <Icon name="energy" className="energy" />
+                          <div className="innertoken">
+                            <img
+                              src="/tokenimages/usdt.png"
+                              alt="usdt"
+                              className="tokenimg"
+                            />
+                          </div>
+                        </div>
+                        <h6 className="tokenname">{symbol}/USDT</h6>
+                        <span className="innerspan">
+                          <Icon name="timer" className="timer" />
+                          {item.duration ?? "—"}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                  <h6 className="tokenname">BTC/USDT</h6>
-                  <span className="innerspan">
-                    <Icon name="timer" className="timer" />
-                    15 MIN
-                  </span>
+                  <div className="innerboxmain">
+                    <div className="box">
+                      <p className="boxpara">Prediction</p>
+                      <div className={`predictionmain ${isUp ? "upmain" : "downmain"}`}>
+                        <span className="predictionimg">
+                          <Icon name={isUp ? "up" : "down"} className={isUp ? "up" : "down"} />
+                        </span>
+                        <p className="predictionpara">{isUp ? "Up" : "Down"}</p>
+                      </div>
+                    </div>
+                    <div className="box">
+                      <p className="boxpara">Amount</p>
+                      <h6 className="boxhead">${Number(item.amount ?? 0).toFixed(2)}</h6>
+                    </div>
+                  </div>
+                  <div className="innerboxmain">
+                    <div className="box">
+                      <p className="boxpara">Result</p>
+                      <h6 className={`boxhead ${isWon ? "won" : "lost"}`}>{isWon ? "Won" : "Lost"}</h6>
+                    </div>
+                    <div className="box">
+                      <p className="boxpara">Earned</p>
+                      <h6 className="boxhead">${Number(item.earned ?? item.payout ?? 0).toFixed(2)}</h6>
+                    </div>
+                  </div>
+                  <div className="innerboxmain">
+                    <div className="box">
+                      <p className="boxpara">Date & Time</p>
+                      <div className="maintime">
+                        <h6 className="timehead">{time}</h6>
+                        <p className="timepara">{date}</p>
+                      </div>
+                    </div>
+                    <div className="box">
+                      <button className="sharebtn">
+                        <Icon name="predictionshare" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="innerboxmain">
-              <div className="box">
-                <p className="boxpara">Prediction</p>
-                <div className="predictionmain downmain">
-                  <span className="predictionimg">
-                    <Icon name="down" className="down" />
-                  </span>
-                  <p className="predictionpara">Down</p>
-                </div>
-              </div>
-              <div className="box">
-                <p className="boxpara">Amount</p>
-                <h6 className="boxhead">$50</h6>
-              </div>
-            </div>
-            <div className="innerboxmain">
-              <div className="box">
-                <p className="boxpara">Result</p>
-                <h6 className="boxhead lost">Lost</h6>
-              </div>
-              <div className="box">
-                <p className="boxpara">Earned</p>
-                <h6 className="boxhead">$50</h6>
-              </div>
-            </div>
-            <div className="innerboxmain">
-              <div className="box">
-                <p className="boxpara">Date & Time</p>
-                <div className="maintime">
-                  <h6 className="timehead">13:26:30</h6>
-                  <p className="timepara">2025-12-15</p>
-                </div>
-              </div>
-              <div className="box">
-                <button className="sharebtn">
-                  <Icon name="predictionshare" />
-                </button>
-              </div>
-            </div>
-          </div>
+              );
+            })
+          )}
         </div>
 
-        <ReactPaginate
-          previousLabel={"←"}
-          nextLabel={"→"}
-          breakLabel={"..."}
-          pageCount={15}
-          marginPagesDisplayed={1}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageClick}
-          containerClassName={"pagination"}
-          pageClassName={"page-item"}
-          pageLinkClassName={"page-link"}
-          previousClassName={"page-item"}
-          nextClassName={"page-item"}
-          previousLinkClassName={"page-link"}
-          nextLinkClassName={"page-link"}
-          breakClassName={"page-item"}
-          breakLinkClassName={"page-link"}
-          activeClassName={"active"}
-        />
+        {totalPages > 1 && (
+          <ReactPaginate
+            previousLabel={"←"}
+            nextLabel={"→"}
+            breakLabel={"..."}
+            pageCount={totalPages}
+            forcePage={currentPage}
+            marginPagesDisplayed={1}
+            pageRangeDisplayed={5}
+            onPageChange={handlePageClick}
+            containerClassName={"pagination"}
+            pageClassName={"page-item"}
+            pageLinkClassName={"page-link"}
+            previousClassName={"page-item"}
+            nextClassName={"page-item"}
+            previousLinkClassName={"page-link"}
+            nextLinkClassName={"page-link"}
+            breakClassName={"page-item"}
+            breakLinkClassName={"page-link"}
+            activeClassName={"active"}
+          />
+        )}
       </div>
     </>
   );
