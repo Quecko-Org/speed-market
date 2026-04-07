@@ -15,7 +15,7 @@ import Positiontable from "./Positiontable";
 import Activity from "./Activity";
 import History from "./History";
 import Sharemarket from "./Sharemarket";
-import { getCoinDetail, getSignature } from "@/app/services/coinListing";
+import { getCoinDetail, getCoinActivity, getSignature } from "@/app/services/coinListing";
 import { useAtomValue } from "jotai";
 import {
   userSmartAccount,
@@ -68,6 +68,12 @@ const Exploredetail: FC = () => {
   const { grantPermissions } = useSessionPermissions();
   const fetchUsdtBalance = useGetUsdtBalance();
 
+  const [activities, setActivities] = useState<any[]>([]);
+  const [activityLoading, setActivityLoading] = useState(false);
+  const [activityPage, setActivityPage] = useState(0);
+  const [activityTotalPages, setActivityTotalPages] = useState(0);
+  const ACTIVITY_LIMIT = 10;
+
   useEffect(() => {
     if (!symbol) return;
 
@@ -85,6 +91,31 @@ const Exploredetail: FC = () => {
 
     fetchCoinDetail();
   }, [symbol]);
+
+  const fetchActivity = async (page: number) => {
+    if (!symbol) return;
+    setActivityLoading(true);
+    try {
+      const response = await getCoinActivity(symbol, page + 1, ACTIVITY_LIMIT);
+      if (response) {
+        setActivities(response.bets ?? response.data ?? []);
+        const total = response.totalCount ?? response.total ?? 0;
+        setActivityTotalPages(Math.ceil(total / ACTIVITY_LIMIT));
+      }
+    } catch (err) {
+      console.error("Failed to fetch coin activity:", err);
+    } finally {
+      setActivityLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (symbol) fetchActivity(activityPage);
+  }, [symbol, activityPage]);
+
+  const handleActivityPageChange = (page: number) => {
+    setActivityPage(page);
+  };
 
   const [direction, setDirection] = useState<"UP" | "DOWN">("UP");
   const [amount, setAmount] = useState(5);
@@ -279,7 +310,7 @@ const Exploredetail: FC = () => {
                 <div className="chart-parent">
                   <TradingChart coinDetail={coinDetail} symbol={symbol} />
                 </div>
-                <Positiontable />
+                <Positiontable symbol={symbol} />
                 <Sharemarket />
                 <Marketinfo coinDetail={coinDetail} />
                 <div className="placemain d-none">
@@ -301,10 +332,16 @@ const Exploredetail: FC = () => {
                     className="mblactivitytabs"
                   >
                     <Tab eventKey="activity" title="Activity">
-                      <Activity />
+                      <Activity
+                        activities={activities}
+                        loading={activityLoading}
+                        currentPage={activityPage}
+                        totalPages={activityTotalPages}
+                        onPageChange={handleActivityPageChange}
+                      />
                     </Tab>
                     <Tab eventKey="history" title="History">
-                      <History />
+                      <History symbol={symbol} />
                     </Tab>
                   </Tabs>
                 </div>
@@ -320,7 +357,7 @@ const Exploredetail: FC = () => {
             <div className="chart-parent">
               <TradingChart coinDetail={coinDetail} symbol={symbol} />
             </div>
-            <Positiontable />
+            <Positiontable symbol={symbol} />
             <Marketinfo coinDetail={coinDetail} />
             <div className="maintabs">
               <Tabs
@@ -332,10 +369,16 @@ const Exploredetail: FC = () => {
                   <CommentSection coinId={coinDetail?._id ?? coinDetail?._id ?? ""} />
                 </Tab>
                 <Tab eventKey="activity" title="Activity">
-                  <Activity />
+                  <Activity
+                        activities={activities}
+                        loading={activityLoading}
+                        currentPage={activityPage}
+                        totalPages={activityTotalPages}
+                        onPageChange={handleActivityPageChange}
+                      />
                 </Tab>
                 <Tab eventKey="history" title="History">
-                  <History />
+                  <History symbol={symbol} />
                 </Tab>
               </Tabs>
             </div>

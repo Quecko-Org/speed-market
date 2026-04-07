@@ -15,7 +15,7 @@ interface CommentData {
   content: string;
   likes?: number;
   createdAt: string;
-  replysCount?: number;
+  replyCount?: number;
 }
 
 function getUserName(user: CommentUser | string): string {
@@ -171,7 +171,7 @@ const CommentItem: React.FC<{
   const [replies, setReplies] = useState<CommentData[]>([]);
   const [repliesLoading, setRepliesLoading] = useState(false);
   const [repliesCursor, setRepliesCursor] = useState<string | undefined>();
-  const [replyTotalCount, setReplyTotalCount] = useState<number>(comment.replysCount ?? 0);
+  const [replyTotalCount, setReplyTotalCount] = useState<number>(comment.replyCount ?? 0);
   const [showReplyInput, setShowReplyInput] = useState(false);
 
   const fetchReplies = async (cursor?: string) => {
@@ -205,24 +205,6 @@ const CommentItem: React.FC<{
       fetchReplies();
     }
     setShowReplies(!showReplies);
-  };
-
-  const [likeLoading, setLikeLoading] = useState(false);
-
-  const handleLike = async () => {
-    if (likeLoading) return;
-    setLikeLoading(true);
-    try {
-      const result = await likeComments(comment._id);
-      if (result) {
-        setLiked(!liked);
-        setLikeCount((prev) => liked ? prev - 1 : prev + 1);
-      }
-    } catch {
-      toast.error("Failed to like comment");
-    } finally {
-      setLikeLoading(false);
-    }
   };
 
   const handleReplyPosted = () => {
@@ -265,27 +247,27 @@ const CommentItem: React.FC<{
             {comment.content}
           </p>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <button className="cmt-like-btn" onClick={handleLike} disabled={likeLoading}>
-              <ThumbIcon active={liked} />
-              <span>{likeLoading ? "..." : likeCount}</span>
+            <button className="cmt-like-btn">
+              <ThumbIcon active={(comment.likes ?? 0) > 0} />
+              <span>{comment.likes ?? 0}</span>
             </button>
             {!isReply && (
               <>
                 <button className="cmt-reply-btn" onClick={() => setShowReplyInput(!showReplyInput)}>
                   <ReplyIcon /> Reply
                 </button>
-                {(replyTotalCount > 0 || showReplies) && (
-                  <button
-                    className="cmt-reply-btn"
-                    onClick={handleToggleReplies}
-                    style={{ display: "flex", alignItems: "center", gap: 4 }}
-                  >
-                    <ChevronDownIcon />
-                    {showReplies
-                      ? "Hide replies"
-                      : `View replies (${replyTotalCount})`}
-                  </button>
-                )}
+                <button
+                  className="cmt-reply-btn"
+                  onClick={handleToggleReplies}
+                  style={{ display: "flex", alignItems: "center", gap: 4 }}
+                >
+                  <ChevronDownIcon />
+                  {showReplies
+                    ? "Hide replies"
+                    : replyTotalCount > 0
+                      ? `View replies (${replyTotalCount})`
+                      : "View replies"}
+                </button>
               </>
             )}
           </div>
