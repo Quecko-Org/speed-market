@@ -157,7 +157,7 @@ const History: FC<HistoryProps> = ({ symbol, refreshKey }) => {
           ) : (
             history.map((item: any) => {
               const isUp = item.betType === "UP";
-              const isWon = item.result === "won" || item.status === "won";
+              const isWon = item.result === "WIN" || item.status === "won";
               const { time, date } = formatDate(item.createdAt);
               return (
                 <div className="innerbox" key={item._id}>
