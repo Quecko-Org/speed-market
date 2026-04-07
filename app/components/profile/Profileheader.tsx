@@ -4,8 +4,11 @@ import Icon from "../Icon";
 import { getFormattedAddress } from "@/app/utils/helpers";
 import { useAtomValue } from "jotai";
 import { userProfileData, userSmartAccount } from "@/app/store/atoms";
-
-const ProfileHeader: FC = () => {
+interface ProfileheaderProps {
+  onEdit: () => void;
+  onShare: () => void;
+}
+const Profileheader: FC<ProfileheaderProps> = ({ onEdit, onShare }) => {
 
   const smartAccount = useAtomValue(userSmartAccount);
   const userProfileInfo = useAtomValue(userProfileData);
@@ -33,8 +36,8 @@ const ProfileHeader: FC = () => {
           </div>
         </div>
         <div className="profilebtns">
-          <button className="editbtn">Edit Profile</button>
-          <button className="sharebtn">
+          <button onClick={onEdit} className="editbtn">Edit Profile</button>
+          <button onClick={onShare} className="sharebtn">
             Share Profile
             <Icon name="sharewhite" />
           </button>
@@ -44,4 +47,4 @@ const ProfileHeader: FC = () => {
   );
 };
 
-export default ProfileHeader;
+export default Profileheader;
