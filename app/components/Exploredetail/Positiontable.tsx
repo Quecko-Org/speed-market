@@ -18,6 +18,7 @@ import { speedMarketAbi } from "@/app/utils/speedMarket";
 import { SPEED_MARKET_CONTRACT, usdt_token } from "@/app/config/environment";
 import { USDT_MOCK_VALUE } from "@/app/config/constants";
 import { sendGasFeeAsUsdt, sendSmartAccountTx, isSessionNotFoundError, clearStaleSession } from "@/app/utils/transaction";
+import { handleCheckSession } from "@/app/utils/helpers";
 import { showToast } from "@/app/hooks/showToast";
 
 type ModalKeys =
@@ -80,7 +81,7 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
   const smartAccount = useAtomValue(userSmartAccount);
   const smartAccountClient = useAtomValue(userSmartAccountClient);
   const publicClient = useAtomValue(userPublicClient);
-  const { isWalletConnected } = useWalletContext();
+  const { isWalletConnected, setIsLoading: setWalletLoading, setLoadingStep } = useWalletContext();
   const { grantPermissions } = useSessionPermissions();
   const fetchUsdtBalance = useGetUsdtBalance();
 
@@ -178,6 +179,11 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
         return;
       }
 
+      const needsPermission = await handleCheckSession();
+      if (needsPermission) {
+        setWalletLoading(true);
+        setLoadingStep("Confirm permission request from your wallet");
+      }
       let permResult = await grantPermissions();
       if (!permResult) {
         showToast("error", { message: "Failed to grant session permissions" });
@@ -215,6 +221,10 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
         }
       };
 
+      // Hide overlay after permissions granted
+      setWalletLoading(false);
+      setLoadingStep("");
+
       const claimArgs = [
         BigInt(sigResponse.optionId ?? optionId),
         BigInt(sigResponse.price),
@@ -251,6 +261,8 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
       showToast("error", { message: error?.shortMessage || error?.message || "Claim failed" });
     } finally {
       setClaimingId(null);
+      setLoadingStep("");
+      setWalletLoading(false);
     }
   };
 

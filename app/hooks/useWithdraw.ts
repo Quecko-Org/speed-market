@@ -8,6 +8,8 @@ import {
   userPublicClient,
 } from "@/app/store/atoms";
 import { useSessionPermissions } from "@/app/hooks/useSessionPermissions";
+import { useWalletContext } from "@/app/context/WalletContext";
+import { handleCheckSession } from "@/app/utils/helpers";
 import {
   ALCHEMY_API_KEY,
   usdt_token,
@@ -29,6 +31,7 @@ export const useWithdraw = () => {
   const smartAccountClient = useAtomValue(userSmartAccountClient);
   const publicClient = useAtomValue(userPublicClient);
   const { grantPermissions } = useSessionPermissions();
+  const { setIsLoading: setWalletLoading, setLoadingStep } = useWalletContext();
 
   const alchemy = new Alchemy({
     apiKey: ALCHEMY_API_KEY,
@@ -122,8 +125,15 @@ export const useWithdraw = () => {
         }
       }
 
+      const needsPermission = await handleCheckSession();
+      if (needsPermission) {
+        setWalletLoading(true);
+        setLoadingStep("Confirm permission request from your wallet");
+      }
       const permResult = await grantPermissions();
       if (!permResult) {
+        setWalletLoading(false);
+        setLoadingStep("");
         return {
           receipt: null,
           txHash: null,
@@ -132,6 +142,10 @@ export const useWithdraw = () => {
       }
       const { userPermissions: permissions, userSessionKey: sessionKey } =
         permResult;
+
+      // Hide overlay after permissions granted
+      setWalletLoading(false);
+      setLoadingStep("");
 
       const calls = [
         {
@@ -163,6 +177,8 @@ export const useWithdraw = () => {
       return { receipt, txHash, error: null };
     } catch (error) {
       console.error("Withdraw error:", error);
+      setWalletLoading(false);
+      setLoadingStep("");
       return { receipt: null, txHash: null, error };
     }
   };
