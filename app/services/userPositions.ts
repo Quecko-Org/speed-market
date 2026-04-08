@@ -1,13 +1,12 @@
 import axios from "axios";
 import { api_url } from "@/app/config/environment";
 
-export const getUserPosition = async (symbol?: string) => {
+export const getUserPosition = async (symbol?: string, offset = 1, limit = 10) => {
     const token = localStorage.getItem("accessToken");
     if (!token) return null;
     try {
-        const url = symbol
-            ? `${api_url}/bets/my-positions?offset=1&limit=10&symbol=${symbol}`
-            : `${api_url}/bets/my-positions?offset=1&limit=10`;
+        let url = `${api_url}/bets/my-positions?offset=${offset}&limit=${limit}`;
+        if (symbol) url += `&symbol=${symbol}`;
         const response = await axios.get(url, {
             headers: {
                 Authorization: `Bearer ${token}`,

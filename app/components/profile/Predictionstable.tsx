@@ -112,9 +112,11 @@ const PredictionsTable: FC<PredictionsTableProps> = ({ history, loading, current
                         </div>
                       </td>
                       <td>
-                        <button className="sharebtn">
-                          <Icon name="predictionshare" />
-                        </button>
+                        {isWon && (
+                          <button className="sharebtn">
+                            <Icon name="predictionshare" />
+                          </button>
+                        )}
                       </td>
                     </tr>
                   );
@@ -202,11 +204,13 @@ const PredictionsTable: FC<PredictionsTableProps> = ({ history, loading, current
                         <p className="timepara">{date}</p>
                       </div>
                     </div>
-                    <div className="box">
-                      <button className="sharebtn">
-                        <Icon name="predictionshare" />
-                      </button>
-                    </div>
+                    {isWon && (
+                      <div className="box">
+                        <button className="sharebtn">
+                          <Icon name="predictionshare" />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               );

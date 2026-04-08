@@ -83,7 +83,7 @@ const MasterModeMarket: FC<MasterModeMarketProps> = ({
     }
   };
 
-  const maxPosition = usdtBalance >= 100 ? 100 : usdtBalance;
+  const maxPosition = usdtBalance >= 150 ? 150 : usdtBalance;
 
   const handleSliderChange = (cardIndex: number, percent: number) => {
     if (maxPosition <= 0) return;

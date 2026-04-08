@@ -17,7 +17,7 @@ import { getFormattedAddress } from "@/app/utils/helpers";
 import { useDepositTransfer } from "@/app/hooks/useDepositTransfer";
 import { useGetUsdtBalance } from "@/app/hooks/useBalance";
 import Depositsuccessmodal from "./Depositsuccessmodal";
-import { toast } from "react-toastify";
+import { showToast } from "@/app/hooks/showToast";
 
 interface DepositmodalProps {
   show: boolean;
@@ -73,15 +73,15 @@ const Depositmodal: React.FC<DepositmodalProps> = ({ show, onHide }) => {
   const handleDeposit = async () => {
     const amount = depositAmount.trim();
     if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
-      toast.error("Please enter a valid amount");
+      showToast("error", { message: "Please enter a valid amount" });
       return;
     }
     if (Number(amount) > Number(walletBalance)) {
-      toast.error("Insufficient balance");
+      showToast("error", { message: "Insufficient balance" });
       return;
     }
     if (!smartAccount) {
-      toast.error("Smart account not available");
+      showToast("error", { message: "Smart account not available" });
       return;
     }
 

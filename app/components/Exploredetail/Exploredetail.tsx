@@ -37,7 +37,6 @@ import {
 import { USDT_DECIMALS, USDT_MOCK_VALUE, MAX_UINT256 } from "@/app/config/constants";
 import { sendGasFeeAsUsdt, sendSmartAccountTx, isSessionNotFoundError, clearStaleSession } from "@/app/utils/transaction";
 import { handleCheckSession } from "@/app/utils/helpers";
-import { toast } from "react-toastify";
 import { showToast } from "@/app/hooks/showToast";
 import type { MarketDuration } from "../home/Market";
 
@@ -154,7 +153,7 @@ const Exploredetail: FC = () => {
   const [direction, setDirection] = useState<"UP" | "DOWN">("UP");
   const [amount, setAmount] = useState(5);
 
-  const maxPosition = usdtBalance >= 100 ? 100 : usdtBalance;
+  const maxPosition = usdtBalance >= 150 ? 150 : usdtBalance;
   const quickValues = [5, 10, 50, 100];
 
   const feeValue = amount * 0.05;
@@ -163,15 +162,15 @@ const Exploredetail: FC = () => {
 
   const handlePlacePrediction = async () => {
     if (!symbol || !duration) {
-      toast.error("Missing symbol or duration");
+      showToast("error", { message: "Missing symbol or duration" });
       return;
     }
     if (!isWalletConnected || !smartAccount) {
-      toast.error("Please connect your wallet first");
+      showToast("error", { message: "Please connect your wallet first" });
       return;
     }
     if (!smartAccountClient || !publicClient) {
-      toast.error("Wallet not fully initialized. Please try again.");
+      showToast("error", { message: "Wallet not fully initialized. Please try again." });
       return;
     }
 
@@ -179,19 +178,19 @@ const Exploredetail: FC = () => {
     const numAmount = Number(trimmedAmount);
 
     if (!trimmedAmount || isNaN(numAmount) || numAmount <= 0) {
-      toast.error("Please enter a valid amount greater than 0");
+      showToast("error", { message: "Please enter a valid amount greater than 0" });
       return;
     }
     if (numAmount < 5) {
-      toast.error("Minimum amount is $5");
+      showToast("error", { message: "Minimum amount is $5" });
       return;
     }
     if (numAmount > maxPosition) {
-      toast.error(`Maximum amount is $${maxPosition}`);
+      showToast("error", { message: `Maximum amount is $${maxPosition}` });
       return;
     }
     if (numAmount > usdtBalance) {
-      toast.error("Insufficient USDT balance");
+      showToast("error", { message: "Insufficient USDT balance" });
       return;
     }
     if (isTradeLoading) return;
@@ -207,7 +206,7 @@ const Exploredetail: FC = () => {
       }
       let permResult = await grantPermissions();
       if (!permResult) {
-        toast.error("Failed to grant session permissions");
+        showToast("error", { message: "Failed to grant session permissions" });
         return;
       }
       let { userPermissions: permissions, userSessionKey: sessionKey } = permResult;
@@ -283,7 +282,7 @@ const Exploredetail: FC = () => {
       });
 
       if (!signatureResponse) {
-        toast.error("Failed to get trade signature from server");
+        showToast("error", { message: "Failed to get trade signature from server" });
         return;
       }
 
@@ -314,7 +313,7 @@ const Exploredetail: FC = () => {
       ]);
 
       if (receipt.status === "reverted") {
-        toast.error("Transaction reverted. Please try again.");
+        showToast("error", { message: "Transaction reverted. Please try again." });
         return;
       }
 
@@ -330,7 +329,7 @@ const Exploredetail: FC = () => {
       handleClose();
     } catch (error: any) {
       console.error("Trade execution error:", error);
-      toast.error(error?.shortMessage || error?.message || "Transaction failed");
+      showToast("error", { message: error?.shortMessage || error?.message || "Transaction failed" });
     } finally {
       setIsTradeLoading(false);
       setLoadingStep("");

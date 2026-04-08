@@ -12,7 +12,7 @@ import { userSmartAccount, userProfileData } from "@/app/store/atoms";
 import { useWalletContext } from "@/app/context/WalletContext";
 import { useWalletList } from "@/app/hooks/useWalletList";
 import { getWalletImage, getFormattedAddress } from "@/app/utils/helpers";
-import { toast } from "react-toastify";
+import { showToast } from "@/app/hooks/showToast";
 import Signmodal from "../modals/Signmodal";
 
 type ModalKeys =
@@ -76,7 +76,7 @@ const Header: FC = () => {
       connectWallet(wallet.connector);
       handleCloseNav();
     } else {
-      toast.warning(`Please install ${wallet.name} extension first.`);
+      showToast("error", { message: `Please install ${wallet.name} extension first.` });
     }
   };
 

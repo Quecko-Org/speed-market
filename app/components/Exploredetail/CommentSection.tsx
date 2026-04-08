@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { postComments, getComments, likeComments } from "@/app/services/comments";
-import { toast } from "react-toastify";
+import { showToast } from "@/app/hooks/showToast";
 
 interface CommentUser {
   _id: string;
@@ -101,10 +101,10 @@ const InlineReplyInput: React.FC<{
         setText("");
         onPosted();
       } else {
-        toast.error("Failed to post reply");
+        showToast("error", { message: "Failed to post reply" });
       }
     } catch {
-      toast.error("Failed to post reply");
+      showToast("error", { message: "Failed to post reply" });
     } finally {
       setIsPosting(false);
     }
@@ -195,7 +195,7 @@ const CommentItem: React.FC<{
         if (result.totalCount !== undefined) setReplyTotalCount(result.totalCount);
       }
     } catch {
-      toast.error("Failed to load replies");
+      showToast("error", { message: "Failed to load replies" });
     } finally {
       setRepliesLoading(false);
     }
@@ -331,7 +331,7 @@ const DesktopCommentInput: React.FC<{
     const content = t.trim();
     if (!content) return;
     if (!coinId) {
-      toast.error("Coin info not available");
+      showToast("error", { message: "Coin info not available" });
       return;
     }
 
@@ -342,10 +342,10 @@ const DesktopCommentInput: React.FC<{
         setT("");
         onCommentPosted();
       } else {
-        toast.error("Failed to post comment");
+        showToast("error", { message: "Failed to post comment" });
       }
     } catch {
-      toast.error("Failed to post comment");
+      showToast("error", { message: "Failed to post comment" });
     } finally {
       setIsPosting(false);
     }
@@ -381,33 +381,26 @@ interface CommentSectionProps {
 const CommentSection: React.FC<CommentSectionProps> = ({ coinId }) => {
   const [comments, setComments] = useState<CommentData[]>([]);
   const [loading, setLoading] = useState(false);
-  const [nextCursor, setNextCursor] = useState<string | undefined>();
   const [totalCount, setTotalCount] = useState(0);
 
   const [mobileInput, setMobileInput] = useState<string>("");
   const [isMobilePosting, setIsMobilePosting] = useState(false);
 
-  const fetchComments = async (cursor?: string) => {
+  const fetchComments = async () => {
     if (!coinId) return;
     setLoading(true);
     try {
       const result = await getComments({
         coinId,
-        limit: COMMENTS_LIMIT,
-        nextCursor: cursor,
+        limit: 100,
       });
       if (result) {
         const newComments = result.comments ?? result.data ?? result;
-        if (cursor) {
-          setComments((prev) => [...prev, ...(Array.isArray(newComments) ? newComments : [])]);
-        } else {
-          setComments(Array.isArray(newComments) ? newComments : []);
-        }
-        setNextCursor(result.nextCursor || undefined);
+        setComments(Array.isArray(newComments) ? newComments : []);
         if (result.totalCount !== undefined) setTotalCount(result.totalCount);
       }
     } catch {
-      toast.error("Failed to load comments");
+      showToast("error", { message: "Failed to load comments" });
     } finally {
       setLoading(false);
     }
@@ -434,10 +427,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ coinId }) => {
         setMobileInput("");
         fetchComments();
       } else {
-        toast.error("Failed to post comment");
+        showToast("error", { message: "Failed to post comment" });
       }
     } catch {
-      toast.error("Failed to post comment");
+      showToast("error", { message: "Failed to post comment" });
     } finally {
       setIsMobilePosting(false);
     }
@@ -468,15 +461,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({ coinId }) => {
                 <p style={{ color: "#74728B", fontSize: 13, textAlign: "center", padding: 16 }}>
                   No comments yet. Be the first!
                 </p>
-              )}
-              {!loading && nextCursor && (
-                <button
-                  className="cmt-reply-btn"
-                  style={{ textAlign: "center", padding: "8px 0", fontSize: 13 }}
-                  onClick={() => fetchComments(nextCursor)}
-                >
-                  Load more comments
-                </button>
               )}
             </div>
           </div>

@@ -136,9 +136,11 @@ const History: FC<HistoryProps> = ({ symbol, refreshKey }) => {
                         </div>
                       </td>
                       <td>
-                        <button onClick={() => openModal("Shareresults")} className="sharebtn">
-                          <Icon name="predictionshare" />
-                        </button>
+                        {isWon && (
+                          <button onClick={() => openModal("Shareresults")} className="sharebtn">
+                            <Icon name="predictionshare" />
+                          </button>
+                        )}
                       </td>
                     </tr>
                   );
@@ -194,11 +196,13 @@ const History: FC<HistoryProps> = ({ symbol, refreshKey }) => {
                         <p className="timepara">{date}</p>
                       </div>
                     </div>
-                    <div className="box">
-                      <button onClick={() => openModal("Shareresults")} className="sharebtn">
-                        <Icon name="predictionshare" />
-                      </button>
-                    </div>
+                    {isWon && (
+                      <div className="box">
+                        <button onClick={() => openModal("Shareresults")} className="sharebtn">
+                          <Icon name="predictionshare" />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               );

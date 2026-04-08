@@ -4,7 +4,7 @@ import Icon from "../Icon";
 import { getFormattedAddress } from "@/app/utils/helpers";
 import { useAtomValue } from "jotai";
 import { userProfileData, userSmartAccount } from "@/app/store/atoms";
-import { toast } from "react-toastify";
+import { showToast } from "@/app/hooks/showToast";
 interface ProfileheaderProps {
   onEdit: () => void;
   onShare: () => void;
@@ -33,7 +33,7 @@ const Profileheader: FC<ProfileheaderProps> = ({ onEdit, onShare }) => {
               <button className="copybtn" onClick={() => {
                 if (!smartAccount) return;
                 navigator.clipboard.writeText(smartAccount);
-                toast.success("Address copied!");
+                showToast("success", { message: "Address copied!" });
               }}>
                 <Icon name="copy" />
               </button>

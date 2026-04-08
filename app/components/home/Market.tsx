@@ -33,7 +33,6 @@ import {
   clearStaleSession,
 } from "@/app/utils/transaction";
 import { handleCheckSession } from "@/app/utils/helpers";
-import { toast } from "react-toastify";
 import { showToast } from "@/app/hooks/showToast";
 
 // ── Types ──────────────────────────────────────────────────────────────
@@ -128,36 +127,36 @@ const Market: FC = () => {
   }) => {
     // Validations
     if (!isWalletConnected || !smartAccount) {
-      toast.error("Please connect your wallet first");
+      showToast("error", { message: "Please connect your wallet first" });
       return false;
     }
     if (!smartAccountClient || !publicClient) {
-      toast.error("Wallet not fully initialized. Please try again.");
+      showToast("error", { message: "Wallet not fully initialized. Please try again." });
       return false;
     }
 
     const trimmedAmount = amount.trim();
     const numAmount = Number(trimmedAmount);
-    const maxPosition = usdtBalance >= 100 ? 100 : usdtBalance;
+    const maxPosition = usdtBalance >= 150 ? 150 : usdtBalance;
 
     if (!trimmedAmount || isNaN(numAmount) || numAmount <= 0) {
-      toast.error("Please enter a valid amount greater than 0");
+      showToast("error", { message: "Please enter a valid amount greater than 0" });
       return false;
     }
     if (numAmount < 5) {
-      toast.error("Minimum amount is $5");
+      showToast("error", { message: "Minimum amount is $5" });
       return false;
     }
     if (numAmount > maxPosition) {
-      toast.error(`Maximum amount is $${maxPosition}`);
+      showToast("error", { message: `Maximum amount is $${maxPosition}` });
       return false;
     }
     if (!asset) {
-      toast.error("Please select an asset");
+      showToast("error", { message: "Please select an asset" });
       return false;
     }
     if (numAmount > usdtBalance) {
-      toast.error("Insufficient USDT balance");
+      showToast("error", { message: "Insufficient USDT balance" });
       return false;
     }
     if (isTradeLoading) return false;
@@ -173,7 +172,7 @@ const Market: FC = () => {
       }
       let permResult = await grantPermissions();
       if (!permResult) {
-        toast.error("Failed to grant session permissions");
+        showToast("error", { message: "Failed to grant session permissions" });
         return false;
       }
       let { userPermissions: permissions, userSessionKey: sessionKey } =
@@ -255,7 +254,7 @@ const Market: FC = () => {
       });
 
       if (!signatureResponse) {
-        toast.error("Failed to get trade signature from server");
+        showToast("error", { message: "Failed to get trade signature from server" });
         return false;
       }
 
@@ -287,7 +286,7 @@ const Market: FC = () => {
       ]);
 
       if (receipt.status === "reverted") {
-        toast.error("Transaction reverted. Please try again.");
+        showToast("error", { message: "Transaction reverted. Please try again." });
         return false;
       }
 
@@ -302,9 +301,7 @@ const Market: FC = () => {
       return true;
     } catch (error: any) {
       console.error("Trade execution error:", error);
-      toast.error(
-        error?.shortMessage || error?.message || "Transaction failed",
-      );
+      showToast("error", { message: error?.shortMessage || error?.message || "Transaction failed" });
       return false;
     } finally {
       setIsTradeLoading(false);

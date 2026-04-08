@@ -44,7 +44,7 @@ import {
 import { loginOrRegister, getUserProfile } from "@/app/services/auth";
 import { useGetUsdtBalance } from "@/app/hooks/useBalance";
 import { LOGIN_SUCCESS, SIGNATURE_REJECTED } from "@/app/config/constants";
-import { toast } from "react-toastify";
+import { showToast } from "@/app/hooks/showToast";
 
 interface WalletContextValue {
   isWalletConnected: boolean;
@@ -158,7 +158,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       } catch (error) {
         setLoadingStep("");
         setIsLoading(false);
-        toast.error(SIGNATURE_REJECTED);
+        showToast("error", { message: SIGNATURE_REJECTED });
         disconnectWallet();
         console.error("Signing failed:", error);
         return null;
@@ -211,7 +211,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       setLoadingStep("Setting up your account...");
       const smartAddr = await createSmartAccountFn(walletClient);
       await loginOrRegister(signData, address, smartAddr ?? "");
-      toast.success(LOGIN_SUCCESS);
+      showToast("success", { message: LOGIN_SUCCESS });
 
       await fetchUsdtBalance(smartAddr ?? undefined);
       const profile = await getUserProfile();

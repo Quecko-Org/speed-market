@@ -7,7 +7,7 @@ import { userSmartAccountUsdtBalance, userSmartAccount } from "@/app/store/atoms
 import { formatNumberWithCommas } from "@/app/utils/helpers";
 import { useWithdraw } from "@/app/hooks/useWithdraw";
 import { useGetUsdtBalance } from "@/app/hooks/useBalance";
-import { toast } from "react-toastify";
+import { showToast } from "@/app/hooks/showToast";
 
 interface WithdrawmodalProps {
   show: boolean;
@@ -64,28 +64,28 @@ const Withdrawmodal: React.FC<WithdrawmodalProps> = ({ show, onHide }) => {
   const handleWithdraw = async () => {
     // Validations
     if (!smartAccount) {
-      toast.error("Please connect your wallet first.");
+      showToast("error", { message: "Please connect your wallet first." });
       return;
     }
 
     if (!recipientAddress.trim()) {
-      toast.error("Please enter a recipient address.");
+      showToast("error", { message: "Please enter a recipient address." });
       return;
     }
 
     if (!isValidEthAddress(recipientAddress.trim())) {
-      toast.error("Please enter a valid Ethereum address.");
+      showToast("error", { message: "Please enter a valid Ethereum address." });
       return;
     }
 
     const numAmount = parseFloat(amount);
     if (!amount || isNaN(numAmount) || numAmount <= 0) {
-      toast.error("Please enter a valid amount.");
+      showToast("error", { message: "Please enter a valid amount." });
       return;
     }
 
     if (numAmount > usdtBalance) {
-      toast.error("Insufficient balance.");
+      showToast("error", { message: "Insufficient balance." });
       return;
     }
 
@@ -110,10 +110,10 @@ const Withdrawmodal: React.FC<WithdrawmodalProps> = ({ show, onHide }) => {
           result.error?.code === 4001
             ? "Transaction rejected by user."
             : "Withdrawal failed. Please try again.";
-        toast.error(errorMsg);
+        showToast("error", { message: errorMsg });
       }
     } catch {
-      toast.error("Withdrawal failed. Please try again.");
+      showToast("error", { message: "Withdrawal failed. Please try again." });
     } finally {
       setIsWithdrawing(false);
     }

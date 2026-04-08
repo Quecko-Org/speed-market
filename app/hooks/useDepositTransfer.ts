@@ -4,7 +4,7 @@ import { parseUnits, formatUnits } from "viem";
 import { erc20Abi } from "@/app/utils/erc20Abi";
 import { usdt_token } from "@/app/config/environment";
 import { USDT_DECIMALS } from "@/app/config/constants";
-import { toast } from "react-toastify";
+import { showToast } from "@/app/hooks/showToast";
 
 export const useDepositTransfer = () => {
   const { address, isConnected } = useAccount();
@@ -30,11 +30,11 @@ export const useDepositTransfer = () => {
   const transferToSmartAccount = useCallback(
     async (toAddress: string, amount: string) => {
       if (!isConnected || !address) {
-        toast.error("Wallet not connected");
+        showToast("error", { message: "Wallet not connected" });
         return false;
       }
       if (!publicClient) {
-        toast.error("Public client not available");
+        showToast("error", { message: "Public client not available" });
         return false;
       }
 
@@ -58,7 +58,7 @@ export const useDepositTransfer = () => {
         const nativeBalance = await publicClient.getBalance({ address });
 
         if (nativeBalance < totalGasCost) {
-          toast.error("Insufficient ETH for gas fees");
+          showToast("error", { message: "Insufficient ETH for gas fees" });
           return false;
         }
 
@@ -74,7 +74,7 @@ export const useDepositTransfer = () => {
         return hash;
       } catch (error: any) {
         console.error("Transfer error:", error);
-        toast.error(error?.shortMessage || error?.message || "Transfer failed");
+        showToast("error", { message: error?.shortMessage || error?.message || "Transfer failed" });
         return false;
       } finally {
         setIsTransferring(false);

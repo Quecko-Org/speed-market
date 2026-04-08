@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import Icon from "../Icon";
 import { uploadMedia, updateUserProfile } from "@/app/services/auth";
-import { toast } from "react-toastify";
+import { showToast } from "@/app/hooks/showToast";
 
 interface EditprofilemodalProps {
   show: boolean;
@@ -40,7 +40,7 @@ const Editprofilemodal: React.FC<EditprofilemodalProps> = ({
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      toast.error("Please select a PNG or JPEG image");
+      showToast("error", { message: "Please select a PNG or JPEG image" });
       return;
     }
 
@@ -59,7 +59,7 @@ const Editprofilemodal: React.FC<EditprofilemodalProps> = ({
       if (imageFile) {
         const uploadResult = await uploadMedia(imageFile);
         if (!uploadResult) {
-          toast.error("Failed to upload image");
+          showToast("error", { message: "Failed to upload image" });
           return;
         }
         imageUrl = uploadResult.url ?? uploadResult.mediaUrl ?? uploadResult;
@@ -72,14 +72,14 @@ const Editprofilemodal: React.FC<EditprofilemodalProps> = ({
 
       const result = await updateUserProfile(payload);
       if (result) {
-        toast.success("Profile updated successfully");
+        showToast("success", { message: "Profile updated successfully" });
         onProfileUpdated?.();
         onHide();
       } else {
-        toast.error("Failed to update profile");
+        showToast("error", { message: "Failed to update profile" });
       }
     } catch {
-      toast.error("Failed to update profile");
+      showToast("error", { message: "Failed to update profile" });
     } finally {
       setSaving(false);
     }
@@ -126,6 +126,7 @@ const Editprofilemodal: React.FC<EditprofilemodalProps> = ({
               type="text"
               placeholder="Enter Your Name"
               value={name}
+              maxLength={20}
               onChange={(e) => setName(e.target.value)}
             />
           </div>

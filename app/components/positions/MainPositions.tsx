@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import Icon from "../Icon";
 import { usePositions } from "./PositionsContext";
 import { getUserPosition } from "@/app/services/userPositions";
@@ -27,33 +27,54 @@ interface MainPositionsProps {
   symbol?: string | null;
 }
 
+const ITEMS_PER_PAGE = 10;
+
 const MainPositions: FC<MainPositionsProps> = ({ symbol }) => {
   const { isOpen, toggle, close, activeTab, refreshKey } = usePositions();
   const [positions, setPositions] = useState<PositionItem[]>([]);
   const [pnlData, setPnlData] = useState<{ totalPnL: number; totalAmount: number; totalPayout: number; totalBets: number } | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
   const [, setTick] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const fetchPositions = async (pageNum: number, append = false) => {
+    if (!append) setLoading(true);
+    else setLoadingMore(true);
+    try {
+      const response = await getUserPosition(symbol || undefined, pageNum, ITEMS_PER_PAGE);
+      if (response) {
+        const newBets = Array.isArray(response.bets) ? response.bets : [];
+        setPositions((prev) => append ? [...prev, ...newBets] : newBets);
+        setPnlData(response.pnl?.[0] ?? null);
+        const totalPages = response.pages ?? 1;
+        setHasMore(pageNum < totalPages);
+      }
+    } catch (err) {
+      console.error("Failed to fetch positions:", err);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  };
 
   useEffect(() => {
-    const isInitialLoad = positions.length === 0;
-
-    const fetchPositions = async () => {
-      if (isInitialLoad) setLoading(true);
-      try {
-        const response = await getUserPosition(symbol || undefined);
-        if (response) {
-          setPositions(Array.isArray(response.bets) ? response.bets : []);
-          setPnlData(response.pnl?.[0] ?? null);
-        }
-      } catch (err) {
-        console.error("Failed to fetch positions:", err);
-      } finally {
-        if (isInitialLoad) setLoading(false);
-      }
-    };
-
-    fetchPositions();
+    setPage(1);
+    setHasMore(true);
+    fetchPositions(1);
   }, [symbol, refreshKey]);
+
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (!el || loadingMore || !hasMore) return;
+    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 20) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      fetchPositions(nextPage, true);
+    }
+  };
 
   // Live countdown
   useEffect(() => {
@@ -109,7 +130,7 @@ const MainPositions: FC<MainPositionsProps> = ({ symbol }) => {
         </div>
       </div>
 
-      <div className="historytable">
+      <div className="historytable" ref={scrollRef} onScroll={handleScroll}>
         <table>
           <thead>
             <tr>
@@ -181,6 +202,9 @@ const MainPositions: FC<MainPositionsProps> = ({ symbol }) => {
             )}
           </tbody>
         </table>
+        {loadingMore && (
+          <p style={{ textAlign: "center", color: "#74728B", fontSize: 12, padding: 8 }}>Loading more...</p>
+        )}
       </div>
 
       <div className="positionfooter">

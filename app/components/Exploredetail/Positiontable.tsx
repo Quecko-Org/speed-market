@@ -18,7 +18,7 @@ import { speedMarketAbi } from "@/app/utils/speedMarket";
 import { SPEED_MARKET_CONTRACT, usdt_token } from "@/app/config/environment";
 import { USDT_MOCK_VALUE } from "@/app/config/constants";
 import { sendGasFeeAsUsdt, sendSmartAccountTx, isSessionNotFoundError, clearStaleSession } from "@/app/utils/transaction";
-import { toast } from "react-toastify";
+import { showToast } from "@/app/hooks/showToast";
 
 type ModalKeys =
   | "createprofile"
@@ -54,12 +54,18 @@ function getRemainingTime(expiresAt?: string): string {
   return `${mins}m ${secs}s`;
 }
 
+const ITEMS_PER_PAGE = 10;
+
 const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpired }) => {
   const { refreshNow } = usePositions();
   const [positions, setPositions] = useState<any[]>([]);
   const [positionsLoading, setPositionsLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
   const [, setTick] = useState(0);
   const [claimingId, setClaimingId] = useState<string | null>(null);
+  const scrollRef = React.useRef<HTMLDivElement>(null);
   const [modals, setModals] = useState<ModalState>({
     createprofile: false,
     Shareresults: false,
@@ -117,33 +123,48 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
   }, [positions, symbol, onTimerExpired]);
 
   // Fetch positions
-  useEffect(() => {
+  const fetchPositions = async (pageNum: number, append = false) => {
     if (!symbol) return;
-    const isInitialLoad = positions.length === 0;
+    if (!append) setPositionsLoading(true);
+    else setLoadingMore(true);
+    try {
+      const response = await getUserPosition(symbol, pageNum, ITEMS_PER_PAGE);
+      const newBets = Array.isArray(response?.bets) ? response.bets : Array.isArray(response) ? response : [];
+      setPositions((prev) => append ? [...prev, ...newBets] : newBets);
+      const totalPages = response?.pages ?? 1;
+      setHasMore(pageNum < totalPages);
+    } catch (err) {
+      console.error("Failed to fetch positions:", err);
+    } finally {
+      setPositionsLoading(false);
+      setLoadingMore(false);
+    }
+  };
 
-    const fetchPositions = async () => {
-      if (isInitialLoad) setPositionsLoading(true);
-      try {
-        const response = await getUserPosition(symbol);
-        setPositions(Array.isArray(response?.bets) ? response.bets : Array.isArray(response) ? response : []);
-      } catch (err) {
-        console.error("Failed to fetch positions:", err);
-      } finally {
-        if (isInitialLoad) setPositionsLoading(false);
-      }
-    };
-
-    fetchPositions();
+  useEffect(() => {
+    setPage(1);
+    setHasMore(true);
+    fetchPositions(1);
   }, [symbol, refreshKey]);
+
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (!el || loadingMore || !hasMore) return;
+    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 20) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      fetchPositions(nextPage, true);
+    }
+  };
 
   // Claim handler
   const handleClaim = async (betId: string, optionId: string) => {
     if (!isWalletConnected || !smartAccount) {
-      toast.error("Please connect your wallet first");
+      showToast("error", { message: "Please connect your wallet first" });
       return;
     }
     if (!smartAccountClient || !publicClient) {
-      toast.error("Wallet not fully initialized. Please try again.");
+      showToast("error", { message: "Wallet not fully initialized. Please try again." });
       return;
     }
     if (claimingId) return;
@@ -153,13 +174,13 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
     try {
       const sigResponse = await getClaimSignature({ betId });
       if (!sigResponse) {
-        toast.error("Failed to get claim signature from server");
+        showToast("error", { message: "Failed to get claim signature from server" });
         return;
       }
 
       let permResult = await grantPermissions();
       if (!permResult) {
-        toast.error("Failed to grant session permissions");
+        showToast("error", { message: "Failed to grant session permissions" });
         return;
       }
       let { userPermissions: permissions, userSessionKey: sessionKey } = permResult;
@@ -217,17 +238,17 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
       ]);
 
       if (receipt.status === "reverted") {
-        toast.error("Claim transaction reverted. Please try again.");
+        showToast("error", { message: "Claim transaction reverted. Please try again." });
         return;
       }
 
-      toast.success("Claim successful!");
+      showToast("success", { message: "Claim successful!" });
       fetchUsdtBalance();
       setPositions((prev) => prev.filter((p) => p._id !== betId));
       refreshNow();
     } catch (error: any) {
       console.error("Claim error:", error);
-      toast.error(error?.shortMessage || error?.message || "Claim failed");
+      showToast("error", { message: error?.shortMessage || error?.message || "Claim failed" });
     } finally {
       setClaimingId(null);
     }
@@ -249,7 +270,7 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
           {/* <button className="claimallbtn">Claim All</button> */}
         </div>
 
-        <div className="table-responsive">
+        <div className="table-responsive" ref={scrollRef} onScroll={handleScroll}>
           <table>
             <thead>
               <tr>
@@ -333,6 +354,9 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
               )}
             </tbody>
           </table>
+          {loadingMore && (
+            <p style={{ textAlign: "center", color: "#74728B", fontSize: 12, padding: 8 }}>Loading more...</p>
+          )}
         </div>
 
         {/* Mobile view */}
