@@ -9,13 +9,23 @@ interface Props {
     | "positionOpeneddown"
     | "roundWon"
     | "roundLost"
-    | "profileupdated";
+    | "profileupdated"
+    | "error"
+    | "success"
+    | "info";
   asset?: string;
   amount?: string;
   duration?: string;
+  message?: string;
 }
 
-const CustomToast: React.FC<Props> = ({ type, asset = "BTC/USDT", amount = "0", duration = "5 min" }) => {
+const CustomToast: React.FC<Props> = ({
+  type,
+  asset = "BTC/USDT",
+  amount = "0",
+  duration = "5 min",
+  message,
+}) => {
   return (
     <>
       {type === "positionOpenedup" && (
@@ -86,6 +96,45 @@ const CustomToast: React.FC<Props> = ({ type, asset = "BTC/USDT", amount = "0", 
               <h6 className="positionhead">
                 Your profile has been updated successfully.
               </h6>
+            </div>
+          </div>
+        </div>
+      )}
+      {type === "error" && (
+        <div className={`toast-${type}`}>
+          <div className="lefttoast">
+            <span className="errorimg">
+              <Icon name="errortoast" />
+            </span>
+            <div className="toasttexts">
+              <h6 className="toasthead">Error</h6>
+              <p className="toastpara">{message}</p>
+            </div>
+          </div>
+        </div>
+      )}
+      {type === "success" && (
+        <div className={`toast-${type}`}>
+          <div className="lefttoast">
+            <span className="successimg">
+              <Icon name="tick" />
+            </span>
+            <div className="toasttexts">
+              <h6 className="toasthead">Success</h6>
+              <p className="toastpara">{message}</p>
+            </div>
+          </div>
+        </div>
+      )}
+         {type === "info" && (
+        <div className={`toast-${type}`}>
+          <div className="lefttoast">
+            <span className="infoimg">
+              <Icon name="infotoast" />
+            </span>
+            <div className="toasttexts">
+              <h6 className="toasthead">Info</h6>
+              <p className="toastpara">{message}</p>
             </div>
           </div>
         </div>

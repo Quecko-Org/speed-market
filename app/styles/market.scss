@@ -172,7 +172,8 @@
                 vertical-align: middle;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.08);
                 white-space: nowrap;
-                &:last-child{
+
+                &:last-child {
                     text-align: end;
                 }
             }
@@ -630,8 +631,9 @@
                         .winpara {
                             font-size: 11px;
                             font-weight: 500;
-                            .bold{
-                                  font-weight: 600;
+
+                            .bold {
+                                font-weight: 600;
                             }
                         }
                     }
@@ -679,7 +681,7 @@
                         inset: 0;
                         border-radius: 50%;
                         background-color: #5FC363;
-       animation: pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+                        animation: pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
                         // z-index: -1;
                     }
 
@@ -821,6 +823,29 @@
                             background: rgba(254, 57, 50, 0.18);
                         }
                     }
+                }
+            }
+
+            .no-data-found {
+                border-radius: 14px;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                background: linear-gradient(117deg, #2C2D42 0%, #1B1C31 99.9%);
+                display: flex;
+                padding: 20px;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                min-height: 233px;
+                grid-column: 1 / -1;
+                width: 100%;
+
+                p {
+                    color: #FFF;
+                    font-feature-settings: 'dlig' on, 'salt' on;
+                    font-size: 20px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: 120%;
                 }
             }
         }
@@ -1037,6 +1062,10 @@
             }
         }
     }
+
+    .speedmarket .innermarket .mainmarketcards .no-data-found{
+        margin-right: 20px;
+    }
 }
 
 @media (max-width: 400px) {
@@ -1049,7 +1078,7 @@
 .skeleton-card {
     position: relative;
     overflow: hidden;
-    min-height: 200px;
+    min-height: 233px;
     background: rgba(255, 255, 255, 0.04);
     border-radius: 16px;
 
@@ -1059,12 +1088,10 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(
-            90deg,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0.05) 50%,
-            rgba(255, 255, 255, 0) 100%
-        );
+        background: linear-gradient(90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.05) 50%,
+                rgba(255, 255, 255, 0) 100%);
         animation: shimmer 1.5s infinite;
     }
 }
@@ -1073,21 +1100,8 @@
     0% {
         transform: translateX(-100%);
     }
+
     100% {
         transform: translateX(100%);
-    }
-}
-
-.no-data-found {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    min-height: 150px;
-
-    p {
-        color: rgba(255, 255, 255, 0.4);
-        font-size: 14px;
-        font-weight: 500;
     }
 }

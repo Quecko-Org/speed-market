@@ -13,6 +13,7 @@ import { useWalletContext } from "@/app/context/WalletContext";
 import { useWalletList } from "@/app/hooks/useWalletList";
 import { getWalletImage, getFormattedAddress } from "@/app/utils/helpers";
 import { toast } from "react-toastify";
+import Signmodal from "../modals/Signmodal";
 
 type ModalKeys =
   | "createprofile"
@@ -22,7 +23,8 @@ type ModalKeys =
   | "Sharemarket"
   | "Sharebet"
   | "withdraw"
-  | "deposit";
+  | "deposit"
+  | "sign";
 
 type ModalState = Record<ModalKeys, boolean>;
 
@@ -53,6 +55,7 @@ const Header: FC = () => {
     Sharebet: false,
     withdraw: false,
     deposit: false,
+    sign: false,
   });
   const [open, setOpen] = useState(false);
   const [showNav, setShowNav] = useState(false);
@@ -124,8 +127,9 @@ const Header: FC = () => {
                           <div
                             key={wallet.name}
                             onClick={() => handleWalletClick(wallet)}
-                            className={`innerwallet ${!wallet.isAvailable ? "disabled-wallet" : ""
-                              }`}
+                            className={`innerwallet ${
+                              !wallet.isAvailable ? "disabled-wallet" : ""
+                            }`}
                           >
                             {getWalletImage(wallet.name) && (
                               <img
@@ -151,7 +155,10 @@ const Header: FC = () => {
                   <Dropdown.Toggle variant="success" id="dropdown-basic">
                     <div className="profileimg">
                       <img
-                        src={userProfile?.profileImage || "/dummyassets/dummyuser.png"}
+                        src={
+                          userProfile?.profileImage ||
+                          "/importantassets/placeholderimg.svg"
+                        }
                         alt="innerprofileimg"
                         className="innerprofileimg"
                       />
@@ -210,7 +217,11 @@ const Header: FC = () => {
         </Offcanvas.Header>
         <Offcanvas.Body>
           {mounted && isWalletConnected ? (
-            <Link href="/profile" className="lowerlink" onClick={handleCloseNav}>
+            <Link
+              href="/profile"
+              className="lowerlink"
+              onClick={handleCloseNav}
+            >
               <div className="linkimg">
                 <Icon name="profilelink" className="profilelink" />
               </div>
@@ -221,14 +232,15 @@ const Header: FC = () => {
               {wallets
                 .filter(
                   (w) =>
-                    w.name === "Coinbase Wallet" || w.name === "WalletConnect"
+                    w.name === "Coinbase Wallet" || w.name === "WalletConnect",
                 )
                 .map((wallet) => (
                   <div
                     key={wallet.name}
                     onClick={() => handleWalletClick(wallet)}
-                    className={`innerwallet ${!wallet.isAvailable ? "disabled-wallet" : ""
-                      }`}
+                    className={`innerwallet ${
+                      !wallet.isAvailable ? "disabled-wallet" : ""
+                    }`}
                   >
                     {getWalletImage(wallet.name) && (
                       <img
@@ -267,6 +279,7 @@ const Header: FC = () => {
         show={modals.deposit}
         onHide={() => closeModal("deposit")}
       />
+      <Signmodal show={modals.sign} onHide={() => closeModal("sign")} />
     </>
   );
 };

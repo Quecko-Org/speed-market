@@ -20,12 +20,18 @@ import { useGetUsdtBalance } from "@/app/hooks/useBalance";
 import { encodeFunctionData, parseUnits } from "viem";
 import { erc20Abi } from "@/app/utils/erc20Abi";
 import { speedMarketAbi } from "@/app/utils/speedMarket";
+import { SPEED_MARKET_CONTRACT, usdt_token } from "@/app/config/environment";
 import {
-  SPEED_MARKET_CONTRACT,
-  usdt_token,
-} from "@/app/config/environment";
-import { USDT_DECIMALS, USDT_MOCK_VALUE, MAX_UINT256 } from "@/app/config/constants";
-import { sendGasFeeAsUsdt, sendSmartAccountTx, isSessionNotFoundError, clearStaleSession } from "@/app/utils/transaction";
+  USDT_DECIMALS,
+  USDT_MOCK_VALUE,
+  MAX_UINT256,
+} from "@/app/config/constants";
+import {
+  sendGasFeeAsUsdt,
+  sendSmartAccountTx,
+  isSessionNotFoundError,
+  clearStaleSession,
+} from "@/app/utils/transaction";
 import { handleCheckSession } from "@/app/utils/helpers";
 import { toast } from "react-toastify";
 import { showToast } from "@/app/hooks/showToast";
@@ -81,7 +87,11 @@ const Market: FC = () => {
   const smartAccount = useAtomValue(userSmartAccount);
   const smartAccountClient = useAtomValue(userSmartAccountClient);
   const publicClient = useAtomValue(userPublicClient);
-  const { isWalletConnected, setIsLoading: setWalletLoading, setLoadingStep } = useWalletContext();
+  const {
+    isWalletConnected,
+    setIsLoading: setWalletLoading,
+    setLoadingStep,
+  } = useWalletContext();
   const { grantPermissions } = useSessionPermissions();
   const fetchUsdtBalance = useGetUsdtBalance();
 
@@ -110,7 +120,12 @@ const Market: FC = () => {
 
   // ── Trade Execution ────────────────────────────────────────────────
 
-  const handleCreateTrade: HandleCreateTrade = async ({ amount, asset, duration, type }) => {
+  const handleCreateTrade: HandleCreateTrade = async ({
+    amount,
+    asset,
+    duration,
+    type,
+  }) => {
     // Validations
     if (!isWalletConnected || !smartAccount) {
       toast.error("Please connect your wallet first");
@@ -161,12 +176,15 @@ const Market: FC = () => {
         toast.error("Failed to grant session permissions");
         return false;
       }
-      let { userPermissions: permissions, userSessionKey: sessionKey } = permResult;
+      let { userPermissions: permissions, userSessionKey: sessionKey } =
+        permResult;
 
       const amountInWei = parseUnits(trimmedAmount, USDT_DECIMALS);
 
       // Helper to run a tx, retrying once on stale session
-      const execTx = async (calls: { to: `0x${string}`; data: `0x${string}` }[]) => {
+      const execTx = async (
+        calls: { to: `0x${string}`; data: `0x${string}` }[],
+      ) => {
         try {
           return await sendSmartAccountTx({
             calls,
@@ -180,7 +198,8 @@ const Market: FC = () => {
           if (isSessionNotFoundError(err)) {
             await clearStaleSession();
             const freshPerm = await grantPermissions();
-            if (!freshPerm) throw new Error("Failed to refresh session permissions");
+            if (!freshPerm)
+              throw new Error("Failed to refresh session permissions");
             permissions = freshPerm.userPermissions;
             sessionKey = freshPerm.userSessionKey;
             return await sendSmartAccountTx({
@@ -205,7 +224,10 @@ const Market: FC = () => {
         address: usdt_token as `0x${string}`,
         abi: erc20Abi,
         functionName: "allowance",
-        args: [smartAccount as `0x${string}`, SPEED_MARKET_CONTRACT as `0x${string}`],
+        args: [
+          smartAccount as `0x${string}`,
+          SPEED_MARKET_CONTRACT as `0x${string}`,
+        ],
       });
 
       if ((allowance as bigint) < amountInWei) {
@@ -243,7 +265,7 @@ const Market: FC = () => {
         sigData.asset ?? asset,
         BigInt(sigData.amount ?? amountInWei.toString()),
         sigData.expiryIndex ?? DURATION_TO_EXPIRY_INDEX[duration],
-        sigData.isCall ?? (type === "UP"),
+        sigData.isCall ?? type === "UP",
         BigInt(sigData.price),
         BigInt(sigData.deadline),
         sigData.signature as `0x${string}`,
@@ -280,7 +302,9 @@ const Market: FC = () => {
       return true;
     } catch (error: any) {
       console.error("Trade execution error:", error);
-      toast.error(error?.shortMessage || error?.message || "Transaction failed");
+      toast.error(
+        error?.shortMessage || error?.message || "Transaction failed",
+      );
       return false;
     } finally {
       setIsTradeLoading(false);

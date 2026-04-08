@@ -141,7 +141,7 @@ const PowerPlayMarket: FC<PowerPlayMarketProps> = ({
 
       <div className="mainmarketcards">
         {isLoading ? (
-          [1, 2, 3].map((i) => (
+          [1, 2, 3, 4].map((i) => (
             <div key={i} className="marketcard skeleton-card">
               <div className="skeleton-shimmer" />
             </div>

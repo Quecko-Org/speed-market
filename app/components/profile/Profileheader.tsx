@@ -20,7 +20,7 @@ const Profileheader: FC<ProfileheaderProps> = ({ onEdit, onShare }) => {
         <div className="innerprofile">
           <div className="profileimg">
             <img
-              src={userProfileInfo?.profileImage || "/dummyassets/dummyuser.png"}
+              src={userProfileInfo?.profileImage || "/importantassets/placeholderimg.svg"}
               alt="innerimg"
               className="innerimg"
             />
