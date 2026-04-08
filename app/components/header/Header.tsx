@@ -36,6 +36,9 @@ const Header: FC = () => {
     walletAddress,
     connectWallet,
     disconnectWallet,
+    showSignModal,
+    handleSign,
+    closeSignModal,
   } = useWalletContext();
 
   const smartAccount = useAtomValue(userSmartAccount);
@@ -279,7 +282,7 @@ const Header: FC = () => {
         show={modals.deposit}
         onHide={() => closeModal("deposit")}
       />
-      <Signmodal show={modals.sign} onHide={() => closeModal("sign")} />
+      <Signmodal show={showSignModal} onHide={closeSignModal} onSign={handleSign} />
     </>
   );
 };

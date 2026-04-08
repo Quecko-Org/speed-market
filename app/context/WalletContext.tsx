@@ -55,6 +55,9 @@ interface WalletContextValue {
   walletAddress: string | undefined;
   connectWallet: (connector: any) => Promise<void>;
   disconnectWallet: () => void;
+  showSignModal: boolean;
+  handleSign: () => void;
+  closeSignModal: () => void;
 }
 
 const WalletContext = createContext<WalletContextValue | null>(null);
@@ -73,6 +76,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   const [, setUserProfile] = useAtom(userProfileData);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState("");
+  const [showSignModal, setShowSignModal] = useState(false);
   const pendingSign = useRef(false);
   const fetchUsdtBalance = useGetUsdtBalance();
 
@@ -199,28 +203,40 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     [connectAsync]
   );
 
-  // When walletClient becomes available after connect, do sign + smart account + balance + profile
+  // When walletClient becomes available after connect, show sign modal
   useEffect(() => {
     if (!pendingSign.current || !address || !walletClient) return;
     pendingSign.current = false;
+    setIsLoading(false);
+    setLoadingStep("");
+    setShowSignModal(true);
+  }, [address, walletClient]);
 
-    (async () => {
-      const signData = await performSign(address);
-      if (!signData) return;
+  const handleSign = useCallback(async () => {
+    if (!address || !walletClient) return;
+    setShowSignModal(false);
+    setIsLoading(true);
 
-      setLoadingStep("Setting up your account...");
-      const smartAddr = await createSmartAccountFn(walletClient);
-      await loginOrRegister(signData, address, smartAddr ?? "");
-      showToast("success", { message: LOGIN_SUCCESS });
+    const signData = await performSign(address);
+    if (!signData) return;
 
-      await fetchUsdtBalance(smartAddr ?? undefined);
-      const profile = await getUserProfile();
-      if (profile) setUserProfile(profile);
+    setLoadingStep("Setting up your account...");
+    const smartAddr = await createSmartAccountFn(walletClient);
+    await loginOrRegister(signData, address, smartAddr ?? "");
+    showToast("success", { message: LOGIN_SUCCESS });
 
-      setLoadingStep("");
-      setIsLoading(false);
-    })();
+    await fetchUsdtBalance(smartAddr ?? undefined);
+    const profile = await getUserProfile();
+    if (profile) setUserProfile(profile);
+
+    setLoadingStep("");
+    setIsLoading(false);
   }, [address, walletClient, performSign, createSmartAccountFn, fetchUsdtBalance, setUserProfile]);
+
+  const closeSignModal = useCallback(() => {
+    setShowSignModal(false);
+    disconnectWallet();
+  }, [disconnectWallet]);
 
   useEffect(() => {
     if (
@@ -275,6 +291,9 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
         walletAddress: address,
         connectWallet,
         disconnectWallet,
+        showSignModal,
+        handleSign,
+        closeSignModal,
       }}
     >
       {children}

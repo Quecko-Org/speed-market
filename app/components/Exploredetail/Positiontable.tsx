@@ -296,9 +296,12 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
               ) : (
                 positions.map((item: any) => {
                   const isUp = item.betType === "UP";
-                  const { time, full } = formatDate(item.createdAt);
-                  const settlementPrice = item.entryPrice
+                  const { full } = formatDate(item.createdAt);
+                  const baselinePrice = item.entryPrice
                     ? `$${Number(item.entryPrice).toLocaleString(undefined, { maximumFractionDigits: 4 })}`
+                    : "—";
+                  const settlementPrice = item.exitPrice
+                    ? `$${Number(item.exitPrice).toLocaleString(undefined, { maximumFractionDigits: 4 })}`
                     : "—";
                   const remaining = getRemainingTime(item.expiresAt);
                   const isClaimable = item.status === "FINALISED" || item.isClaimable;
@@ -315,7 +318,7 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
                       </td>
                       <td>
                         <div className="maintime">
-                          <h6 className="timehead">{time}</h6>
+                          <h6 className="timehead">{baselinePrice}</h6>
                           <p className="timepara">{full}</p>
                         </div>
                       </td>
@@ -368,9 +371,12 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
           ) : (
             positions.map((item: any) => {
               const isUp = item.betType === "UP";
-              const { time, full } = formatDate(item.createdAt);
-              const settlementPrice = item.entryPrice
+              const { full } = formatDate(item.createdAt);
+              const baselinePrice = item.entryPrice
                 ? `$${Number(item.entryPrice).toLocaleString(undefined, { maximumFractionDigits: 4 })}`
+                : "—";
+              const settlementPrice = item.exitPrice
+                ? `$${Number(item.exitPrice).toLocaleString(undefined, { maximumFractionDigits: 4 })}`
                 : "—";
               const remaining = getRemainingTime(item.expiresAt);
               const isClaimable = item.status === "FINALISED" || item.isClaimable;
@@ -390,7 +396,7 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
                     <div className="box">
                       <p className="boxpara">Baseline value and time</p>
                       <div className="maintime">
-                        <h6 className="timehead">{time}</h6>
+                        <h6 className="timehead">{baselinePrice}</h6>
                         <p className="timepara">{full}</p>
                       </div>
                     </div>

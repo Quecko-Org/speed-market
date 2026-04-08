@@ -27,7 +27,7 @@ interface MainPositionsProps {
   symbol?: string | null;
 }
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 20;
 
 const MainPositions: FC<MainPositionsProps> = ({ symbol }) => {
   const { isOpen, toggle, close, activeTab, refreshKey } = usePositions();
