@@ -23,6 +23,16 @@ export const getCoinDetail = async (symbol: string) => {
     }
 };
 
+export const getCoinGraphDetail = async (symbol: string) => {
+    try {
+        const response = await axios.get(`${api_url}/coins/price/history/${symbol}`);
+        return response.data?.data;
+    } catch (error) {
+        console.error("Error fetching coin detail:", error);
+        return null;
+    }
+};
+
 export const getCoinActivity = async (symbol?: string, offset = 1, limit = 10, result?: string) => {
     try {
         let url = `${api_url}/bets/activity?offset=${offset}&limit=${limit}`;

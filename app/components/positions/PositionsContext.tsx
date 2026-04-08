@@ -25,7 +25,7 @@ export const PositionsProvider: FC<{ children: ReactNode }> = ({ children }) => 
     setTimeout(() => {
       setIsOpen(true);
       setRefreshKey((k) => k + 1);
-    }, 7000);
+    }, 5000);
   };
 
   const refreshNow = () => {

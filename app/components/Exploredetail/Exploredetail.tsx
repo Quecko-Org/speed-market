@@ -16,6 +16,7 @@ import Activity from "./Activity";
 import History from "./History";
 import Sharemarket from "./Sharemarket";
 import { getCoinDetail, getCoinActivity, getSignature } from "@/app/services/coinListing";
+import { getSocket } from "@/app/services/socket";
 import { useAtomValue } from "jotai";
 import {
   userSmartAccount,
@@ -100,6 +101,30 @@ const Exploredetail: FC = () => {
     };
 
     fetchCoinDetail();
+  }, [symbol]);
+
+  // Socket: update coinDetail with live price data
+  useEffect(() => {
+    if (!symbol) return;
+
+    const socket = getSocket();
+
+    const handler = (eventData: any) => {
+      if (eventData?.eventType !== "CoinPricesV1") return;
+
+      const coins = eventData?.data?.coins ?? eventData?.coins ?? eventData?.data;
+      if (!Array.isArray(coins)) return;
+
+      const coin = coins.find(
+        (c: any) => c.symbol?.toUpperCase() === symbol.toUpperCase()
+      );
+      if (!coin) return;
+
+      setCoinDetail((prev: any) => (prev ? { ...prev, ...coin } : coin));
+    };
+
+    socket.on("speed_market_event", handler);
+    return () => { socket.off("speed_market_event", handler); };
   }, [symbol]);
 
   const fetchActivity = async (page: number) => {
@@ -334,7 +359,7 @@ const Exploredetail: FC = () => {
               <Tab eventKey="trade" title="Trade">
                 <Token coinDetail={coinDetail} duration={duration} loading={loading} />
                 <div className="chart-parent">
-                  <TradingChart coinDetail={coinDetail} symbol={symbol} />
+                  <TradingChart coinDetail={coinDetail} symbol={symbol} duration={duration} />
                 </div>
                 <Positiontable symbol={symbol} refreshKey={positionRefreshKey} onTimerExpired={handleTimerExpired} />
                 <Sharemarket />
@@ -379,7 +404,7 @@ const Exploredetail: FC = () => {
             <Token coinDetail={coinDetail} duration={duration} loading={loading} />
 
             <div className="chart-parent">
-              <TradingChart coinDetail={coinDetail} symbol={symbol} />
+              <TradingChart coinDetail={coinDetail} symbol={symbol} duration={duration} />
             </div>
             <Positiontable symbol={symbol} refreshKey={positionRefreshKey} onTimerExpired={handleTimerExpired} />
             <Marketinfo coinDetail={coinDetail} />

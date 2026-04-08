@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { getSocket } from "@/app/services/socket";
+import { getCoinGraphDetail } from "@/app/services/coinListing";
 
 // --- Types ---
 interface PricePoint {
@@ -24,9 +25,16 @@ interface PositionLine {
 interface TradingChartProps {
   coinDetail: any;
   symbol: string | null;
+  duration?: string | null;
   positions?: PositionLine[];
   onPriceUpdate?: (price: number) => void;
 }
+
+const DURATION_TO_MS: Record<string, number> = {
+  "5 min": 5 * 60 * 1000,
+  "10 min": 10 * 60 * 1000,
+  "15 min": 15 * 60 * 1000,
+};
 
 // --- Utility functions ---
 function formatTime(ts: number): string {
@@ -55,15 +63,16 @@ function formatTimeFull(ts: number): string {
 }
 
 // --- Generate initial data from a base price ---
-function generateInitialData(basePrice: number): PricePoint[] {
+function generateInitialData(basePrice: number, durationMs: number): PricePoint[] {
   const now = Date.now();
   const points: PricePoint[] = [];
-  const startTime = now - 60 * 60 * 1000; // 1 hour ago
+  const startTime = now - durationMs;
+  const totalPoints = Math.max(60, Math.floor(durationMs / 1000)); // 1 point per second
   let price = basePrice;
-  const variance = basePrice * 0.005; // 0.5% volatility range
+  const variance = basePrice * 0.005;
 
-  for (let i = 0; i < 360; i++) {
-    const t = startTime + i * (60000 / 6);
+  for (let i = 0; i < totalPoints; i++) {
+    const t = startTime + i * (durationMs / totalPoints);
     const volatility = (Math.random() - 0.48) * (variance * 0.3);
     const drift = Math.sin(i / 40) * (variance * 0.5);
     price += volatility;
@@ -75,13 +84,14 @@ function generateInitialData(basePrice: number): PricePoint[] {
 }
 
 // --- Main Component ---
-export default function TradingChart({ coinDetail, symbol, positions = [], onPriceUpdate }: TradingChartProps) {
+export default function TradingChart({ coinDetail, symbol, duration, positions = [], onPriceUpdate }: TradingChartProps) {
   const onPriceUpdateRef = useRef(onPriceUpdate);
   onPriceUpdateRef.current = onPriceUpdate;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const animFrameRef = useRef<number>(0);
   const basePrice = coinDetail?.currentPrice ? Number(coinDetail.currentPrice) : 0;
+  const chartDurationMs = DURATION_TO_MS[duration ?? "5 min"] ?? 5 * 60 * 1000;
   const [data, setData] = useState<PricePoint[]>([]);
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
   const [dimensions, setDimensions] = useState({ width: 1200, height: 500 });
@@ -90,13 +100,56 @@ export default function TradingChart({ coinDetail, symbol, positions = [], onPri
   // Chart config
   const PADDING = { top: 20, right: 100, bottom: 50, left: 20 };
 
-  // Initialize chart data when coinDetail loads
+  // Initialize chart data from API or fallback to generated data
   useEffect(() => {
-    if (basePrice > 0 && !initializedRef.current) {
-      initializedRef.current = true;
-      setData(generateInitialData(basePrice));
-    }
-  }, [basePrice]);
+    if (!symbol || initializedRef.current) return;
+
+    const fetchGraphData = async () => {
+      try {
+        const response = await getCoinGraphDetail(symbol);
+        const history = response?.history ?? response?.prices ?? response;
+
+        if (Array.isArray(history) && history.length > 0) {
+          const cutoff = Date.now() - chartDurationMs;
+          const allPoints: PricePoint[] = history
+            .map((item: any) => ({
+              time: item.timestamp ? new Date(item.timestamp).getTime() : item.time,
+              price: Number(item.price ?? item.currentPrice ?? item.close ?? 0),
+            }))
+            .filter((p: PricePoint) => p.price > 0 && p.time > cutoff)
+            .sort((a: PricePoint, b: PricePoint) => a.time - b.time);
+
+          // Downsample to max 500 points for performance
+          const MAX_POINTS = 500;
+          let points = allPoints;
+          if (allPoints.length > MAX_POINTS) {
+            const step = Math.floor(allPoints.length / MAX_POINTS);
+            points = allPoints.filter((_, i) => i % step === 0);
+            // Always include the last point
+            if (points[points.length - 1] !== allPoints[allPoints.length - 1]) {
+              points.push(allPoints[allPoints.length - 1]);
+            }
+          }
+
+          if (points.length > 0) {
+            initializedRef.current = true;
+            setData(points);
+            return;
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch graph data:", err);
+      }
+
+      // Fallback to generated data
+      if (basePrice > 0) {
+        initializedRef.current = true;
+        setData(generateInitialData(basePrice, chartDurationMs));
+      }
+    };
+
+    fetchGraphData();
+  }, [symbol, basePrice, chartDurationMs]);
 
   // Price boundaries from data
   const { minPrice, maxPrice, currentPrice, openPrice, vwap } = useMemo(() => {
@@ -148,7 +201,7 @@ export default function TradingChart({ coinDetail, symbol, positions = [], onPri
 
       const newPrice = Number(coin.currentPrice);
       const newPoint: PricePoint = { time: Date.now(), price: newPrice };
-      const cutoff = Date.now() - 65 * 60 * 1000;
+      const cutoff = Date.now() - chartDurationMs - 60 * 1000; // duration + 1min buffer
 
       setData((prev) => [...prev.filter((p) => p.time > cutoff), newPoint]);
       onPriceUpdateRef.current?.(newPrice);
@@ -159,7 +212,7 @@ export default function TradingChart({ coinDetail, symbol, positions = [], onPri
     return () => {
       socket.off("speed_market_event", handler);
     };
-  }, [symbol]);
+  }, [symbol, chartDurationMs]);
 
   // Coordinate mapping
   const mapX = useCallback(
