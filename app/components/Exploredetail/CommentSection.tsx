@@ -244,7 +244,7 @@ const CommentItem: React.FC<{
               {comment.createdAt ? timeAgo(comment.createdAt) : ""}
             </span>
           </div>
-          <p style={{ fontSize: 14, color: "#8899b0", lineHeight: 1.55, margin: 0, marginBottom: 8 }}>
+          <p style={{ fontSize: 14, color: "#8899b0", lineHeight: 1.55, margin: 0, marginBottom: 8, wordBreak: 'break-all'  }}>
             {comment.content}
           </p>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
