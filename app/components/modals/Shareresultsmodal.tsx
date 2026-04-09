@@ -44,19 +44,28 @@ const Shareresultsmodal: React.FC<ShareresultsmodalProps> = ({
   const isUp = betType === "UP";
   const slug = symbol.toLowerCase();
 
+  const getShareUrl = () => {
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const params = new URLSearchParams({
+      symbol, betType, duration, baselinePrice, settlementPrice,
+      amount, earned, pnl, result, userName,
+    });
+    return `${origin}/share?${params.toString()}`;
+  };
+
   const handleShare = (platform: string) => {
-    const url = typeof window !== "undefined" ? window.location.origin : "";
+    const shareUrl = getShareUrl();
     const text = `I just ${isWin ? "won" : "lost"} $${earned} on ${symbol}/USDT on Rain Speed Markets!`;
 
     const links: Record<string, string> = {
-      x: `https://x.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`,
-      telegram: `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,
-      whatsapp: `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`,
-      mail: `mailto:?subject=${encodeURIComponent("Rain Speed Markets")}&body=${encodeURIComponent(`${text} ${url}`)}`,
+      x: `https://x.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+      telegram: `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(text)}`,
+      whatsapp: `https://wa.me/?text=${encodeURIComponent(`${text}\n${shareUrl}`)}`,
+      mail: `mailto:?subject=${encodeURIComponent(`${isWin ? "Won" : "Lost"} on Rain Speed Markets`)}&body=${encodeURIComponent(`${text}\n${shareUrl}`)}`,
     };
     if (platform === "link") {
-      try { navigator.clipboard.writeText(`${text} ${url}`); } catch { /* fallback */ }
+      try { navigator.clipboard.writeText(shareUrl); } catch { /* fallback */ }
       showToast("success", { message: "Copied!" });
       return;
     }
