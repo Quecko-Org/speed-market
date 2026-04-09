@@ -322,19 +322,19 @@ export default function TradingChart({ coinDetail, symbol, duration, positions =
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Position entry price lines
+      // Position entry price lines (short line near right side)
       const posBadgeX = W - PADDING.right + 4;
+      const lineWidth = 40;
       positions.forEach((pos) => {
         const posY = mapY(pos.entryPrice);
         const isUp = pos.betType === "UP";
         ctx.strokeStyle = isUp ? "#22c55e" : "#ef4444";
-        ctx.lineWidth = 1;
-        ctx.setLineDash([6, 4]);
+        ctx.lineWidth = 2;
+        ctx.setLineDash([]);
         ctx.beginPath();
-        ctx.moveTo(PADDING.left, posY);
+        ctx.moveTo(W - PADDING.right - lineWidth, posY);
         ctx.lineTo(W - PADDING.right, posY);
         ctx.stroke();
-        ctx.setLineDash([]);
 
         // Position price label
         const posLabel = formatPriceFull(pos.entryPrice);

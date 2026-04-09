@@ -16,6 +16,7 @@ import Activity from "./Activity";
 import History from "./History";
 import Sharemarket from "./Sharemarket";
 import { getCoinDetail, getCoinActivity, getSignature } from "@/app/services/coinListing";
+import { getUserPosition } from "@/app/services/userPositions";
 import { getSocket } from "@/app/services/socket";
 import { useAtomValue } from "jotai";
 import {
@@ -59,7 +60,6 @@ const Exploredetail: FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [positionRefreshKey, setPositionRefreshKey] = useState(0);
   const [historyRefreshKey, setHistoryRefreshKey] = useState(0);
-  const [livePrice, setLivePrice] = useState<number | null>(null);
   const [chartPositions, setChartPositions] = useState<{ entryPrice: number; betType: "UP" | "DOWN" }[]>([]);
 
   const handleOpen = () => setShowModal(true);
@@ -101,6 +101,30 @@ const Exploredetail: FC = () => {
 
     fetchCoinDetail();
   }, [symbol]);
+
+  // Fetch positions for chart lines
+  useEffect(() => {
+    if (!symbol) return;
+
+    const fetchChartPositions = async () => {
+      try {
+        const response = await getUserPosition(symbol);
+        const bets = Array.isArray(response?.bets) ? response.bets : Array.isArray(response) ? response : [];
+        setChartPositions(
+          bets
+            .filter((b: any) => b.entryPrice && b.betType)
+            .map((b: any) => ({
+              entryPrice: Number(b.entryPrice),
+              betType: b.betType,
+            }))
+        );
+      } catch {
+        // silent
+      }
+    };
+
+    fetchChartPositions();
+  }, [symbol, positionRefreshKey]);
 
   // Socket: update coinDetail with live price data
   useEffect(() => {
@@ -359,7 +383,7 @@ const Exploredetail: FC = () => {
               <Tab eventKey="trade" title="Trade">
                 <Token coinDetail={coinDetail} duration={duration} loading={loading} />
                 <div className="chart-parent">
-                  <TradingChart coinDetail={coinDetail} symbol={symbol} duration={duration} />
+                  <TradingChart coinDetail={coinDetail} symbol={symbol} duration={duration} positions={chartPositions} />
                 </div>
                 <Positiontable symbol={symbol} refreshKey={positionRefreshKey} onTimerExpired={handleTimerExpired} />
                 <Sharemarket />
@@ -404,7 +428,7 @@ const Exploredetail: FC = () => {
             <Token coinDetail={coinDetail} duration={duration} loading={loading} />
 
             <div className="chart-parent">
-              <TradingChart coinDetail={coinDetail} symbol={symbol} duration={duration} />
+              <TradingChart coinDetail={coinDetail} symbol={symbol} duration={duration} positions={chartPositions} />
             </div>
             <Positiontable symbol={symbol} refreshKey={positionRefreshKey} onTimerExpired={handleTimerExpired} />
             <Marketinfo coinDetail={coinDetail} />
