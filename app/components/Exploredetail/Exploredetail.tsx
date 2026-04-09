@@ -107,6 +107,7 @@ const Exploredetail: FC = () => {
     if (!symbol) return;
 
     const socket = getSocket();
+    if (!socket) return;
 
     const handler = (eventData: any) => {
       if (eventData?.eventType !== "CoinPricesV1") return;

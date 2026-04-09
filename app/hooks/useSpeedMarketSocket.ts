@@ -17,6 +17,7 @@ export const useSpeedMarketSocket = (callbacks: SpeedMarketSocketCallbacks) => {
 
   useEffect(() => {
     const socket = getSocket();
+    if (!socket) return;
 
     const handler = (data: any) => {
       if (data?.eventType === COIN_PRICES_EVENT_TYPE) {

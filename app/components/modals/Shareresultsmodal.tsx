@@ -2,16 +2,67 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
 import Icon from "../Icon";
+import { showToast } from "@/app/hooks/showToast";
+
+export interface ShareResultsData {
+  symbol?: string;
+  betType?: "UP" | "DOWN";
+  duration?: string;
+  baselinePrice?: string;
+  settlementPrice?: string;
+  amount?: string;
+  earned?: string;
+  pnl?: string;
+  result?: string;
+  userName?: string;
+  userImage?: string;
+}
 
 interface ShareresultsmodalProps {
   show: boolean;
   onHide: () => void;
+  data?: ShareResultsData;
 }
 
 const Shareresultsmodal: React.FC<ShareresultsmodalProps> = ({
   show,
   onHide,
+  data,
 }) => {
+  const symbol = data?.symbol ?? "BTC";
+  const betType = data?.betType ?? "UP";
+  const duration = data?.duration ?? "5 min";
+  const baselinePrice = data?.baselinePrice ?? "—";
+  const settlementPrice = data?.settlementPrice ?? "—";
+  const amount = data?.amount ?? "0";
+  const earned = data?.earned ?? "0";
+  const pnl = data?.pnl ?? "0";
+  const result = data?.result ?? "WIN";
+  const userName = data?.userName ?? "SatoshiSeeker";
+  const userImage = data?.userImage ?? "/importantassets/dummyrain.png";
+  const isWin = result === "WIN";
+  const isUp = betType === "UP";
+  const slug = symbol.toLowerCase();
+
+  const handleShare = (platform: string) => {
+    const url = typeof window !== "undefined" ? window.location.origin : "";
+    const text = `I just ${isWin ? "won" : "lost"} $${earned} on ${symbol}/USDT on Rain Speed Markets!`;
+
+    const links: Record<string, string> = {
+      x: `https://x.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`,
+      telegram: `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,
+      whatsapp: `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`,
+      mail: `mailto:?subject=${encodeURIComponent("Rain Speed Markets")}&body=${encodeURIComponent(`${text} ${url}`)}`,
+    };
+    if (platform === "link") {
+      try { navigator.clipboard.writeText(`${text} ${url}`); } catch { /* fallback */ }
+      showToast("success", { message: "Copied!" });
+      return;
+    }
+    if (links[platform]) window.open(links[platform], "_blank");
+  };
+
   return (
     <Modal className="profilemodal" show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
@@ -32,11 +83,11 @@ const Shareresultsmodal: React.FC<ShareresultsmodalProps> = ({
                 <div className="left">
                   <span>
                     <img
-                      src="/importantassets/dummyrain.png"
+                      src={userImage}
                       alt="img"
                       className="img-fluid images"
                     />
-                    SatoshiSeeker
+                    {userName}
                   </span>
                 </div>
 
@@ -45,8 +96,8 @@ const Shareresultsmodal: React.FC<ShareresultsmodalProps> = ({
                     <div className="tokenimages">
                       <div className="innertoken">
                         <img
-                          src="/tokenimages/btc.png"
-                          alt="tokenimg"
+                          src={`/tokenimages/${slug}.png`}
+                          alt={symbol}
                           className="tokenimg"
                         />
                       </div>
@@ -60,7 +111,7 @@ const Shareresultsmodal: React.FC<ShareresultsmodalProps> = ({
                         />
                       </div>
                     </div>
-                    <h4 className="timerpara">5 min</h4>
+                    <h4 className="timerpara">{duration}</h4>
                   </div>
                 </div>
               </div>
@@ -70,9 +121,9 @@ const Shareresultsmodal: React.FC<ShareresultsmodalProps> = ({
                   <p className="speedpara">Result</p>
 
                   <div className="textparent">
-                    <h4 className="wingreen">Win</h4>
+                    <h4 className="wingreen" style={!isWin ? { color: "#ef4444" } : {}}>{isWin ? "Win" : "Loss"}</h4>
 
-                    <button className="greenbtc">Up for BTC</button>
+                    <button className="greenbtc" style={!isUp ? { background: "rgba(239,68,68,0.2)", color: "#ef4444" } : {}}>{betType} for {symbol}</button>
                   </div>
                 </div>
 
@@ -90,23 +141,28 @@ const Shareresultsmodal: React.FC<ShareresultsmodalProps> = ({
               <div className="bottomcontent">
                 <div className="innermain">
                   <p>Baseline Price</p>
-                  <h4>$90,300.23</h4>
+                  <h4>{baselinePrice}</h4>
                 </div>
 
                 <div className="innermain">
                   <p>Settlement Price</p>
-                  <h4>$90,300.23</h4>
+                  <h4>{settlementPrice}</h4>
                 </div>
                 <div className="brdr"></div>
 
                 <div className="innermain">
                   <p>Effective Amount</p>
-                  <h4>$47.50</h4>
+                  <h4>${amount}</h4>
+                </div>
+
+                <div className="innermain">
+                  <p>P&L</p>
+                  <h4 style={{ color: Number(pnl) >= 0 ? "#70e852" : "#ef4444" }}>{Number(pnl) >= 0 ? "+" : ""}${pnl}</h4>
                 </div>
 
                 <div className="innermain">
                   <p>Amount Earned</p>
-                  <h4 className="greenpara">$95.00</h4>
+                  <h4 className="greenpara">${earned}</h4>
                 </div>
               </div>
             </div>
@@ -116,27 +172,27 @@ const Shareresultsmodal: React.FC<ShareresultsmodalProps> = ({
             <p>Share with Friends</p>
 
             <div className="icons">
-              <span>
+              <span onClick={() => handleShare("x")}>
                <Icon name="x" />
               </span>
 
-              <span>
+              <span onClick={() => handleShare("facebook")}>
               <Icon name="facebook" />
               </span>
 
-              <span>
+              <span onClick={() => handleShare("telegram")}>
               <Icon name="telegram" />
               </span>
 
-              <span>
+              <span onClick={() => handleShare("whatsapp")}>
               <Icon name="whatsapp" />
               </span>
 
-              <span>
+              <span onClick={() => handleShare("mail")}>
            <Icon name="mail" />
               </span>
 
-              <span>
+              <span onClick={() => handleShare("link")}>
            <Icon name="link" />
               </span>
             </div>

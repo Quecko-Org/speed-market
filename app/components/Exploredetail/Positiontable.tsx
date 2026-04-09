@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import Icon from "../Icon";
 import Claimprocessedmodal from "../modals/Claimprocessedmodal";
-import Sharebetmodal from "../modals/Sharebetmodal";
+import Shareresultsmodal, { ShareResultsData } from "../modals/Shareresultsmodal";
 import { getUserPosition, getClaimSignature } from "@/app/services/userPositions";
 import { usePositions } from "../positions/PositionsContext";
 import { useAtomValue } from "jotai";
@@ -9,6 +9,7 @@ import {
   userSmartAccount,
   userSmartAccountClient,
   userPublicClient,
+  userProfileData,
 } from "@/app/store/atoms";
 import { useWalletContext } from "@/app/context/WalletContext";
 import { useSessionPermissions } from "@/app/hooks/useSessionPermissions";
@@ -81,6 +82,7 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
   const smartAccount = useAtomValue(userSmartAccount);
   const smartAccountClient = useAtomValue(userSmartAccountClient);
   const publicClient = useAtomValue(userPublicClient);
+  const userProfile = useAtomValue(userProfileData);
   const { isWalletConnected, setIsLoading: setWalletLoading, setLoadingStep } = useWalletContext();
   const { grantPermissions } = useSessionPermissions();
   const fetchUsdtBalance = useGetUsdtBalance();
@@ -254,8 +256,10 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
 
       showToast("success", { message: "Claim successful!" });
       fetchUsdtBalance();
+      const claimedItem = positions.find((p) => p._id === betId);
       setPositions((prev) => prev.filter((p) => p._id !== betId));
       refreshNow();
+      if (claimedItem) openClaimShareModal(claimedItem);
     } catch (error: any) {
       console.error("Claim error:", error);
       showToast("error", { message: error?.shortMessage || error?.message || "Claim failed" });
@@ -266,12 +270,28 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
     }
   };
 
-  const openModal = (name: ModalKeys) => {
-    setModals((prev) => ({ ...prev, [name]: true }));
-  };
-
   const closeModal = (name: ModalKeys) => {
     setModals((prev) => ({ ...prev, [name]: false }));
+  };
+
+  const [shareResultsData, setShareResultsData] = useState<ShareResultsData | undefined>();
+  const [showShareResults, setShowShareResults] = useState(false);
+
+  const openClaimShareModal = (item: any) => {
+    setShareResultsData({
+      symbol: item.cryptoSymbol,
+      betType: item.betType,
+      duration: item.timeframe ?? item.duration,
+      baselinePrice: item.entryPrice ? `$${Number(item.entryPrice).toLocaleString(undefined, { maximumFractionDigits: 4 })}` : "—",
+      settlementPrice: item.exitPrice ? `$${Number(item.exitPrice).toLocaleString(undefined, { maximumFractionDigits: 4 })}` : "—",
+      amount: Number(item.amount ?? 0).toFixed(2),
+      earned: Number((Number(item.amount ?? 0) * 1.92)).toFixed(2),
+      pnl: Number((Number(item.amount ?? 0) * 1.92) - Number(item.amount ?? 0)).toFixed(2),
+      result: "WIN",
+      userName: userProfile?.displayName ?? "User",
+      userImage: userProfile?.profileImage ?? "/importantassets/dummyrain.png",
+    });
+    setShowShareResults(true);
   };
 
   return (
@@ -355,12 +375,6 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
                           ) : (
                             <button className="timerbtn">{remaining}</button>
                           )}
-                          <button
-                            onClick={() => openModal("Sharebet")}
-                            className="sharebtn"
-                          >
-                            <Icon name="predictionshare" />
-                          </button>
                         </div>
                       </td>
                     </tr>
@@ -431,12 +445,6 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
                         ) : (
                           <button className="timerbtn">{remaining}</button>
                         )}
-                        <button
-                          onClick={() => openModal("Sharebet")}
-                          className="sharebtn"
-                        >
-                          <Icon name="predictionshare" />
-                        </button>
                       </div>
                     </div>
                   </div>
@@ -451,9 +459,10 @@ const Positiontable: FC<PositiontableProps> = ({ symbol, refreshKey, onTimerExpi
         show={modals.Claimprocessed}
         onHide={() => closeModal("Claimprocessed")}
       />
-      <Sharebetmodal
-        show={modals.Sharebet}
-        onHide={() => closeModal("Sharebet")}
+      <Shareresultsmodal
+        show={showShareResults}
+        onHide={() => setShowShareResults(false)}
+        data={shareResultsData}
       />
     </>
   );

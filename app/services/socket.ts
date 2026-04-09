@@ -3,7 +3,10 @@ import { api_url } from "@/app/config/environment";
 
 let socket: Socket | null = null;
 
-export const getSocket = (): Socket => {
+export const getSocket = (): Socket | null => {
+  if (typeof window === "undefined") return null;
+  if (!api_url) return null;
+
   if (!socket) {
     socket = io(api_url, {
       transports: ["websocket"],
