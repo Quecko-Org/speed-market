@@ -1,8 +1,10 @@
 import React, { FC, useEffect, useState } from "react";
 import Icon from "../Icon";
 import ReactPaginate from "react-paginate";
-import Shareresultsmodal from "../modals/Shareresultsmodal";
+import Shareresultsmodal, { ShareResultsData } from "../modals/Shareresultsmodal";
 import { getUserHistory } from "@/app/services/userPositions";
+import { useAtomValue } from "jotai";
+import { userProfileData } from "@/app/store/atoms";
 
 type ModalKeys =
   | "createprofile"
@@ -31,6 +33,7 @@ function formatDate(dateStr?: string) {
 const ITEMS_PER_PAGE = 10;
 
 const History: FC<HistoryProps> = ({ symbol, refreshKey }) => {
+  const userProfile = useAtomValue(userProfileData);
   const [history, setHistory] = useState<any[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
@@ -67,12 +70,27 @@ const History: FC<HistoryProps> = ({ symbol, refreshKey }) => {
     deposit: false,
   });
 
+  const [shareData, setShareData] = useState<ShareResultsData | undefined>();
+
   const handlePageClick = (event: any) => {
     setCurrentPage(event.selected);
   };
 
-  const openModal = (name: ModalKeys) => {
-    setModals((prev) => ({ ...prev, [name]: true }));
+  const openShareModal = (item: any) => {
+    setShareData({
+      symbol: item.cryptoSymbol,
+      betType: item.betType,
+      duration: item.timeframe ?? item.duration,
+      baselinePrice: item.entryPrice ? `$${Number(item.entryPrice).toLocaleString(undefined, { maximumFractionDigits: 4 })}` : "—",
+      settlementPrice: item.exitPrice ? `$${Number(item.exitPrice).toLocaleString(undefined, { maximumFractionDigits: 4 })}` : "—",
+      amount: Number(item.amount ?? 0).toFixed(2),
+      earned: Number(item.earned ?? item.payout ?? 0).toFixed(2),
+      pnl: Number((item.earned ?? item.payout ?? 0) - (item.amount ?? 0)).toFixed(2),
+      result: item.result,
+      userName: userProfile?.displayName ?? "User",
+      userImage: userProfile?.profileImage ?? "/importantassets/dummyrain.png",
+    });
+    setModals((prev) => ({ ...prev, Shareresults: true }));
   };
 
   const closeModal = (name: ModalKeys) => {
@@ -137,7 +155,7 @@ const History: FC<HistoryProps> = ({ symbol, refreshKey }) => {
                       </td>
                       <td>
                         {isWon && (
-                          <button onClick={() => openModal("Shareresults")} className="sharebtn">
+                          <button onClick={() => openShareModal(item)} className="sharebtn">
                             <Icon name="predictionshare" />
                           </button>
                         )}
@@ -198,7 +216,7 @@ const History: FC<HistoryProps> = ({ symbol, refreshKey }) => {
                     </div>
                     {isWon && (
                       <div className="box">
-                        <button onClick={() => openModal("Shareresults")} className="sharebtn">
+                        <button onClick={() => openShareModal(item)} className="sharebtn">
                           <Icon name="predictionshare" />
                         </button>
                       </div>
@@ -237,6 +255,7 @@ const History: FC<HistoryProps> = ({ symbol, refreshKey }) => {
       <Shareresultsmodal
         show={modals.Shareresults}
         onHide={() => closeModal("Shareresults")}
+        data={shareData}
       />
     </>
   );
