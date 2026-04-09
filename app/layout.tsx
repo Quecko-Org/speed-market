@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     "Make fast predictions on crypto price movements. Win 2x your stake in minutes with Speed Markets.",
   authors: [{ name: "Speed Markets" }],
   creator: "Speed Markets",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://dev-speedmarket.rain.one"),
+  metadataBase: new URL("https://dev-speedmarket.rain.one"),
   openGraph: {
     type: "website",
     locale: "en_US",

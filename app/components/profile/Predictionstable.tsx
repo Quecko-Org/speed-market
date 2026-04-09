@@ -1,10 +1,7 @@
 "use client";
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import Icon from "../Icon";
 import ReactPaginate from "react-paginate";
-import Shareresultsmodal, { ShareResultsData } from "../modals/Shareresultsmodal";
-import { useAtomValue } from "jotai";
-import { userProfileData } from "@/app/store/atoms";
 
 interface PredictionsTableProps {
   history: any[];
@@ -23,29 +20,8 @@ function formatDate(dateStr?: string) {
 }
 
 const PredictionsTable: FC<PredictionsTableProps> = ({ history, loading, currentPage, totalPages, onPageChange }) => {
-  const userProfile = useAtomValue(userProfileData);
-  const [showShareModal, setShowShareModal] = useState(false);
-  const [shareData, setShareData] = useState<ShareResultsData | undefined>();
-
   const handlePageClick = (event: any) => {
     onPageChange(event.selected);
-  };
-
-  const openShareModal = (item: any) => {
-    setShareData({
-      symbol: item.cryptoSymbol,
-      betType: item.betType,
-      duration: item.timeframe ?? item.duration,
-      baselinePrice: item.entryPrice ? `$${Number(item.entryPrice).toLocaleString(undefined, { maximumFractionDigits: 4 })}` : "—",
-      settlementPrice: item.exitPrice ? `$${Number(item.exitPrice).toLocaleString(undefined, { maximumFractionDigits: 4 })}` : "—",
-      amount: Number(item.amount ?? 0).toFixed(2),
-      earned: Number(item.earned ?? item.payout ?? 0).toFixed(2),
-      pnl: Number((item.earned ?? item.payout ?? 0) - (item.amount ?? 0)).toFixed(2),
-      result: item.result,
-      userName: userProfile?.displayName ?? "User",
-      userImage: userProfile?.profileImage ?? "/importantassets/dummyrain.png",
-    });
-    setShowShareModal(true);
   };
 
   return (
@@ -137,7 +113,7 @@ const PredictionsTable: FC<PredictionsTableProps> = ({ history, loading, current
                       </td>
                       <td>
                         {isWon && (
-                          <button className="sharebtn" onClick={() => openShareModal(item)}>
+                          <button className="sharebtn" onClick={() => {}}>
                             <Icon name="predictionshare" />
                           </button>
                         )}
@@ -230,7 +206,7 @@ const PredictionsTable: FC<PredictionsTableProps> = ({ history, loading, current
                     </div>
                     {isWon && (
                       <div className="box">
-                        <button className="sharebtn" onClick={() => openShareModal(item)}>
+                        <button className="sharebtn" onClick={() => {}}>
                           <Icon name="predictionshare" />
                         </button>
                       </div>
@@ -265,11 +241,6 @@ const PredictionsTable: FC<PredictionsTableProps> = ({ history, loading, current
           />
         )}
       </div>
-      <Shareresultsmodal
-        show={showShareModal}
-        onHide={() => setShowShareModal(false)}
-        data={shareData}
-      />
     </>
   );
 };
