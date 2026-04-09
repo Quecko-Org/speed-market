@@ -39,7 +39,6 @@ const Sharebetmodal: React.FC<SharebetmodalProps> = ({ show, onHide, data }) => 
       symbol, betType, duration, baselinePrice, amount, pnl, userName,
     });
     const shareUrl = `${origin}/share?${ogParams.toString()}`;
-    const displayUrl = origin;
     const text = `I placed a ${betType} bet of $${amount} on ${symbol}/USDT on Rain Speed Markets!`;
 
     const links: Record<string, string> = {
@@ -47,10 +46,10 @@ const Sharebetmodal: React.FC<SharebetmodalProps> = ({ show, onHide, data }) => 
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
       telegram: `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(text)}`,
       whatsapp: `https://wa.me/?text=${encodeURIComponent(`${text}\n${shareUrl}`)}`,
-      mail: `mailto:?subject=${encodeURIComponent("Rain Speed Markets")}&body=${encodeURIComponent(`${text}\n${displayUrl}`)}`,
+      mail: `mailto:?subject=${encodeURIComponent("Rain Speed Markets")}&body=${encodeURIComponent(`${text}\n${shareUrl}`)}`,
     };
     if (platform === "link") {
-      try { navigator.clipboard.writeText(`${text}\n${displayUrl}`); } catch { /* fallback */ }
+      try { navigator.clipboard.writeText(`${text}\n${shareUrl}`); } catch { /* fallback */ }
       showToast("success", { message: "Copied!" });
       return;
     }

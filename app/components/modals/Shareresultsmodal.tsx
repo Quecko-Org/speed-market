@@ -51,7 +51,6 @@ const Shareresultsmodal: React.FC<ShareresultsmodalProps> = ({
       amount, earned, pnl, result, userName,
     });
     const shareUrl = `${origin}/share?${ogParams.toString()}`;
-    const displayUrl = origin;
     const text = `I just ${isWin ? "won" : "lost"} $${earned} on ${symbol}/USDT on Rain Speed Markets!`;
 
     const links: Record<string, string> = {
@@ -59,10 +58,10 @@ const Shareresultsmodal: React.FC<ShareresultsmodalProps> = ({
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
       telegram: `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(text)}`,
       whatsapp: `https://wa.me/?text=${encodeURIComponent(`${text}\n${shareUrl}`)}`,
-      mail: `mailto:?subject=${encodeURIComponent(`${isWin ? "Won" : "Lost"} on Rain Speed Markets`)}&body=${encodeURIComponent(`${text}\n${displayUrl}`)}`,
+      mail: `mailto:?subject=${encodeURIComponent(`${isWin ? "Won" : "Lost"} on Rain Speed Markets`)}&body=${encodeURIComponent(`${text}\n${shareUrl}`)}`,
     };
     if (platform === "link") {
-      try { navigator.clipboard.writeText(`${text}\n${displayUrl}`); } catch { /* fallback */ }
+      try { navigator.clipboard.writeText(`${text}\n${shareUrl}`); } catch { /* fallback */ }
       showToast("success", { message: "Copied!" });
       return;
     }
