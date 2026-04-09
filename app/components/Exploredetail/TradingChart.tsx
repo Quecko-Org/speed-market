@@ -300,27 +300,6 @@ export default function TradingChart({ coinDetail, symbol, duration, positions =
         ctx.fillText(formatTime(t), x, H - PADDING.bottom + 25);
       }
 
-      // VWAP dashed line (green)
-      const vwapY = mapY(vwap);
-      ctx.strokeStyle = "#70E852";
-      ctx.lineWidth = 1;
-      ctx.setLineDash([8, 6]);
-      ctx.beginPath();
-      ctx.moveTo(PADDING.left, vwapY);
-      ctx.lineTo(W - PADDING.right, vwapY);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      // Open price dashed line (orange dim)
-      const openY = mapY(openPrice);
-      ctx.strokeStyle = "#E45F14 ";
-      ctx.lineWidth = 1;
-      ctx.setLineDash([6, 8]);
-      ctx.beginPath();
-      ctx.moveTo(PADDING.left, openY);
-      ctx.lineTo(W - PADDING.right, openY);
-      ctx.stroke();
-      ctx.setLineDash([]);
 
       // Position entry price lines (short line near right side)
       const posBadgeX = W - PADDING.right + 4;
@@ -337,7 +316,7 @@ export default function TradingChart({ coinDetail, symbol, duration, positions =
         ctx.stroke();
 
         // Position price label
-        const posLabel = formatPriceFull(pos.entryPrice);
+        const posLabel = `$${pos.entryPrice.toLocaleString("en-US", { minimumFractionDigits: 3, maximumFractionDigits: 3 })}`;
         ctx.font = "bold 11px sans-serif";
         const posLabelW = ctx.measureText(posLabel).width + 14;
         ctx.fillStyle = isUp ? "#22c55e" : "#ef4444";
@@ -420,26 +399,6 @@ export default function TradingChart({ coinDetail, symbol, duration, positions =
       ctx.fillStyle = "#fff";
       ctx.textAlign = "left";
       ctx.fillText(priceLabel, badgeX + 7, badgeY + 14);
-
-      
-      // VWAP label (green badge)
-      const vwapLabel = formatPriceFull(vwap);
-      const vwapLabelW = ctx.measureText(vwapLabel).width + 14;
-      const vwapBadgeY = vwapY - 10;
-
-      ctx.fillStyle = "#70E852";
-      roundRect(ctx, badgeX, vwapBadgeY, vwapLabelW, 20, 3);
-      ctx.fill();
-      ctx.fillStyle = "#000";
-      ctx.fillText(vwapLabel, badgeX + 7, vwapBadgeY + 14);
-
-      const vwapTimeLabel = formatTimeFull(Date.now());
-      const vwapTimeLabelW = ctx.measureText(vwapTimeLabel).width + 14;
-      ctx.fillStyle = "rgba(61,220,132,0.15)";
-    roundRect(ctx, badgeX, vwapBadgeY + 22, vwapTimeLabelW, 20, 3);
-ctx.fill();
-ctx.fillStyle = "#70E852";
-ctx.fillText(vwapTimeLabel, badgeX + 7, vwapBadgeY + 36);
 
       // Tooltip crosshair
       if (tooltip) {

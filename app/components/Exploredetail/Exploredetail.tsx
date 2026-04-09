@@ -108,11 +108,11 @@ const Exploredetail: FC = () => {
 
     const fetchChartPositions = async () => {
       try {
-        const response = await getUserPosition(symbol);
+        const response = await getUserPosition(symbol, 1, 100);
         const bets = Array.isArray(response?.bets) ? response.bets : Array.isArray(response) ? response : [];
         setChartPositions(
           bets
-            .filter((b: any) => b.entryPrice && b.betType)
+            .filter((b: any) => b.entryPrice && b.betType && b.expiresAt && new Date(b.expiresAt).getTime() > Date.now())
             .map((b: any) => ({
               entryPrice: Number(b.entryPrice),
               betType: b.betType,
