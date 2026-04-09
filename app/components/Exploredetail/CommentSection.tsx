@@ -15,6 +15,7 @@ interface CommentData {
   avatar?: string;
   content: string;
   likes?: number;
+  reactionsCount?: number;
   createdAt: string;
   replysCount?: number;
 }
@@ -167,7 +168,9 @@ const CommentItem: React.FC<{
   onRefresh: () => void;
 }> = ({ comment, isReply = false, coinId, onRefresh }) => {
   const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(comment.likes ?? 0);
+  const [likeOffset, setLikeOffset] = useState(0);
+  const baseLikeCount = (comment as any).reactionsCount ?? comment.likes ?? 0;
+  const likeCount = baseLikeCount + likeOffset;
   const [showReplies, setShowReplies] = useState(false);
   const [replies, setReplies] = useState<CommentData[]>([]);
   const [repliesLoading, setRepliesLoading] = useState(false);
@@ -183,7 +186,7 @@ const CommentItem: React.FC<{
       const result = await likeComments(comment._id);
       if (result) {
         setLiked(!liked);
-        setLikeCount((prev) => liked ? prev - 1 : prev + 1);
+        setLikeOffset((prev) => liked ? prev - 1 : prev + 1);
       }
     } catch {
       showToast("error", { message: "Failed to like comment" });
