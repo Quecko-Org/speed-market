@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://yoursite.com",
+    url: "https://dev-speedmarket.rain.one",
     siteName: "Speed Markets",
     title: "Speed Markets — Fast Crypto Predictions",
     description:

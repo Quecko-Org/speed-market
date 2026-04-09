@@ -1,9 +1,8 @@
 import { ImageResponse } from "next/og";
-import { NextRequest } from "next/server";
-
-export const runtime = "edge";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
+  try {
   const p = req.nextUrl.searchParams;
   const symbol = p.get("symbol") ?? "BTC";
   const betType = p.get("betType") ?? "UP";
@@ -94,4 +93,7 @@ export async function GET(req: NextRequest) {
     ),
     { width: 1200, height: 630 }
   );
+  } catch (e) {
+    return NextResponse.json({ error: "Failed to generate image" }, { status: 500 });
+  }
 }
