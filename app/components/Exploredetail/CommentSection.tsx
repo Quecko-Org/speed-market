@@ -16,7 +16,7 @@ interface CommentData {
   content: string;
   likes?: number;
   createdAt: string;
-  replyCount?: number;
+  replysCount?: number;
 }
 
 function getUserName(user: CommentUser | string): string {
