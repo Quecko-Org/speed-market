@@ -100,9 +100,17 @@ export default function TradingChart({ coinDetail, symbol, duration, positions =
   // Chart config
   const PADDING = { top: 20, right: 100, bottom: 50, left: 20 };
 
-  // Initialize chart data from API or fallback to generated data
+  // Show generated data immediately, then replace with API data
   useEffect(() => {
-    if (!symbol || initializedRef.current) return;
+    if (basePrice > 0 && !initializedRef.current) {
+      initializedRef.current = true;
+      setData(generateInitialData(basePrice, chartDurationMs));
+    }
+  }, [basePrice, chartDurationMs]);
+
+  // Fetch real graph data in background and replace
+  useEffect(() => {
+    if (!symbol || !initializedRef.current) return;
 
     const fetchGraphData = async () => {
       try {
@@ -119,37 +127,27 @@ export default function TradingChart({ coinDetail, symbol, duration, positions =
             .filter((p: PricePoint) => p.price > 0 && p.time > cutoff)
             .sort((a: PricePoint, b: PricePoint) => a.time - b.time);
 
-          // Downsample to max 500 points for performance
           const MAX_POINTS = 500;
           let points = allPoints;
           if (allPoints.length > MAX_POINTS) {
             const step = Math.floor(allPoints.length / MAX_POINTS);
             points = allPoints.filter((_, i) => i % step === 0);
-            // Always include the last point
             if (points[points.length - 1] !== allPoints[allPoints.length - 1]) {
               points.push(allPoints[allPoints.length - 1]);
             }
           }
 
           if (points.length > 0) {
-            initializedRef.current = true;
             setData(points);
-            return;
           }
         }
       } catch (err) {
         console.error("Failed to fetch graph data:", err);
       }
-
-      // Fallback to generated data
-      if (basePrice > 0) {
-        initializedRef.current = true;
-        setData(generateInitialData(basePrice, chartDurationMs));
-      }
     };
 
     fetchGraphData();
-  }, [symbol, basePrice, chartDurationMs]);
+  }, [symbol, chartDurationMs]);
 
   // Price boundaries from data
   const { minPrice, maxPrice, currentPrice, openPrice, vwap } = useMemo(() => {
