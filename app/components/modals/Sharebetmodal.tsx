@@ -33,16 +33,13 @@ const Sharebetmodal: React.FC<SharebetmodalProps> = ({ show, onHide, data }) => 
   const isUp = betType === "UP";
   const slug = symbol.toLowerCase();
 
-  const getShareUrl = () => {
+  const handleShare = (platform: string) => {
     const origin = typeof window !== "undefined" ? window.location.origin : "";
-    const params = new URLSearchParams({
+    const ogParams = new URLSearchParams({
       symbol, betType, duration, baselinePrice, amount, pnl, userName,
     });
-    return `${origin}/share?${params.toString()}`;
-  };
-
-  const handleShare = (platform: string) => {
-    const shareUrl = getShareUrl();
+    const shareUrl = `${origin}/share?${ogParams.toString()}`;
+    const displayUrl = origin;
     const text = `I placed a ${betType} bet of $${amount} on ${symbol}/USDT on Rain Speed Markets!`;
 
     const links: Record<string, string> = {
@@ -50,10 +47,10 @@ const Sharebetmodal: React.FC<SharebetmodalProps> = ({ show, onHide, data }) => 
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
       telegram: `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(text)}`,
       whatsapp: `https://wa.me/?text=${encodeURIComponent(`${text}\n${shareUrl}`)}`,
-      mail: `mailto:?subject=${encodeURIComponent("Rain Speed Markets")}&body=${encodeURIComponent(`${text}\n${shareUrl}`)}`,
+      mail: `mailto:?subject=${encodeURIComponent("Rain Speed Markets")}&body=${encodeURIComponent(`${text}\n${displayUrl}`)}`,
     };
     if (platform === "link") {
-      try { navigator.clipboard.writeText(shareUrl); } catch { /* fallback */ }
+      try { navigator.clipboard.writeText(`${text}\n${displayUrl}`); } catch { /* fallback */ }
       showToast("success", { message: "Copied!" });
       return;
     }
