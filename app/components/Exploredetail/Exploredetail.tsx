@@ -112,7 +112,7 @@ const Exploredetail: FC = () => {
         const bets = Array.isArray(response?.bets) ? response.bets : Array.isArray(response) ? response : [];
         setChartPositions(
           bets
-            .filter((b: any) => b.entryPrice && b.betType && b.expiresAt && new Date(b.expiresAt).getTime() > Date.now())
+            .filter((b: any) => b.entryPrice && b.betType && b.status === "ACTIVE")
             .map((b: any) => ({
               entryPrice: Number(b.entryPrice),
               betType: b.betType,
