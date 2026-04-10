@@ -7,7 +7,6 @@ interface SignmodalProps {
   show: boolean;
   onHide: () => void;
 }
-
 const Signmodal: React.FC<SignmodalProps> = ({ show, onHide }) => {
   return (
     <Modal className="profilemodal" show={show} onHide={onHide} centered>
