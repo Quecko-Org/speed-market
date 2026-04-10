@@ -9,9 +9,30 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@aa-sdk/core": "^4.87.0",
+    "@account-kit/infra": "^4.87.0",
+    "@account-kit/wallet-client": "^4.87.0",
+    "@tanstack/react-query": "^5.96.1",
+    "@wagmi/core": "^3.4.1",
+    "@walletconnect/ethereum-provider": "^2.23.9",
+    "alchemy-sdk": "^3.6.5",
+    "axios": "^1.7.3",
+    "bootstrap": "^5.3.8",
+    "idb": "^8.0.3",
+    "jotai": "^2.19.0",
     "next": "16.2.1",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-bootstrap": "^2.10.10",
+    "react-dom": "19.2.4",
+    "react-fast-marquee": "^1.6.5",
+    "react-paginate": "^8.3.0",
+    "react-qr-code": "^2.0.18",
+    "react-svg": "^17.2.4",
+    "react-toastify": "^11.0.5",
+    "sass": "^1.98.0",
+    "socket.io-client": "^4.8.3",
+    "viem": "^2.47.6",
+    "wagmi": "^3.6.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

@@ -1,0 +1,1107 @@
+@keyframes tradeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.app-layout {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    height: calc(100vh - 153px);
+    overflow: hidden;
+
+    .app-main {
+        overflow: auto;
+        height: 100%;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}
+
+.explore-layout {
+    height: calc(100vh - 93px);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.mainpositions {
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
+    background: linear-gradient(180deg, #1D2031 0%, #0A0B1D 106.85%);
+    position: relative;
+    padding-bottom: 41px;
+    height: 100%;
+    overflow: hidden;
+    will-change: width;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    .positions-handle {
+        display: none;
+    }
+
+    &.show {
+        width: 339px;
+        pointer-events: auto;
+    }
+
+    &.hide {
+        width: 0;
+        pointer-events: none;
+        border-left: none;
+    }
+
+    .positionheader {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        display: flex;
+        padding: 15px;
+        justify-content: space-between;
+        align-items: center;
+
+        .headerleft {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            gap: 4px;
+
+            .mainheading {
+                color: #FFF;
+                font-feature-settings: 'dlig' on;
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 110%;
+                white-space: nowrap;
+            }
+
+            .realpara {
+                color: #5F5D72;
+                font-size: 12px;
+                font-weight: 400;
+                line-height: 110%;
+                white-space: nowrap;
+            }
+        }
+
+        .positionbtn {
+            width: 22px;
+            height: 22px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+    }
+
+    .totalmain {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        background: #171A2B;
+        display: flex;
+        padding: 15px;
+        justify-content: space-between;
+        align-items: center;
+
+        .totallefthead {
+            color: #FFF;
+            font-feature-settings: 'dlig' on, 'salt' on;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 100%;
+            white-space: nowrap;
+        }
+
+        .totalright {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: flex-end;
+            gap: 4px;
+
+            .totalhead {
+                font-feature-settings: 'dlig' on, 'salt' on;
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 100%;
+                white-space: nowrap;
+            }
+
+            .totalpara {
+                font-feature-settings: 'dlig' on, 'salt' on;
+                font-size: 12px;
+                font-weight: 500;
+                line-height: 100%;
+                white-space: nowrap;
+            }
+        }
+    }
+
+    .greencolor {
+        color: #22AC00;
+    }
+
+    .redcolor {
+        color: #FE3932;
+    }
+
+    .historytable {
+        overflow: auto;
+        height: 100%;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        table {
+            width: 100%;
+
+            thead th {
+                height: 34px;
+                padding: 12px;
+                color: #5F5D72;
+                font-size: 12px;
+                font-weight: 400;
+                line-height: 100%;
+                vertical-align: middle;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                white-space: nowrap;
+
+                &:last-child {
+                    text-align: end;
+                }
+            }
+
+            tbody tr {
+                td {
+                    height: 48px;
+                    padding: 12px;
+                    border: none;
+
+                    .maintoken {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+
+                        .tokenimg {
+                            display: flex;
+                            width: 22px;
+                            height: 22px;
+                            justify-content: center;
+                            align-items: center;
+                            border-radius: 100px;
+                        }
+
+                        .tokenpara {
+                            color: #FFF;
+                            font-size: 14px;
+                            font-weight: 500;
+                            line-height: 100%;
+                            white-space: nowrap;
+                        }
+                    }
+
+                    .maintimer {
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+
+                        .timepara {
+                            color: #BDBBD0;
+                            font-size: 12px;
+                            font-weight: 500;
+                            white-space: nowrap;
+                            line-height: 100%;
+                        }
+                    }
+
+                    .amountpara {
+                        color: #BDBBD0;
+                        font-size: 12px;
+                        font-weight: 500;
+                        white-space: nowrap;
+                        line-height: 100%;
+                    }
+
+                    .plmain {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-end;
+                        gap: 2px;
+
+                        .plhead,
+                        .plpara {
+                            font-feature-settings: 'dlig' on, 'salt' on;
+                            font-weight: 500;
+                            line-height: 100%;
+                            white-space: nowrap;
+                        }
+
+                        .plhead {
+                            font-size: 12px;
+                        }
+
+                        .plpara {
+                            font-size: 10px;
+                        }
+                    }
+                }
+
+                &.green {
+                    border-bottom: 1px solid rgba(34, 172, 0, 0.20);
+                    background: linear-gradient(270deg, rgba(34, 172, 0, 0.00) 0%, rgba(34, 172, 0, 0.10) 100%);
+
+                    .maintoken .tokenimg {
+                        background: rgba(34, 197, 94, 0.10);
+                    }
+
+                    .plmain .plhead,
+                    .plmain .plpara {
+                        color: #22AC00;
+                    }
+                }
+
+                &.red {
+                    border-bottom: 1px solid rgba(254, 57, 50, 0.20);
+                    background: linear-gradient(270deg, rgba(254, 57, 50, 0.00) 0%, rgba(254, 57, 50, 0.10) 100%);
+
+                    .maintoken .tokenimg {
+                        background: rgba(254, 57, 50, 0.10);
+                    }
+
+                    .plmain .plhead,
+                    .plmain .plpara {
+                        color: #FE3932;
+                    }
+                }
+            }
+        }
+    }
+
+    .positionfooter {
+        border-top: 1px solid #2A2D42;
+        background: rgba(23, 26, 43, 1);
+        display: flex;
+        padding: 14px 16px;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 41px;
+        z-index: 9;
+
+        .footerpara {
+            color: #5F5D72;
+            font-size: 12px;
+            font-weight: 400;
+            white-space: nowrap;
+            line-height: 110%;
+        }
+    }
+}
+
+.openbtn {
+    border-radius: 10px 0 0 10px;
+    background: linear-gradient(117deg, #2C2D42 0%, #1B1C31 99.9%);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .10), 0 4px 6px -4px rgba(0, 0, 0, .10);
+    display: flex;
+    padding: 10px 0;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    height: 150px;
+    width: 30px;
+    z-index: 999;
+    cursor: pointer;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    .mainnumber {
+        color: #FFF;
+        font-feature-settings: 'dlig' on, 'salt' on;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 100%;
+    }
+
+    .openpara {
+        color: #5F5D72;
+        font-feature-settings: 'dlig' on, 'salt' on;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 100%;
+        transform: rotate(-90deg);
+        white-space: nowrap;
+    }
+
+    .openarrow {
+        width: 8px;
+        height: 14px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .rotate {
+        transform: rotate(180deg);
+    }
+}
+
+.speedmarket {
+    padding-top: 35px;
+    width: 100%;
+    position: relative;
+
+    .markethead {
+        color: #FFF;
+        font-feature-settings: 'dlig' on, 'salt' on;
+        font-size: 26px;
+        font-weight: 500;
+        line-height: 100%;
+        margin-bottom: 16px;
+        padding: 0 50px;
+    }
+
+    .marketpara {
+        color: #5F5D72;
+        font-feature-settings: 'dlig' on, 'salt' on;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 100%;
+        border-bottom: 1px solid #2C2A42;
+        padding: 0 50px 25px;
+        margin-bottom: 25px;
+    }
+
+    .innermarket {
+        padding: 0 50px;
+
+        .innerhead {
+            color: #FFF;
+            font-feature-settings: 'dlig' on, 'salt' on;
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 100%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+
+            .innerspan {
+                border-radius: 35px;
+                background: rgba(255, 255, 255, 0.10);
+                display: flex;
+                padding: 8px 10px;
+                align-items: center;
+                gap: 6px;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 100%;
+                text-transform: uppercase;
+            }
+        }
+
+        .innerpara {
+            color: #5F5D72;
+            font-feature-settings: 'dlig' on, 'salt' on;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 100%;
+            margin-bottom: 26px;
+        }
+
+        .mainmarketcards {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 14px;
+            padding-bottom: 38px;
+
+            .marketcard {
+                border-radius: 14px;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                background: linear-gradient(117deg, #2C2D42 0%, #1B1C31 99.9%);
+                padding: 20px;
+                position: relative;
+                overflow: hidden;
+
+                .maintrade {
+                    position: absolute;
+                    inset: 0;
+                    padding: 20px;
+                    background: linear-gradient(117deg, #2C2D42 0%, #1B1C31 99.9%);
+                    animation: tradeSlideIn 0.25s ease-in-out both;
+
+                    .tradetop {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 17px;
+
+                        .maintoken {
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+
+                            .tokenimg {
+                                width: 18px;
+                                height: 18px;
+                                border-radius: 80px;
+                                overflow: hidden;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+
+                                .innerimg {
+                                    width: 100%;
+                                    height: 100%;
+                                    object-fit: cover;
+                                }
+                            }
+
+                            .tokenpara {
+                                color: #FFF;
+                                font-feature-settings: 'dlig' on, 'salt' on;
+                                font-size: 14px;
+                                font-weight: 500;
+                                line-height: 120%;
+                            }
+                        }
+
+                        .closebtn {
+                            width: 18px;
+                            height: 18px;
+                            padding: 0;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            background: transparent;
+                            border: none;
+                            cursor: pointer;
+                        }
+                    }
+
+                    .inputupper {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 9px;
+
+                        .amountpara {
+                            color: #5F5D72;
+                            font-size: 12px;
+                            font-weight: 500;
+                            line-height: 100%;
+                        }
+
+                        .mainbalance {
+                            display: flex;
+                            align-items: center;
+                            gap: 6px;
+
+                            .balancepara {
+                                color: #5F5D72;
+                                font-size: 12px;
+                                font-weight: 500;
+                                line-height: 100%;
+                            }
+
+                            .tokenimg {
+                                width: 17px;
+                                height: 17px;
+                                border-radius: 80px;
+                                overflow: hidden;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+
+                                .innerimg {
+                                    width: 100%;
+                                    height: 100%;
+                                    object-fit: cover;
+                                }
+                            }
+
+                            .innerbalance {
+                                color: #FFF;
+                                font-feature-settings: 'salt' on;
+                                font-size: 12px;
+                                font-weight: 500;
+                                line-height: 120%;
+                            }
+                        }
+                    }
+
+                    .maininput {
+                        position: relative;
+                        margin-bottom: 15px;
+
+                        .innerinput {
+                            height: 44px;
+                            border-radius: 10px;
+                            background: #16192A;
+                            color: #FFF;
+                            font-size: 14px;
+                            font-weight: 500;
+                            padding: 5px 60px 5px 15px;
+                            border: none;
+                            outline: none;
+                            width: 100%;
+
+                            &::placeholder {
+                                color: #5F5D72;
+                                font-size: 14px;
+                                font-weight: 500;
+                            }
+                        }
+
+                        .maxbtn {
+                            display: flex;
+                            height: 22px;
+                            padding: 6px 8px;
+                            justify-content: center;
+                            align-items: center;
+                            border-radius: 7px;
+                            background: rgba(255, 255, 255, 0.07);
+                            color: #FFF;
+                            font-size: 10px;
+                            font-weight: 500;
+                            position: absolute;
+                            top: 11px;
+                            right: 10px;
+                            border: none;
+                            cursor: pointer;
+                        }
+                    }
+
+                    .amountslider {
+                        width: 100%;
+                        padding-bottom: 17px;
+
+                        .mainslider {
+                            position: relative;
+                            border-radius: 30px;
+                            background: #16192A;
+                            height: 6px;
+                            cursor: pointer;
+                            user-select: none;
+
+                            .innerslider {
+                                border-radius: 100px;
+                                background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
+                                height: 100%;
+                            }
+
+                            .slidercircle {
+                                position: absolute;
+                                top: 50%;
+                                transform: translate(-50%, -50%);
+                                width: 16px;
+                                height: 16px;
+                                border-radius: 50%;
+                                background: linear-gradient(90deg, #EC8711 0%, #E45F14 100%);
+                                border: 1px solid #26273C;
+                            }
+                        }
+                    }
+
+                    .tradebtn {
+                        display: flex;
+                        height: 50px;
+                        padding: 14px 20px;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        border-radius: 10px;
+                        font-size: 14px;
+                        font-weight: 500;
+                        text-transform: capitalize;
+                        border: none;
+                        width: 100%;
+                        cursor: pointer;
+
+                        .winpara {
+                            font-size: 11px;
+                            font-weight: 500;
+
+                            .bold {
+                                font-weight: 600;
+                            }
+                        }
+                    }
+
+                    .upbtn {
+                        background: #70E852;
+                        color: #000;
+
+                        .winpara {
+                            color: rgba(0, 0, 0, 0.80);
+                        }
+                    }
+
+                    .downbtn {
+                        background: #FF4646;
+                        color: #FFF;
+
+                        .winpara {
+                            color: #FFF;
+                        }
+                    }
+                }
+
+                .cardlive {
+                    position: absolute;
+                    top: 15px;
+                    right: 15px;
+                    display: flex;
+                    height: 14px;
+                    align-items: center;
+                    gap: 9px;
+
+                    .livecircle {
+                        width: 9.333px;
+                        height: 9.333px;
+                        background-color: #5FC363;
+                        border-radius: 50%;
+                        position: relative;
+                    }
+
+                    /* Pulse effect */
+                    .livecircle::after {
+                        content: "";
+                        position: absolute;
+                        inset: 0;
+                        border-radius: 50%;
+                        background-color: #5FC363;
+                        animation: pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+                        // z-index: -1;
+                    }
+
+                    @keyframes pulse {
+                        0% {
+                            transform: scale(1);
+                            opacity: 0.7;
+                        }
+
+                        70% {
+                            transform: scale(2.5);
+                            opacity: 0;
+                        }
+
+                        100% {
+                            transform: scale(2.5);
+                            opacity: 0;
+                        }
+                    }
+
+                    .livepara {
+                        color: #5FC363;
+                        font-feature-settings: 'dlig' on, 'salt' on;
+                        font-size: 14px;
+                        font-weight: 500;
+                        line-height: 100%;
+                    }
+                }
+
+                .tokenimages {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-bottom: 14px;
+                    position: relative;
+
+                    .energy {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                    }
+
+                    .innertoken {
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 200px;
+                        overflow: hidden;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        .tokenimg {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
+                    }
+                }
+
+                .tokenname {
+                    color: #5F5D72;
+                    font-feature-settings: 'dlig' on, 'salt' on;
+                    font-size: 14px;
+                    font-weight: 500;
+                    line-height: 120%;
+                    margin-bottom: 12px;
+                    text-align: center;
+                }
+
+                .tokenprice {
+                    color: #FFF;
+                    font-feature-settings: 'dlig' on, 'salt' on;
+                    font-size: 24px;
+                    font-weight: 700;
+                    line-height: 120%;
+                    margin-bottom: 31px;
+                    text-align: center;
+                }
+
+                .cardbtns {
+                    display: flex;
+                    align-items: flex-start;
+                    justify-content: space-between;
+                    gap: 8px;
+
+                    .upbtn {
+                        display: flex;
+                        padding: 14px 5px;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 10px;
+                        border-radius: 10px;
+                        background: rgba(95, 195, 99, 0.12);
+                        color: #5FC363;
+                        font-size: 14px;
+                        font-weight: 500;
+                        line-height: 100%;
+                        border: none;
+                        text-transform: capitalize;
+                        width: 100%;
+                        cursor: pointer;
+
+                        .innerbtn {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            width: 22px;
+                            height: 22px;
+                            border-radius: 78px;
+                            background: rgba(34, 172, 0, 0.18);
+                        }
+                    }
+
+                    .downbtn {
+                        display: flex;
+                        padding: 14px 5px;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 10px;
+                        border-radius: 10px;
+                        background: rgba(254, 57, 50, 0.12);
+                        color: #FE3932;
+                        font-size: 14px;
+                        font-weight: 500;
+                        line-height: 100%;
+                        border: none;
+                        text-transform: capitalize;
+                        width: 100%;
+                        cursor: pointer;
+
+                        .innerbtn {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            width: 22px;
+                            height: 22px;
+                            border-radius: 78px;
+                            background: rgba(254, 57, 50, 0.18);
+                        }
+                    }
+                }
+            }
+
+            .no-data-found {
+                border-radius: 14px;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                background: linear-gradient(117deg, #2C2D42 0%, #1B1C31 99.9%);
+                display: flex;
+                padding: 20px;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                min-height: 233px;
+                grid-column: 1 / -1;
+                width: 100%;
+
+                p {
+                    color: #FFF;
+                    font-feature-settings: 'dlig' on, 'salt' on;
+                    font-size: 20px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: 120%;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 1540px) {
+    .speedmarket .markethead {
+        padding: 0 20px;
+    }
+
+    .speedmarket .marketpara {
+        padding: 0 20px 25px;
+    }
+
+    .speedmarket .innermarket {
+        padding: 0 23px 0 20px;
+    }
+
+    .openbtn {
+        width: 20px;
+    }
+}
+
+@media (max-width: 1440px) {
+    .speedmarket .innermarket .mainmarketcards {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+@media (max-width: 1199px) {
+    .speedmarket .innermarket .mainmarketcards {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 991px) {
+    .app-layout {
+        height: 100%;
+        overflow: hidden;
+        border: none !important;
+    }
+
+    .speedmarket .markethead {
+        font-size: 22px;
+    }
+
+    .speedmarket .innermarket {
+        padding: 0 0 0 20px;
+    }
+
+    .speedmarket .innermarket .innerhead {
+        font-size: 18px;
+    }
+
+    .speedmarket .innermarket .innerpara {
+        font-size: 14px;
+    }
+
+    .speedmarket .innermarket .mainmarketcards {
+        display: flex;
+        flex-direction: row;
+        overflow: auto;
+        gap: 0;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+
+
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    .mainpositions .positionheader {
+        display: none;
+    }
+
+    .mainpositions .totalmain {
+        border-radius: 20px 20px 0 0;
+    }
+
+    .speedmarket .innermarket .mainmarketcards .marketcard {
+        min-width: 340px;
+        max-width: 340px;
+        margin-right: 14px;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+
+        .maintrade {
+            touch-action: pan-y;
+        }
+    }
+
+    .openbtn {
+        display: none;
+    }
+
+    .app-layout {
+        grid-template-columns: 1fr;
+        height: 100%;
+        position: relative;
+        padding-bottom: 0;
+    }
+
+    .mainpositions {
+        width: 100% !important;
+        height: auto;
+        max-height: 70vh;
+        border-left: none;
+
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 200;
+        overflow: unset;
+        border-radius: 20px 20px 0 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+
+        will-change: transform;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &.hide {
+            transform: translateY(calc(100% - 0px));
+            pointer-events: auto;
+            border-left: none;
+            opacity: 1;
+            width: 100% !important;
+        }
+
+        &.show {
+            transform: translateY(0);
+            width: 100% !important;
+
+            .positions-handle {
+                top: -28px;
+            }
+        }
+
+        .positions-handle {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            height: 28px;
+            padding: 0 16px;
+            background: linear-gradient(180deg, #EC8711 0%, #E45F14 100%);
+            border: none;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            max-width: fit-content;
+            position: fixed;
+            top: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+
+            .mainnumber {
+                color: #FFF;
+                font-feature-settings: 'dlig' on, 'salt' on;
+                font-size: 12px;
+                font-weight: 600;
+                line-height: 100%;
+            }
+
+            .openpara {
+                color: #FFF;
+                font-feature-settings: 'dlig' on, 'salt' on;
+                font-size: 12px;
+                font-weight: 600;
+                line-height: 100%;
+                transform: none;
+                white-space: nowrap;
+            }
+
+            svg {
+                flex-shrink: 0;
+                transition: transform 0.3s ease;
+                transform: rotate(90deg);
+
+                path {
+                    fill: #FFF;
+                }
+            }
+
+            .rotate {
+                transform: rotate(270deg);
+            }
+        }
+
+        .positionheader .positionbtn {
+            display: none;
+        }
+
+        .historytable {
+            height: unset;
+            max-height: calc(70vh - 40px - 60px - 41px);
+        }
+    }
+
+    .explore-layout {
+        .positions-handle {
+            top: -132px !important;
+        }
+
+        .mainpositions {
+            &.show {
+                .positions-handle {
+                    top: -28px !important;
+                }
+            }
+        }
+    }
+
+    .speedmarket .innermarket .mainmarketcards .no-data-found{
+        margin-right: 20px;
+    }
+}
+
+@media (max-width: 400px) {
+    .speedmarket .innermarket .mainmarketcards .marketcard {
+        min-width: 300px;
+        max-width: 300px;
+    }
+}
+
+.skeleton-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 233px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
+
+    .skeleton-shimmer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.05) 50%,
+                rgba(255, 255, 255, 0) 100%);
+        animation: shimmer 1.5s infinite;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}

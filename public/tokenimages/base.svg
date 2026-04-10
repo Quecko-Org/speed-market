@@ -1,0 +1,16 @@
+<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_17_43488)">
+<path d="M22 11C22 4.92487 17.0751 0 11 0C4.92487 0 0 4.92487 0 11C0 17.0751 4.92487 22 11 22C17.0751 22 22 17.0751 22 11Z" fill="#0857FF"/>
+<mask id="mask0_17_43488" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="3" y="3" width="16" height="16">
+<path d="M18.3346 3.6665H3.66797V18.3332H18.3346V3.6665Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_17_43488)">
+<path d="M10.9884 18.3332C15.0458 18.3332 18.3346 15.0502 18.3346 10.9998C18.3346 6.94949 15.0458 3.6665 10.9884 3.6665C7.13928 3.6665 3.98184 6.62213 3.66797 10.3833H13.3779V11.6164H3.66797C3.98184 15.3776 7.13928 18.3332 10.9884 18.3332Z" fill="white"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_17_43488">
+<rect width="22" height="22" fill="white"/>
+</clipPath>
+</defs>
+</svg>
