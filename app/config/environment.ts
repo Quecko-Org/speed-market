@@ -19,7 +19,7 @@ if (system_ENV === "development") {
   usdt_token = "0xCa4f77A38d8552Dd1D5E44e890173921B67725F4";
   ACTIVE_SESSION_TIME = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 1;
 } else if (system_ENV === "stage") {
-  api_url = "";
+  api_url = "https://rain-speed-markets-stg-api.quecko.org";
   aqua_base_url = "https://stg-api.aqua.cash";
   SPEED_MARKET_CONTRACT = "0x20902004C236FAD57039964162A856b0059E16b2";
   usdt_token = "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9";
