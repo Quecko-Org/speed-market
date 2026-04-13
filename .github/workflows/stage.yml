@@ -1,15 +1,19 @@
 name: Deploying stage Branch
+
 on:
   push:
     branches:
       - stage
+
 jobs:
   build:
     runs-on: [self-hosted, speed-market-dev-vm]
+
     env:
       PM2_PROCESS_NAME: Speed-Market-Stg-FE
       PORT: 3001
       node-version: 22
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -22,14 +26,13 @@ jobs:
         with:
           node-version: ${{ env.node-version }}
 
-      - name: Clean workspace
-        run: rm -rf node_modules .next package-lock.json
-
       - name: Install dependencies
         run: npm install --legacy-peer-deps
+        working-directory: staging
 
       - name: Create build
         run: npm run build
+        working-directory: staging
 
       - name: Start or Reload the Application
         run: |
@@ -41,3 +44,4 @@ jobs:
             PORT=$PORT pm2 start "npm start" --name "$PM2_PROCESS_NAME"
           fi
           pm2 save
+        working-directory: staging
