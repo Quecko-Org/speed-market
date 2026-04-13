@@ -6,9 +6,10 @@ import Icon from "../Icon";
 interface SignmodalProps {
   show: boolean;
   onHide: () => void;
+  onSign?: () => void;
 }
 
-const Signmodal: React.FC<SignmodalProps> = ({ show, onHide }) => {
+const Signmodal: React.FC<SignmodalProps> = ({ show, onHide, onSign }) => {
   return (
     <Modal className="profilemodal" show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
@@ -25,7 +26,7 @@ const Signmodal: React.FC<SignmodalProps> = ({ show, onHide }) => {
             This signature confirms your identity and connects your wallet
             safely to the platform.
           </p>
-          <button className="signbtn">Sign</button>
+          <button className="signbtn" onClick={onSign}>Sign</button>
         </div>
       </Modal.Body>
     </Modal>
