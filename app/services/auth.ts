@@ -74,6 +74,12 @@ export const updateUserProfile = async (payload: { displayName?: string; profile
   }
 };
 
+let onUnauthorized: (() => void) | null = null;
+
+export const setOnUnauthorized = (cb: () => void) => {
+  onUnauthorized = cb;
+};
+
 export const getUserProfile = async () => {
   const token = localStorage.getItem("accessToken");
   if (!token) return null;
@@ -85,7 +91,10 @@ export const getUserProfile = async () => {
       },
     });
     return response.data?.data;
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.response?.status === 401 && onUnauthorized) {
+      onUnauthorized();
+    }
     console.error("Error fetching user profile:", error);
     return null;
   }
