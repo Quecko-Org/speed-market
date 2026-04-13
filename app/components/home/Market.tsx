@@ -135,6 +135,11 @@ const Market: FC = () => {
       return false;
     }
 
+    if (usdtBalance < 5) {
+      showToast("error", { message: "Minimum balance required is $5" });
+      return false;
+    }
+
     const trimmedAmount = amount.trim();
     const numAmount = Number(trimmedAmount);
     const maxPosition = usdtBalance >= 150 ? 150 : usdtBalance;

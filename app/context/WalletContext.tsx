@@ -9,6 +9,7 @@ import {
   useRef,
   type ReactNode,
 } from "react";
+import { setLogoutCallback } from "@/app/services/axiosInterceptor";
 import {
   useConnect,
   useDisconnect,
@@ -102,6 +103,16 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("sign");
     localStorage.removeItem("sessionExpiryTime");
   }, [disconnect, setSmartAccount, setSmartAccountClient, setPubClient, setUserProfile]);
+
+  // Register 401 interceptor to auto-disconnect on auth failure
+  useEffect(() => {
+    setLogoutCallback(() => {
+      disconnectWallet();
+      if (typeof window !== "undefined" && window.location.pathname !== "/") {
+        window.location.href = "/";
+      }
+    });
+  }, [disconnectWallet]);
 
   const createSmartAccountFn = useCallback(
     async (wc: any) => {

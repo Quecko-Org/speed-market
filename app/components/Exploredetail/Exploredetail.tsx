@@ -199,6 +199,11 @@ const Exploredetail: FC = () => {
       return;
     }
 
+    if (usdtBalance < 5) {
+      showToast("error", { message: "Minimum balance required is $5" });
+      return;
+    }
+
     const trimmedAmount = String(amount).trim();
     const numAmount = Number(trimmedAmount);
 
