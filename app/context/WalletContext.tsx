@@ -9,7 +9,6 @@ import {
   useRef,
   type ReactNode,
 } from "react";
-import { setLogoutCallback } from "@/app/services/axiosInterceptor";
 import {
   useConnect,
   useDisconnect,
@@ -42,7 +41,7 @@ import {
   ALCHEMY_API_KEY,
   PAYMASTER_POLICY_ID,
 } from "@/app/config/environment";
-import { loginOrRegister, getUserProfile } from "@/app/services/auth";
+import { loginOrRegister, getUserProfile, setOnUnauthorized } from "@/app/services/auth";
 import { useGetUsdtBalance } from "@/app/hooks/useBalance";
 import { LOGIN_SUCCESS, SIGNATURE_REJECTED } from "@/app/config/constants";
 import { showToast } from "@/app/hooks/showToast";
@@ -104,9 +103,8 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("sessionExpiryTime");
   }, [disconnect, setSmartAccount, setSmartAccountClient, setPubClient, setUserProfile]);
 
-  // Register 401 interceptor to auto-disconnect on auth failure
   useEffect(() => {
-    setLogoutCallback(() => {
+    setOnUnauthorized(() => {
       disconnectWallet();
       if (typeof window !== "undefined" && window.location.pathname !== "/") {
         window.location.href = "/";
