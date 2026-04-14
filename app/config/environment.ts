@@ -13,7 +13,7 @@ export const ALCHEMY_RPC_URL = `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_A
 const system_ENV = process.env.NEXT_PUBLIC_ENV;
 
 if (system_ENV === "development") {
-  api_url = "https://rain-speed-markets-dev-api.quecko.org";
+  api_url = "https://dev-api.pulsepairs.com";
   aqua_base_url = "https://dev-aqua-backend.quecko.org";
   SPEED_MARKET_CONTRACT = "0x35B4f9f775f236d66c53fC5F087015F4A1391FD3";
   usdt_token = "0xCa4f77A38d8552Dd1D5E44e890173921B67725F4";
